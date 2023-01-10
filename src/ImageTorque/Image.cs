@@ -7,6 +7,7 @@ namespace ImageTorque;
 
 public partial record Image : IImage
 {
+    private static readonly Decoder s_decoder = new();
     private static readonly PixelBufferConverter s_pixelBufferConverter = new();
     private readonly IPixelBuffer _rootPixelBuffer;
     private readonly ConcurrentDictionary<Type, IPixelBuffer> _convertedPixelBuffers = new();
@@ -92,6 +93,33 @@ public partial record Image : IImage
         where TPixel : unmanaged, IPlanarPixel<TPixel>
     {
         return (ReadOnlyPlanarPixelBuffer<TPixel>)AsPixelBuffer<PlanarPixelBuffer<TPixel>>();
+    }
+
+    /// <summary>
+    /// Loads the image from the specified stream.
+    /// </summary>
+    /// <param name="stream">The stream.</param>
+    /// <returns>The image.</returns>
+    public static IImage Load(Stream stream)
+    {
+        IPixelBuffer pixelBuffer = s_decoder.Execute(new DecoderParameters
+        {
+            Input = stream,
+            OutputType = typeof(IPixelBuffer)
+        });
+
+        return new Image(pixelBuffer);
+    }
+
+    /// <summary>
+    /// Loads the image from the specified file.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The image.</returns>
+    public static IImage Load(string path)
+    {
+        using FileStream stream = File.OpenRead(path);
+        return Load(stream);
     }
 
     /// <summary>

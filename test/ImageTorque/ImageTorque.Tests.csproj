@@ -25,4 +25,10 @@
     <ProjectReference Include="..\..\src\ImageTorque\ImageTorque.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+      <Content Include="resources\*.*">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+  </ItemGroup>
+
 </Project>

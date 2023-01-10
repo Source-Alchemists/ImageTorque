@@ -6,35 +6,7 @@ namespace ImageTorque;
 
 public static class ImageExtensions
 {
-    private static readonly Decoder s_decoder = new();
     private static readonly Encoder s_encoder = new();
-
-    /// <summary>
-    /// Loads the image from the specified stream.
-    /// </summary>
-    /// <param name="stream">The stream.</param>
-    /// <returns>The image.</returns>
-    public static IImage Load(this IImage image, Stream stream)
-    {
-        IPixelBuffer pixelBuffer = s_decoder.Execute(new DecoderParameters
-        {
-            Input = stream,
-            OutputType = typeof(IPixelBuffer)
-        });
-
-        return new Image(pixelBuffer);
-    }
-
-    /// <summary>
-    /// Loads the image from the specified file.
-    /// </summary>
-    /// <param name="path">The path.</param>
-    /// <returns>The image.</returns>
-    public static IImage Load(this IImage image, string path)
-    {
-        using FileStream stream = File.OpenRead(path);
-        return image.Load(stream);
-    }
 
     /// <summary>
     /// Saves the image to the specified stream.
