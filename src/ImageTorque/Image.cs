@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
+using ImageTorque.Processing;
 
 namespace ImageTorque;
 
@@ -158,7 +159,7 @@ public partial record Image : IImage
             return pixelBuffer.AsReadOnly();
         }
 
-        IPixelBuffer convertedPixelBuffer = s_pixelBufferConverter.Execute(new ConvertParameters
+        IPixelBuffer convertedPixelBuffer = s_pixelBufferConverter.Execute(new PixelBufferConvertParameters
         {
             Input = _rootPixelBuffer.AsReadOnly(),
             OutputType = typeof(TBuffer)

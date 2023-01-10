@@ -1,21 +1,22 @@
 using System.Runtime.CompilerServices;
+using ImageTorque.Buffers;
 using ImageTorque.Pixels;
 
-namespace ImageTorque.Buffers;
+namespace ImageTorque.Processing;
 
 public partial class PixelBufferConverter
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static IPixelBuffer ConvertMono(ConvertParameters parameters)
+    private static IPixelBuffer ConvertMono(PixelBufferConvertParameters parameters)
     {
         Type outputType = parameters.OutputType;
 
-        if(outputType == typeof(PackedPixelBuffer<Mono8>))
+        if (outputType == typeof(PackedPixelBuffer<Mono8>))
         {
             return MonoToMono8(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Mono16>))
+        if (outputType == typeof(PackedPixelBuffer<Mono16>))
         {
             return MonoToMono16(parameters);
         }
@@ -24,16 +25,16 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static IPixelBuffer ConvertMono8(ConvertParameters parameters)
+    private static IPixelBuffer ConvertMono8(PixelBufferConvertParameters parameters)
     {
         Type outputType = parameters.OutputType;
 
-        if(outputType == typeof(PackedPixelBuffer<Mono>))
+        if (outputType == typeof(PackedPixelBuffer<Mono>))
         {
             return Mono8ToMono(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Mono16>))
+        if (outputType == typeof(PackedPixelBuffer<Mono16>))
         {
             return Mono8ToMono16(parameters);
         }
@@ -42,16 +43,16 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static IPixelBuffer ConvertMono16(ConvertParameters parameters)
+    private static IPixelBuffer ConvertMono16(PixelBufferConvertParameters parameters)
     {
         Type outputType = parameters.OutputType;
 
-        if(outputType == typeof(PackedPixelBuffer<Mono>))
+        if (outputType == typeof(PackedPixelBuffer<Mono>))
         {
             return Mono16ToMono(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Mono8>))
+        if (outputType == typeof(PackedPixelBuffer<Mono8>))
         {
             return Mono16ToMono8(parameters);
         }
@@ -60,7 +61,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono16> MonoToMono16(ConvertParameters parameters)
+    private static PackedPixelBuffer<Mono16> MonoToMono16(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Mono16>(inputBuffer.Width, inputBuffer.Height);
@@ -77,7 +78,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono8> MonoToMono8(ConvertParameters parameters)
+    private static PackedPixelBuffer<Mono8> MonoToMono8(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Mono8>(inputBuffer.Width, inputBuffer.Height);
@@ -94,7 +95,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono> Mono8ToMono(ConvertParameters parameters)
+    private static PackedPixelBuffer<Mono> Mono8ToMono(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono8>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Mono>(inputBuffer.Width, inputBuffer.Height);
@@ -111,7 +112,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono16> Mono8ToMono16(ConvertParameters parameters)
+    private static PackedPixelBuffer<Mono16> Mono8ToMono16(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono8>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Mono16>(inputBuffer.Width, inputBuffer.Height);
@@ -128,7 +129,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono> Mono16ToMono(ConvertParameters parameters)
+    private static PackedPixelBuffer<Mono> Mono16ToMono(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono16>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Mono>(inputBuffer.Width, inputBuffer.Height);
@@ -145,7 +146,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono8> Mono16ToMono8(ConvertParameters parameters)
+    private static PackedPixelBuffer<Mono8> Mono16ToMono8(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono16>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Mono8>(inputBuffer.Width, inputBuffer.Height);

@@ -1,12 +1,11 @@
 using System.Runtime.InteropServices;
 using ImageTorque.Buffers;
-using ImageTorque.Operations;
 using ImageTorque.Pixels;
 using SixLabors.ImageSharp;
 
-namespace ImageTorque.Decoding;
+namespace ImageTorque.Processing;
 
-public class Decoder : IOperation<DecoderDescription, DecoderParameters, IPixelBuffer>
+public class Decoder : IProcessor<DecoderParameters, IPixelBuffer>
 {
     private static Configuration s_configuration = Configuration.Default;
 

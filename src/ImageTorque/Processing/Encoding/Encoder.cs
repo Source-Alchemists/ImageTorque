@@ -1,11 +1,10 @@
 using System.Runtime.CompilerServices;
 using ImageTorque.Buffers;
-using ImageTorque.Operations;
 using ImageTorque.Pixels;
 
-namespace ImageTorque.Encoding;
+namespace ImageTorque.Processing;
 
-public class Encoder : IOperation<EncoderDescription, EncoderParameters, bool>
+public class Encoder : IProcessor<EncoderParameters, bool>
 {
     public bool Execute(EncoderParameters parameters)
     {

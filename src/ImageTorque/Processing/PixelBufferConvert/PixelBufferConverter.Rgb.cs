@@ -1,36 +1,37 @@
 using System.Runtime.CompilerServices;
+using ImageTorque.Buffers;
 using ImageTorque.Pixels;
 
-namespace ImageTorque.Buffers;
+namespace ImageTorque.Processing;
 
 public partial class PixelBufferConverter
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static IPixelBuffer ConvertPackedRgb(ConvertParameters parameters)
+    private static IPixelBuffer ConvertPackedRgb(PixelBufferConvertParameters parameters)
     {
         Type outputType = parameters.OutputType;
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb24>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb24>))
         {
             return RgbToRgb24(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb48>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb48>))
         {
             return RgbToRgb48(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<Rgb161616>))
+        if (outputType == typeof(PlanarPixelBuffer<Rgb161616>))
         {
             return RgbToRgb161616(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<Rgb888>))
+        if (outputType == typeof(PlanarPixelBuffer<Rgb888>))
         {
             return RgbToRgb888(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<RgbFFF>))
+        if (outputType == typeof(PlanarPixelBuffer<RgbFFF>))
         {
             return RgbToRgbFFF(parameters);
         }
@@ -39,31 +40,31 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static IPixelBuffer ConvertPackedRgb24(ConvertParameters parameters)
+    private static IPixelBuffer ConvertPackedRgb24(PixelBufferConvertParameters parameters)
     {
         Type outputType = parameters.OutputType;
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb>))
         {
             return Rgb24ToRgb(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb48>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb48>))
         {
             return Rgb24ToRgb48(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<Rgb161616>))
+        if (outputType == typeof(PlanarPixelBuffer<Rgb161616>))
         {
             return Rgb24ToRgb161616(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<Rgb888>))
+        if (outputType == typeof(PlanarPixelBuffer<Rgb888>))
         {
             return Rgb24ToRgb888(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<RgbFFF>))
+        if (outputType == typeof(PlanarPixelBuffer<RgbFFF>))
         {
             return Rgb24ToRgbFFF(parameters);
         }
@@ -72,31 +73,31 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static IPixelBuffer ConvertPackedRgb48(ConvertParameters parameters)
+    private static IPixelBuffer ConvertPackedRgb48(PixelBufferConvertParameters parameters)
     {
         Type outputType = parameters.OutputType;
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb>))
         {
             return Rgb48ToRgb(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb24>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb24>))
         {
             return Rgb48ToRgb24(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<Rgb161616>))
+        if (outputType == typeof(PlanarPixelBuffer<Rgb161616>))
         {
             return Rgb48ToRgb161616(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<Rgb888>))
+        if (outputType == typeof(PlanarPixelBuffer<Rgb888>))
         {
             return Rgb48ToRgb888(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<RgbFFF>))
+        if (outputType == typeof(PlanarPixelBuffer<RgbFFF>))
         {
             return Rgb48ToRgbFFF(parameters);
         }
@@ -105,31 +106,31 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static IPixelBuffer ConvertPlanarRgbFFF(ConvertParameters parameters)
+    private static IPixelBuffer ConvertPlanarRgbFFF(PixelBufferConvertParameters parameters)
     {
         Type outputType = parameters.OutputType;
 
-        if(outputType == typeof(PlanarPixelBuffer<Rgb161616>))
+        if (outputType == typeof(PlanarPixelBuffer<Rgb161616>))
         {
             return RgbFFFToRgb161616(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<Rgb888>))
+        if (outputType == typeof(PlanarPixelBuffer<Rgb888>))
         {
             return RgbFFFToRgb888(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb>))
         {
             return RgbFFFToRgb(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb24>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb24>))
         {
             return RgbFFFToRgb24(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb48>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb48>))
         {
             return RgbFFFToRgb48(parameters);
         }
@@ -138,31 +139,31 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static IPixelBuffer ConvertPlanarRgb888(ConvertParameters parameters)
+    private static IPixelBuffer ConvertPlanarRgb888(PixelBufferConvertParameters parameters)
     {
         Type outputType = parameters.OutputType;
 
-        if(outputType == typeof(PlanarPixelBuffer<Rgb161616>))
+        if (outputType == typeof(PlanarPixelBuffer<Rgb161616>))
         {
             return Rgb888ToRgb161616(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<RgbFFF>))
+        if (outputType == typeof(PlanarPixelBuffer<RgbFFF>))
         {
             return Rgb888ToRgbFFF(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb>))
         {
             return Rgb888ToRgb(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb24>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb24>))
         {
             return Rgb888ToRgb24(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb48>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb48>))
         {
             return Rgb888ToRgb48(parameters);
         }
@@ -171,31 +172,31 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static IPixelBuffer ConvertPlanarRgb161616(ConvertParameters parameters)
+    private static IPixelBuffer ConvertPlanarRgb161616(PixelBufferConvertParameters parameters)
     {
         Type outputType = parameters.OutputType;
 
-        if(outputType == typeof(PlanarPixelBuffer<Rgb888>))
+        if (outputType == typeof(PlanarPixelBuffer<Rgb888>))
         {
             return Rgb161616ToRgb888(parameters);
         }
 
-        if(outputType == typeof(PlanarPixelBuffer<RgbFFF>))
+        if (outputType == typeof(PlanarPixelBuffer<RgbFFF>))
         {
             return Rgb161616ToRgbFFF(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb>))
         {
             return Rgb161616ToRgb(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb24>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb24>))
         {
             return Rgb161616ToRgb24(parameters);
         }
 
-        if(outputType == typeof(PackedPixelBuffer<Rgb48>))
+        if (outputType == typeof(PackedPixelBuffer<Rgb48>))
         {
             return Rgb161616ToRgb48(parameters);
         }
@@ -204,7 +205,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb24> RgbToRgb24(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb24> RgbToRgb24(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb24>(inputBuffer.Width, inputBuffer.Height);
@@ -221,7 +222,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb48> RgbToRgb48(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb48> RgbToRgb48(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb48>(inputBuffer.Width, inputBuffer.Height);
@@ -238,7 +239,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb> Rgb24ToRgb(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb> Rgb24ToRgb(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb24>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb>(inputBuffer.Width, inputBuffer.Height);
@@ -255,7 +256,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb48> Rgb24ToRgb48(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb48> Rgb24ToRgb48(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb24>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb48>(inputBuffer.Width, inputBuffer.Height);
@@ -272,7 +273,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb> Rgb48ToRgb(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb> Rgb48ToRgb(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb>(inputBuffer.Width, inputBuffer.Height);
@@ -289,7 +290,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb24> Rgb48ToRgb24(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb24> Rgb48ToRgb24(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb24>(inputBuffer.Width, inputBuffer.Height);
@@ -306,7 +307,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb161616> RgbToRgb161616(ConvertParameters parameters)
+    private static PlanarPixelBuffer<Rgb161616> RgbToRgb161616(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<Rgb161616>(inputBuffer.Width, inputBuffer.Height);
@@ -328,7 +329,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb161616> Rgb24ToRgb161616(ConvertParameters parameters)
+    private static PlanarPixelBuffer<Rgb161616> Rgb24ToRgb161616(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb24>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<Rgb161616>(inputBuffer.Width, inputBuffer.Height);
@@ -350,7 +351,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb161616> Rgb48ToRgb161616(ConvertParameters parameters)
+    private static PlanarPixelBuffer<Rgb161616> Rgb48ToRgb161616(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<Rgb161616>(inputBuffer.Width, inputBuffer.Height);
@@ -372,7 +373,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb888> RgbToRgb888(ConvertParameters parameters)
+    private static PlanarPixelBuffer<Rgb888> RgbToRgb888(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<Rgb888>(inputBuffer.Width, inputBuffer.Height);
@@ -394,7 +395,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb888> Rgb24ToRgb888(ConvertParameters parameters)
+    private static PlanarPixelBuffer<Rgb888> Rgb24ToRgb888(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb24>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<Rgb888>(inputBuffer.Width, inputBuffer.Height);
@@ -416,7 +417,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb888> Rgb48ToRgb888(ConvertParameters parameters)
+    private static PlanarPixelBuffer<Rgb888> Rgb48ToRgb888(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<Rgb888>(inputBuffer.Width, inputBuffer.Height);
@@ -438,7 +439,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<RgbFFF> RgbToRgbFFF(ConvertParameters parameters)
+    private static PlanarPixelBuffer<RgbFFF> RgbToRgbFFF(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<RgbFFF>(inputBuffer.Width, inputBuffer.Height);
@@ -460,7 +461,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<RgbFFF> Rgb24ToRgbFFF(ConvertParameters parameters)
+    private static PlanarPixelBuffer<RgbFFF> Rgb24ToRgbFFF(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb24>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<RgbFFF>(inputBuffer.Width, inputBuffer.Height);
@@ -482,7 +483,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<RgbFFF> Rgb48ToRgbFFF(ConvertParameters parameters)
+    private static PlanarPixelBuffer<RgbFFF> Rgb48ToRgbFFF(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<RgbFFF>(inputBuffer.Width, inputBuffer.Height);
@@ -504,7 +505,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb888> Rgb161616ToRgb888(ConvertParameters parameters)
+    private static PlanarPixelBuffer<Rgb888> Rgb161616ToRgb888(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<Rgb161616>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<Rgb888>(inputBuffer.Width, inputBuffer.Height);
@@ -528,7 +529,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private  static PlanarPixelBuffer<RgbFFF> Rgb161616ToRgbFFF(ConvertParameters parameters)
+    private static PlanarPixelBuffer<RgbFFF> Rgb161616ToRgbFFF(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<Rgb161616>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<RgbFFF>(inputBuffer.Width, inputBuffer.Height);
@@ -552,7 +553,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb161616> Rgb888ToRgb161616(ConvertParameters parameters)
+    private static PlanarPixelBuffer<Rgb161616> Rgb888ToRgb161616(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<Rgb888>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<Rgb161616>(inputBuffer.Width, inputBuffer.Height);
@@ -576,7 +577,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<RgbFFF> Rgb888ToRgbFFF(ConvertParameters parameters)
+    private static PlanarPixelBuffer<RgbFFF> Rgb888ToRgbFFF(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<Rgb888>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<RgbFFF>(inputBuffer.Width, inputBuffer.Height);
@@ -600,7 +601,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb161616> RgbFFFToRgb161616(ConvertParameters parameters)
+    private static PlanarPixelBuffer<Rgb161616> RgbFFFToRgb161616(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<RgbFFF>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<Rgb161616>(inputBuffer.Width, inputBuffer.Height);
@@ -624,7 +625,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb888> RgbFFFToRgb888(ConvertParameters parameters)
+    private static PlanarPixelBuffer<Rgb888> RgbFFFToRgb888(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<RgbFFF>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<Rgb888>(inputBuffer.Width, inputBuffer.Height);
@@ -648,7 +649,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb> Rgb161616ToRgb(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb> Rgb161616ToRgb(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<Rgb161616>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb>(inputBuffer.Width, inputBuffer.Height);
@@ -670,7 +671,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb24> Rgb161616ToRgb24(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb24> Rgb161616ToRgb24(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<Rgb161616>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb24>(inputBuffer.Width, inputBuffer.Height);
@@ -692,7 +693,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb48> Rgb161616ToRgb48(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb48> Rgb161616ToRgb48(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<Rgb161616>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb48>(inputBuffer.Width, inputBuffer.Height);
@@ -714,7 +715,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb> Rgb888ToRgb(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb> Rgb888ToRgb(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<Rgb888>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb>(inputBuffer.Width, inputBuffer.Height);
@@ -736,7 +737,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb24> Rgb888ToRgb24(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb24> Rgb888ToRgb24(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<Rgb888>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb24>(inputBuffer.Width, inputBuffer.Height);
@@ -758,7 +759,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb48> Rgb888ToRgb48(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb48> Rgb888ToRgb48(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<Rgb888>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb48>(inputBuffer.Width, inputBuffer.Height);
@@ -780,7 +781,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb> RgbFFFToRgb(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb> RgbFFFToRgb(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<RgbFFF>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb>(inputBuffer.Width, inputBuffer.Height);
@@ -802,7 +803,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb24> RgbFFFToRgb24(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb24> RgbFFFToRgb24(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<RgbFFF>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb24>(inputBuffer.Width, inputBuffer.Height);
@@ -824,7 +825,7 @@ public partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb48> RgbFFFToRgb48(ConvertParameters parameters)
+    private static PackedPixelBuffer<Rgb48> RgbFFFToRgb48(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<RgbFFF>)parameters.Input;
         var resultBuffer = new PackedPixelBuffer<Rgb48>(inputBuffer.Width, inputBuffer.Height);

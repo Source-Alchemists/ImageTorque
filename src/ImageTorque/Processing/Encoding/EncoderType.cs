@@ -1,4 +1,4 @@
-namespace ImageTorque.Encoding;
+namespace ImageTorque.Processing;
 
 public enum EncoderType
 {

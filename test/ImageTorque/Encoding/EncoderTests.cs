@@ -1,6 +1,6 @@
 using ImageTorque.Buffers;
-using ImageTorque.Encoding;
 using ImageTorque.Pixels;
+using ImageTorque.Processing;
 
 namespace ImageTorque.Tests.Encoding;
 

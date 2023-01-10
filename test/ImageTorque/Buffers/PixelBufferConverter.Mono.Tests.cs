@@ -1,5 +1,6 @@
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
+using ImageTorque.Processing;
 
 namespace ImageTorque.Tests.Buffers;
 
@@ -21,7 +22,7 @@ public class PixelBufferConverterMonoTests
     public void TestMonoToMono8()
     {
         // Act
-        using IPixelBuffer resultBuffer = _converter.Execute(new ConvertParameters
+        using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono.AsReadOnly(),
             OutputType = typeof(PackedPixelBuffer<Mono8>)
@@ -36,7 +37,7 @@ public class PixelBufferConverterMonoTests
     public void TestMonoToMono16()
     {
         // Act
-        using IPixelBuffer resultBuffer = _converter.Execute(new ConvertParameters
+        using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono.AsReadOnly(),
             OutputType = typeof(PackedPixelBuffer<Mono16>)
@@ -51,7 +52,7 @@ public class PixelBufferConverterMonoTests
     public void TestMono8ToMono()
     {
         // Act
-        using IPixelBuffer resultBuffer = _converter.Execute(new ConvertParameters
+        using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono8.AsReadOnly(),
             OutputType = typeof(PackedPixelBuffer<Mono>)
@@ -66,7 +67,7 @@ public class PixelBufferConverterMonoTests
     public void TestMono8ToMono16()
     {
         // Act
-        using IPixelBuffer resultBuffer = _converter.Execute(new ConvertParameters
+        using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono8.AsReadOnly(),
             OutputType = typeof(PackedPixelBuffer<Mono16>)
@@ -81,7 +82,7 @@ public class PixelBufferConverterMonoTests
     public void TestMono16ToMono()
     {
         // Act
-        using IPixelBuffer resultBuffer = _converter.Execute(new ConvertParameters
+        using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono16.AsReadOnly(),
             OutputType = typeof(PackedPixelBuffer<Mono>)
@@ -96,7 +97,7 @@ public class PixelBufferConverterMonoTests
     public void TestMono16ToMono8()
     {
         // Act
-        using IPixelBuffer resultBuffer = _converter.Execute(new ConvertParameters
+        using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono16.AsReadOnly(),
             OutputType = typeof(PackedPixelBuffer<Mono8>)
