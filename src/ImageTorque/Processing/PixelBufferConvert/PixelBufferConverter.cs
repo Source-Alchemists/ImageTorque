@@ -3,7 +3,7 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing;
 
-public partial class PixelBufferConverter : IProcessor<PixelBufferConvertParameters, IPixelBuffer>
+internal partial class PixelBufferConverter : IProcessor<PixelBufferConvertParameters, IPixelBuffer>
 {
     public IPixelBuffer Execute(PixelBufferConvertParameters parameters)
     {

@@ -5,7 +5,7 @@ using SixLabors.ImageSharp;
 
 namespace ImageTorque.Processing;
 
-public class Decoder : IProcessor<DecoderParameters, IPixelBuffer>
+internal class Decoder : IProcessor<DecoderParameters, IPixelBuffer>
 {
     private static Configuration s_configuration = Configuration.Default;
 

@@ -4,7 +4,7 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing;
 
-public partial class PixelBufferConverter
+internal partial class PixelBufferConverter
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static IPixelBuffer ConvertMono(PixelBufferConvertParameters parameters)

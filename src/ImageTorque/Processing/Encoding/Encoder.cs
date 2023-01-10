@@ -4,7 +4,7 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing;
 
-public class Encoder : IProcessor<EncoderParameters, bool>
+internal class Encoder : IProcessor<EncoderParameters, bool>
 {
     public bool Execute(EncoderParameters parameters)
     {

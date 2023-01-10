@@ -4,7 +4,7 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing;
 
-public sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
+internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 {
     private const double D270 = 3d * Math.PI / 2d;
     private const double D90 = Math.PI / 2d;

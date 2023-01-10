@@ -4,7 +4,7 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing;
 
-public class GrayscaleFilter : IProcessor<GrayscaleFilterParameters, IPixelBuffer>
+internal class GrayscaleFilter : IProcessor<GrayscaleFilterParameters, IPixelBuffer>
 {
     public IPixelBuffer Execute(GrayscaleFilterParameters parameters)
     {

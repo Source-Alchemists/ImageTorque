@@ -2,7 +2,7 @@ using ImageTorque.Buffers;
 
 namespace ImageTorque.Processing;
 
-public record GrayscaleFilterParameters : ProcessorParameters
+internal record GrayscaleFilterParameters : ProcessorParameters
 {
     public override  ParallelOptions ParallelOptions { get; init; } = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
 

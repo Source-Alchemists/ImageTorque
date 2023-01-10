@@ -1,6 +1,6 @@
 namespace ImageTorque.Processing;
 
-public record DecoderParameters : ProcessorParameters
+internal record DecoderParameters : ProcessorParameters
 {
     public Stream? Input { get; set; }
 

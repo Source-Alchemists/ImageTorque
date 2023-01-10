@@ -4,7 +4,7 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing;
 
-public partial class Binarizer
+internal partial class Binarizer
 {
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void BinarizeMono(ReadOnlySpan<Mono> sourceRow, Span<Mono> targetRow, ReadOnlyPackedPixelBuffer<Mono> sourceBuffer, float threshold, BinaryThresholdMode mode)

@@ -4,7 +4,7 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing;
 
-public sealed partial class Binarizer : IProcessor<BinarizerParameters, IPixelBuffer>
+internal sealed partial class Binarizer : IProcessor<BinarizerParameters, IPixelBuffer>
 {
     public IPixelBuffer Execute(BinarizerParameters parameters)
     {
