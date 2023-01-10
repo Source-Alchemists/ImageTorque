@@ -1,17 +1,65 @@
 using ImageTorque.Operations;
+using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
-public class PixelBufferConverter : Operation<ConvertDescription, ConvertParameters, IPixelBuffer>
+public partial class PixelBufferConverter : IOperation<ConvertDescription, ConvertParameters, IPixelBuffer>
 {
-    public override IPixelBuffer Execute(ConvertParameters parameters)
+    public IPixelBuffer Execute(ConvertParameters parameters)
     {
-        var description = Descriptions.Where(o => o.GetType() == typeof(ConvertDescription)
-                                            && o.InputType == parameters.Input.GetType()
-                                            && o.OutputType == parameters.OutputType).FirstOrDefault();
-        if (description == null)
-            throw new InvalidOperationException($"No converter found for {parameters.Input.GetType()} to {parameters.OutputType}.");
+        Type inputType = parameters.Input.GetType();
 
-        return (IPixelBuffer)description.Operation!.DynamicInvoke(parameters)!;
+        IPixelBuffer result = null!;
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Mono>))
+        {
+            result = ConvertMono(parameters);
+        }
+
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
+        {
+            result = ConvertMono8(parameters);
+        }
+
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
+        {
+            result = ConvertMono16(parameters);
+        }
+
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Rgb>))
+        {
+            result = ConvertPackedRgb(parameters);
+        }
+
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Rgb24>))
+        {
+            result = ConvertPackedRgb24(parameters);
+        }
+
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Rgb48>))
+        {
+            result = ConvertPackedRgb48(parameters);
+        }
+
+        if(inputType == typeof(ReadOnlyPlanarPixelBuffer<RgbFFF>))
+        {
+            result = ConvertPlanarRgbFFF(parameters);
+        }
+
+        if(inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb888>))
+        {
+            result = ConvertPlanarRgb888(parameters);
+        }
+
+        if(inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb161616>))
+        {
+            result = ConvertPlanarRgb161616(parameters);
+        }
+
+        if(result == null)
+        {
+            throw new NotSupportedException($"The input type {inputType} is not supported.");
+        }
+
+        return result;
     }
 }

@@ -1,17 +1,70 @@
+using System.Runtime.InteropServices;
 using ImageTorque.Buffers;
 using ImageTorque.Operations;
+using ImageTorque.Pixels;
+using SixLabors.ImageSharp;
 
 namespace ImageTorque.Decoding;
 
-public class Decoder : Operation<DecoderDescription, DecoderParameters, IPixelBuffer>
+public class Decoder : IOperation<DecoderDescription, DecoderParameters, IPixelBuffer>
 {
-    public override IPixelBuffer Execute(DecoderParameters parameters)
-    {
-        var description = Descriptions.Where(o => o.GetType() == typeof(DecoderDescription)
-                                            && o.OutputType == parameters.OutputType).FirstOrDefault();
-        if (description == null)
-            throw new InvalidOperationException($"No decoder found for {parameters.Input!.GetType()} to {parameters.OutputType}.");
+    private static Configuration s_configuration = Configuration.Default;
 
-        return (IPixelBuffer)description.Operation!.DynamicInvoke(parameters)!;
+    public IPixelBuffer Execute(DecoderParameters parameters)
+    {
+        s_configuration = Configuration.Default;
+        s_configuration.PreferContiguousImageBuffers = true;
+        return DecodeStream(parameters);
+    }
+
+    private static IPixelBuffer DecodeStream(DecoderParameters parameters)
+    {
+        Stream? stream = parameters.Input;
+
+        long position = stream!.Position;
+        IImageInfo info = SixLabors.ImageSharp.Image.Identify(stream);
+        if (info == null)
+            throw new InvalidOperationException("Could not identify image.");
+
+        stream.Seek(position, SeekOrigin.Begin);
+
+        IPixelBuffer pixelBuffer = null!;
+        switch (info.PixelType.BitsPerPixel)
+        {
+            case 8:
+                using (var imageL8 = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.L8>(s_configuration, stream))
+                {
+                    if (imageL8.DangerousTryGetSinglePixelMemory(out Memory<SixLabors.ImageSharp.PixelFormats.L8> pixelsL8))
+                    {
+                        Span<Mono8> buffer = MemoryMarshal.Cast<SixLabors.ImageSharp.PixelFormats.L8, Mono8>(pixelsL8.Span);
+                        pixelBuffer = new PackedPixelBuffer<Mono8>(imageL8.Width, imageL8.Height, buffer);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Could not get pixel buffer.");
+                    }
+                }
+                break;
+            case 24:
+            case 32:
+                using (var imageRgb24 = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(s_configuration, stream))
+                {
+                    if (imageRgb24.DangerousTryGetSinglePixelMemory(out Memory<SixLabors.ImageSharp.PixelFormats.Rgb24> pixelsRgb24))
+                    {
+                        Span<Rgb24> buffer = MemoryMarshal.Cast<SixLabors.ImageSharp.PixelFormats.Rgb24, Rgb24>(pixelsRgb24.Span);
+                        pixelBuffer = new PackedPixelBuffer<Rgb24>(imageRgb24.Width, imageRgb24.Height, buffer);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Could not get pixel buffer.");
+                    }
+                }
+                break;
+
+            default:
+                throw new NotSupportedException($"Pixel type {info.PixelType} is not supported.");
+        }
+
+        return pixelBuffer;
     }
 }
