@@ -9,57 +9,51 @@ public partial class PixelBufferConverter : IProcessor<PixelBufferConvertParamet
     {
         Type inputType = parameters.Input.GetType();
 
-        IPixelBuffer result = null!;
         if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono>))
         {
-            result = ConvertMono(parameters);
+            return ConvertMono(parameters);
         }
 
         if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
         {
-            result = ConvertMono8(parameters);
+            return ConvertMono8(parameters);
         }
 
         if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
         {
-            result = ConvertMono16(parameters);
+            return ConvertMono16(parameters);
         }
 
         if (inputType == typeof(ReadOnlyPackedPixelBuffer<Rgb>))
         {
-            result = ConvertPackedRgb(parameters);
+            return ConvertPackedRgb(parameters);
         }
 
         if (inputType == typeof(ReadOnlyPackedPixelBuffer<Rgb24>))
         {
-            result = ConvertPackedRgb24(parameters);
+            return ConvertPackedRgb24(parameters);
         }
 
         if (inputType == typeof(ReadOnlyPackedPixelBuffer<Rgb48>))
         {
-            result = ConvertPackedRgb48(parameters);
+            return ConvertPackedRgb48(parameters);
         }
 
         if (inputType == typeof(ReadOnlyPlanarPixelBuffer<RgbFFF>))
         {
-            result = ConvertPlanarRgbFFF(parameters);
+            return ConvertPlanarRgbFFF(parameters);
         }
 
         if (inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb888>))
         {
-            result = ConvertPlanarRgb888(parameters);
+            return ConvertPlanarRgb888(parameters);
         }
 
         if (inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb161616>))
         {
-            result = ConvertPlanarRgb161616(parameters);
+            return ConvertPlanarRgb161616(parameters);
         }
 
-        if (result == null)
-        {
-            throw new NotSupportedException($"The input type {inputType} is not supported.");
-        }
-
-        return result;
+        throw new NotSupportedException($"The input type {inputType} is not supported.");
     }
 }

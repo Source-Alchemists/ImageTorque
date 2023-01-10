@@ -87,9 +87,7 @@ public abstract record PixelBuffer<TPixel> : IPixelBuffer<TPixel>
     {
         Width = width;
         Height = height;
-
-        // ToDo: With .NET7 Activator can be replaced with static abstract interface method.
-        var pixel = Activator.CreateInstance<TPixel>();
+        TPixel pixel = Activator.CreateInstance<TPixel>();
         PixelInfo = pixel.PixelInfo;
         NumberOfChannels = pixel.PixelInfo.ChannelsPerImage;
         Size = width * height * NumberOfChannels;

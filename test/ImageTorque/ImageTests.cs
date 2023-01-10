@@ -1,4 +1,3 @@
-
 using ImageTorque;
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
