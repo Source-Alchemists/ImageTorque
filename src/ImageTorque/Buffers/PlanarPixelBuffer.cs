@@ -39,7 +39,7 @@ public sealed record PlanarPixelBuffer<TPixel> : PixelBuffer<TPixel>
             throw new ArgumentOutOfRangeException(nameof(channelIndex));
         }
 
-        var channelLength = Width * Height;
+        int channelLength = Width * Height;
         return Pixels.Slice(channelIndex * channelLength, channelLength);
     }
 
@@ -61,7 +61,7 @@ public sealed record PlanarPixelBuffer<TPixel> : PixelBuffer<TPixel>
             throw new ArgumentOutOfRangeException(nameof(rowIndex));
         }
 
-        var frame = channelIndex * Width * Height;
+        int frame = channelIndex * Width * Height;
         return Pixels.Slice(frame + rowIndex * Width, Width);
     }
 

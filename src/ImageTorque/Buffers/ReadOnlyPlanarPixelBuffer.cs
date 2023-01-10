@@ -25,7 +25,7 @@ public sealed record ReadOnlyPlanarPixelBuffer<TPixel> : ReadOnlyPixelBuffer<TPi
     /// <returns>The row of pixels.</returns>
     public ReadOnlySpan<TPixel> GetRow(int channelIndex, int rowIndex)
     {
-        var frame = channelIndex * Width * Height;
+        int frame = channelIndex * Width * Height;
         return Pixels.Slice(frame + rowIndex * Width, Width);
     }
 }

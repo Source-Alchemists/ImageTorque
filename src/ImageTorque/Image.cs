@@ -6,6 +6,7 @@ namespace ImageTorque;
 
 public partial record Image : IImage
 {
+    private static readonly PixelBufferConverter s_pixelBufferConverter = new();
     private readonly IPixelBuffer _rootPixelBuffer;
     private readonly ConcurrentDictionary<Type, IPixelBuffer> _convertedPixelBuffers = new();
     private bool _isDisposed = false;
@@ -25,6 +26,9 @@ public partial record Image : IImage
     /// </summary>
     public int Size => _rootPixelBuffer.Size;
 
+    /// <summary>
+    /// Gets a value indicating whether the image is color.
+    /// </summary>
     public bool IsColor
     {
         get

@@ -11,11 +11,11 @@ public static class PixelBufferMarshal
     /// <returns>The copy of the pixel buffer.</returns>
     public static IPixelBuffer Copy(IPixelBuffer pixelBuffer)
     {
-        var pixelFormat = pixelBuffer.PixelFormat;
-        var width = pixelBuffer.Width;
-        var height = pixelBuffer.Height;
+        PixelFormat pixelFormat = pixelBuffer.PixelFormat;
+        int width = pixelBuffer.Width;
+        int height = pixelBuffer.Height;
 
-        var newPixelBuffer = CreatePixelBuffer(pixelFormat, width, height);
+        IPixelBuffer newPixelBuffer = CreatePixelBuffer(pixelFormat, width, height);
         pixelBuffer.Buffer.CopyTo(newPixelBuffer.Buffer);
 
         return newPixelBuffer;
@@ -42,7 +42,7 @@ public static class PixelBufferMarshal
                 _ => PixelFormat.Unknown
             },
             PixelBufferType.Planar => pixelType switch
-            {   
+            {
                 PixelType.RgbFFF => PixelFormat.RgbPlanar,
                 PixelType.Rgb888 => PixelFormat.Rgb888Planar,
                 PixelType.Rgb161616 => PixelFormat.Rgb161616Planar,
