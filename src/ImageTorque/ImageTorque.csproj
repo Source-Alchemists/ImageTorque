@@ -7,6 +7,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageId>ImageTorque</PackageId>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyName>ImageTorque</AssemblyName>
     <AssemblyTitle>ImageTorque</AssemblyTitle>
     <RootNamespace>ImageTorque</RootNamespace>
@@ -16,7 +17,7 @@
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageTags>Image Resize Mirror Binarize Crop Packed Planar Interlaced DotNet</PackageTags>
     <Description>Open .NET image processing library</Description>
-    <Version>0.0.3</Version>
+    <Version>0.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
