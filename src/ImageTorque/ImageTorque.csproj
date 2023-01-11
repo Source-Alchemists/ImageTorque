@@ -7,11 +7,16 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageId>ImageTorque</PackageId>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AssemblyName>ImageTorque</AssemblyName>
+    <AssemblyTitle>ImageTorque</AssemblyTitle>
+    <RootNamespace>ImageTorque</RootNamespace>
+    <Company>Source Alchemists</Company>
+    <Copyright>Copyright © Source Alchemists</Copyright>
     <RepositoryUrl Condition="'$(RepositoryUrl)' == ''">https://github.com/Source-Alchemists/ImageTorque/</RepositoryUrl>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageTags>Image Resize Mirror Binarize Crop Packed Planar Interlaced DotNet</PackageTags>
     <Description>Open .NET image processing library</Description>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
