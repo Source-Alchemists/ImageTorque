@@ -41,14 +41,19 @@ public abstract record ReadOnlyPixelBuffer<TPixel> : IReadOnlyPixelBuffer<TPixel
     public int Size { get => PixelBuffer.Size; }
 
     /// <summary>
+    /// Gets a value indicating whether this instance is color.
+    /// </summary>
+    public bool IsColor { get => PixelBuffer.IsColor; }
+
+    /// <summary>
     /// Gets the pixel buffer type.
     /// </summary>
     public PixelBufferType PixelBufferType { get => PixelBuffer.PixelBufferType; }
 
     /// <summary>
-    /// Gets the pixel info.
+    /// Gets the pixel type.
     /// </summary>
-    public PixelInfo PixelInfo { get => PixelBuffer.PixelInfo; }
+    public PixelType PixelType { get => PixelBuffer.PixelType; }
 
     /// <summary>
     /// Gets the pixel format.

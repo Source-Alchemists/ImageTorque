@@ -10,13 +10,7 @@ public record struct L8 : IL1Pixel<byte>
 
     public byte Value { get; set; }
 
-    public PixelInfo PixelInfo
-    {
-        get
-        {
-            return new PixelInfo(PixelType.Mono8, 1, 1, 1, false);
-        }
-    }
+    public PixelType PixelType => PixelType.L8;
 
     public L8(byte value)
     {
@@ -36,13 +30,13 @@ public record struct L8 : IL1Pixel<byte>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public LF ToMono()
+    public LF ToLF()
     {
         return new LF(Convert.ToSingle(Value));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public L16 ToMono16()
+    public L16 ToL16()
     {
         return new L16(Convert.ToUInt16(Value));
     }

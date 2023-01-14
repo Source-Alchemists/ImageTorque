@@ -13,12 +13,6 @@ public static class PixelExtensions
     public static ReadOnlySpan<byte> AsByte(this ReadOnlySpan<L8> pixels) => MemoryMarshal.Cast<L8, byte>(pixels);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Span<byte> AsByte(this Span<Rgb888> pixels) => MemoryMarshal.Cast<Rgb888, byte>(pixels);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<byte> AsByte(this ReadOnlySpan<Rgb888> pixels) => MemoryMarshal.Cast<Rgb888, byte>(pixels);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<byte> AsByte(this ReadOnlySpan<Rgb24> pixels) => MemoryMarshal.Cast<Rgb24, byte>(pixels);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -49,49 +43,37 @@ public static class PixelExtensions
     public static ReadOnlySpan<L8> AsMono8(this ReadOnlySpan<byte> values) => MemoryMarshal.Cast<byte, L8>(values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<Rgb161616> AsRgb161616(this ReadOnlySpan<ushort> values) => MemoryMarshal.Cast<ushort, Rgb161616>(values);
+    public static ReadOnlySpan<L16> AsRgb161616(this ReadOnlySpan<ushort> values) => MemoryMarshal.Cast<ushort, L16>(values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Span<Rgb161616> AsRgb161616(this Span<ushort> values) => MemoryMarshal.Cast<ushort, Rgb161616>(values);
+    public static Span<L16> AsRgb161616(this Span<ushort> values) => MemoryMarshal.Cast<ushort, L16>(values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Span<Rgb161616> AsRgb161616(this ushort[] values) => MemoryMarshal.Cast<ushort, Rgb161616>(values);
+    public static Span<L16> AsRgb161616(this ushort[] values) => MemoryMarshal.Cast<ushort, L16>(values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Span<Rgb888> AsRgb888(this byte[] values) => MemoryMarshal.Cast<byte, Rgb888>(values);
+    public static Span<L8> AsRgb888(this byte[] values) => MemoryMarshal.Cast<byte, L8>(values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Span<Rgb888> AsRgb888(this Span<byte> values) => MemoryMarshal.Cast<byte, Rgb888>(values);
+    public static Span<L8> AsRgb888(this Span<byte> values) => MemoryMarshal.Cast<byte, L8>(values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<Rgb888> AsRgb888(this ReadOnlySpan<byte> values) => MemoryMarshal.Cast<byte, Rgb888>(values);
+    public static ReadOnlySpan<L8> AsRgb888(this ReadOnlySpan<byte> values) => MemoryMarshal.Cast<byte, L8>(values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Span<RgbFFF> AsRgbFFF(this float[] values) => MemoryMarshal.Cast<float, RgbFFF>(values);
+    public static Span<LF> AsRgbFFF(this float[] values) => MemoryMarshal.Cast<float, LF>(values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<RgbFFF> AsRgbFFF(this ReadOnlySpan<float> values) => MemoryMarshal.Cast<float, RgbFFF>(values);
+    public static ReadOnlySpan<LF> AsRgbFFF(this ReadOnlySpan<float> values) => MemoryMarshal.Cast<float, LF>(values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Span<RgbFFF> AsRgbFFF(this Span<float> values) => MemoryMarshal.Cast<float, RgbFFF>(values);
+    public static Span<LF> AsRgbFFF(this Span<float> values) => MemoryMarshal.Cast<float, LF>(values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Span<float> AsSingle(this Span<LF> pixels) => MemoryMarshal.Cast<LF, float>(pixels);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Span<float> AsSingle(this Span<RgbFFF> pixels) => MemoryMarshal.Cast<RgbFFF, float>(pixels);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<float> AsSingle(this ReadOnlySpan<LF> pixels) => MemoryMarshal.Cast<LF, float>(pixels);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<float> AsSingle(this ReadOnlySpan<RgbFFF> pixels) => MemoryMarshal.Cast<RgbFFF, float>(pixels);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Span<ushort> AsUInt16(this Span<Rgb161616> pixels) => MemoryMarshal.Cast<Rgb161616, ushort>(pixels);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<ushort> AsUInt16(this ReadOnlySpan<Rgb161616> pixels) => MemoryMarshal.Cast<Rgb161616, ushort>(pixels);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Span<ushort> AsUInt16(this Span<L16> pixels) => MemoryMarshal.Cast<L16, ushort>(pixels);

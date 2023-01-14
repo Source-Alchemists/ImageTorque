@@ -33,19 +33,13 @@ public record struct Rgb : IL3Pixel<float>
         set { Blue = value; }
     }
 
+    public PixelType PixelType => PixelType.Rgb;
+
     public Rgb(float red, float green, float blue)
     {
         Red = red;
         Green = green;
         Blue = blue;
-    }
-
-    public PixelInfo PixelInfo
-    {
-        get
-        {
-            return new PixelInfo(PixelType.Rgb, 12, 3, 1, true);
-        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -10,17 +10,11 @@ public record struct L16 : IL1Pixel<ushort>
 
     public ushort Value { get; set; }
 
+    public PixelType PixelType => PixelType.L16;
+
     public L16(ushort value)
     {
         Value = value;
-    }
-
-    public PixelInfo PixelInfo
-    {
-        get
-        {
-            return new PixelInfo(PixelType.Mono16, 2, 1, 1, false);
-        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,13 +30,13 @@ public record struct L16 : IL1Pixel<ushort>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public LF ToMono()
+    public LF ToLF()
     {
         return new LF(Convert.ToSingle(Value));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public L8 ToMono8()
+    public L8 ToL8()
     {
         return new L8(Convert.ToByte(Value));
     }

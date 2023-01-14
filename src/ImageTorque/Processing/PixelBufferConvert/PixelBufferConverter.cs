@@ -39,17 +39,17 @@ internal partial class PixelBufferConverter : IProcessor<PixelBufferConvertParam
             return ConvertPackedRgb48(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<RgbFFF>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LF>))
         {
             return ConvertPlanarRgbFFF(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb888>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L8>))
         {
             return ConvertPlanarRgb888(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb161616>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L16>))
         {
             return ConvertPlanarRgb161616(parameters);
         }

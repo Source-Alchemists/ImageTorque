@@ -129,27 +129,27 @@ public static class ImageExtensions
         {
             case PixelFormat.RgbPacked:
                 sourceBuffer = image.AsPacked<Rgb>();
-                targetType = typeof(PackedPixelBuffer<LF>);
+                targetType = typeof(PixelBuffer<LF>);
                 break;
             case PixelFormat.Rgb24Packed:
                 sourceBuffer = image.AsPacked<Rgb24>();
-                targetType = typeof(PackedPixelBuffer<L8>);
+                targetType = typeof(PixelBuffer<L8>);
                 break;
             case PixelFormat.Rgb48Packed:
                 sourceBuffer = image.AsPacked<Rgb48>();
-                targetType = typeof(PackedPixelBuffer<L16>);
+                targetType = typeof(PixelBuffer<L16>);
                 break;
             case PixelFormat.RgbPlanar:
-                sourceBuffer = image.AsPlanar<RgbFFF>();
-                targetType = typeof(PackedPixelBuffer<LF>);
+                sourceBuffer = image.AsPlanar<LF>();
+                targetType = typeof(PixelBuffer<LF>);
                 break;
             case PixelFormat.Rgb888Planar:
-                sourceBuffer = image.AsPlanar<Rgb888>();
-                targetType = typeof(PackedPixelBuffer<L8>);
+                sourceBuffer = image.AsPlanar<L8>();
+                targetType = typeof(PixelBuffer<L8>);
                 break;
             case PixelFormat.Rgb161616Planar:
-                sourceBuffer = image.AsPlanar<Rgb161616>();
-                targetType = typeof(PackedPixelBuffer<L16>);
+                sourceBuffer = image.AsPlanar<L16>();
+                targetType = typeof(PixelBuffer<L16>);
                 break;
         }
         IPixelBuffer grayscaleBuffer = s_grayscaleFilter.Execute(new GrayscaleFilterParameters
@@ -233,9 +233,9 @@ public static class ImageExtensions
             PixelFormat.RgbPacked => image.AsPacked<Rgb>(),
             PixelFormat.Rgb24Packed => image.AsPacked<Rgb24>(),
             PixelFormat.Rgb48Packed => image.AsPacked<Rgb48>(),
-            PixelFormat.RgbPlanar => image.AsPlanar<RgbFFF>(),
-            PixelFormat.Rgb888Planar => image.AsPlanar<Rgb888>(),
-            PixelFormat.Rgb161616Planar => image.AsPlanar<Rgb161616>(),
+            PixelFormat.RgbPlanar => image.AsPlanar<LF>(),
+            PixelFormat.Rgb888Planar => image.AsPlanar<L8>(),
+            PixelFormat.Rgb161616Planar => image.AsPlanar<L16>(),
             _ => throw new NotSupportedException($"The pixel format {image.PixelFormat} is not supported."),
         };
     }

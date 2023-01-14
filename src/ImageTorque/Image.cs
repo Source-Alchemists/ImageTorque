@@ -80,7 +80,7 @@ public partial record Image : IImage
     public ReadOnlyPackedPixelBuffer<TPixel> AsPacked<TPixel>()
         where TPixel : unmanaged, IPixel
     {
-        return (ReadOnlyPackedPixelBuffer<TPixel>)AsPixelBuffer<PackedPixelBuffer<TPixel>>();
+        return (ReadOnlyPackedPixelBuffer<TPixel>)AsPixelBuffer<PixelBuffer<TPixel>>();
     }
 
     /// <summary>

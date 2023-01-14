@@ -33,19 +33,13 @@ public record struct Rgb48 : IL3Pixel<ushort>
         set { Blue = value; }
     }
 
+    public PixelType PixelType => PixelType.Rgb48;
+
     public Rgb48(ushort red, ushort green, ushort blue)
     {
         Red = red;
         Green = green;
         Blue = blue;
-    }
-
-    public PixelInfo PixelInfo
-    {
-        get
-        {
-            return new PixelInfo(PixelType.Rgb48, 6, 3, 1, true);
-        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

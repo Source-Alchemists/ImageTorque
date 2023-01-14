@@ -40,17 +40,17 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
             return ResizeRgb48(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<RgbFFF>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LF>))
         {
             return ResizeRgbFFF(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb888>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L8>))
         {
             return ResizeRgb888(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb161616>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L16>))
         {
             return ResizeRgb161616(parameters);
         }
@@ -59,9 +59,9 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<LF> ResizeMono(ResizerParameters parameters)
+    private static PixelBuffer<LF> ResizeMono(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PackedPixelBuffer<LF>(parameters.Width, parameters.Height);
+        var targetPixelBuffer = new PixelBuffer<LF>(parameters.Width, parameters.Height);
         var sourceBuffer = (ReadOnlyPackedPixelBuffer<LF>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
@@ -107,9 +107,9 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<L8> ResizeMono8(ResizerParameters parameters)
+    private static PixelBuffer<L8> ResizeMono8(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PackedPixelBuffer<L8>(parameters.Width, parameters.Height);
+        var targetPixelBuffer = new PixelBuffer<L8>(parameters.Width, parameters.Height);
         var sourceBuffer = (ReadOnlyPackedPixelBuffer<L8>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
@@ -154,9 +154,9 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
         return targetPixelBuffer;
     }
 
-    private static PackedPixelBuffer<L16> ResizeMono16(ResizerParameters parameters)
+    private static PixelBuffer<L16> ResizeMono16(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PackedPixelBuffer<L16>(parameters.Width, parameters.Height);
+        var targetPixelBuffer = new PixelBuffer<L16>(parameters.Width, parameters.Height);
         var sourceBuffer = (ReadOnlyPackedPixelBuffer<L16>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
@@ -202,9 +202,9 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb> ResizeRgb(ResizerParameters parameters)
+    private static PixelBuffer<Rgb> ResizeRgb(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PackedPixelBuffer<Rgb>(parameters.Width, parameters.Height);
+        var targetPixelBuffer = new PixelBuffer<Rgb>(parameters.Width, parameters.Height);
         var sourceBuffer = (ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
@@ -250,9 +250,9 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb24> ResizeRgb24(ResizerParameters parameters)
+    private static PixelBuffer<Rgb24> ResizeRgb24(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PackedPixelBuffer<Rgb24>(parameters.Width, parameters.Height);
+        var targetPixelBuffer = new PixelBuffer<Rgb24>(parameters.Width, parameters.Height);
         var sourceBuffer = (ReadOnlyPackedPixelBuffer<Rgb24>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
@@ -298,9 +298,9 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Rgb48> ResizeRgb48(ResizerParameters parameters)
+    private static PixelBuffer<Rgb48> ResizeRgb48(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PackedPixelBuffer<Rgb48>(parameters.Width, parameters.Height);
+        var targetPixelBuffer = new PixelBuffer<Rgb48>(parameters.Width, parameters.Height);
         var sourceBuffer = (ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
@@ -346,10 +346,10 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<RgbFFF> ResizeRgbFFF(ResizerParameters parameters)
+    private static PlanarPixelBuffer<LF> ResizeRgbFFF(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PlanarPixelBuffer<RgbFFF>(parameters.Width, parameters.Height);
-        var sourceBuffer = (ReadOnlyPlanarPixelBuffer<RgbFFF>)parameters.Input!;
+        var targetPixelBuffer = new PlanarPixelBuffer<LF>(parameters.Width, parameters.Height);
+        var sourceBuffer = (ReadOnlyPlanarPixelBuffer<LF>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
             case ResizeMode.NearestNeighbor:
@@ -436,10 +436,10 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb888> ResizeRgb888(ResizerParameters parameters)
+    private static PlanarPixelBuffer<L8> ResizeRgb888(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PlanarPixelBuffer<Rgb888>(parameters.Width, parameters.Height);
-        var sourceBuffer = (ReadOnlyPlanarPixelBuffer<Rgb888>)parameters.Input!;
+        var targetPixelBuffer = new PlanarPixelBuffer<L8>(parameters.Width, parameters.Height);
+        var sourceBuffer = (ReadOnlyPlanarPixelBuffer<L8>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
             case ResizeMode.NearestNeighbor:
@@ -526,10 +526,10 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<Rgb161616> ResizeRgb161616(ResizerParameters parameters)
+    private static PlanarPixelBuffer<L16> ResizeRgb161616(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PlanarPixelBuffer<Rgb161616>(parameters.Width, parameters.Height);
-        var sourceBuffer = (ReadOnlyPlanarPixelBuffer<Rgb161616>)parameters.Input!;
+        var targetPixelBuffer = new PlanarPixelBuffer<L16>(parameters.Width, parameters.Height);
+        var sourceBuffer = (ReadOnlyPlanarPixelBuffer<L16>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
             case ResizeMode.NearestNeighbor:

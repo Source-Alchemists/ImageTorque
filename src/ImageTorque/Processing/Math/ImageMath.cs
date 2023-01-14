@@ -43,7 +43,7 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
         where TPixel : unmanaged, IL1Pixel<T>
         where T : unmanaged, INumber<T>
     {
-        var targetBuffer = new PackedPixelBuffer<TPixel>(sourceA.Width, sourceA.Height);
+        var targetBuffer = new PixelBuffer<TPixel>(sourceA.Width, sourceA.Height);
 
         _ = Parallel.For(0, sourceA.Height, parameters.ParallelOptions, rowIndex =>
         {
@@ -97,7 +97,7 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
         where TPixel : unmanaged, IL3Pixel<T>
         where T : unmanaged, INumber<T>
     {
-        var targetBuffer = new PackedPixelBuffer<TPixel>(sourceA.Width, sourceA.Height);
+        var targetBuffer = new PixelBuffer<TPixel>(sourceA.Width, sourceA.Height);
 
         _ = Parallel.For(0, sourceA.Height, parameters.ParallelOptions, rowIndex =>
         {

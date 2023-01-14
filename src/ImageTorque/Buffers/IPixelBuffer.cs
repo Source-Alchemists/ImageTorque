@@ -30,14 +30,19 @@ public interface IPixelBuffer : IDisposable
     int Size { get; }
 
     /// <summary>
+    /// Gets a value indicating whether this instance is color.
+    /// </summary>
+    bool IsColor { get; }
+
+    /// <summary>
     /// Gets the pixel buffer type.
     /// </summary>
     PixelBufferType PixelBufferType { get; }
 
     /// <summary>
-    /// Gets the pixel info.
+    /// Gets the pixel type.
     /// </summary>
-    PixelInfo PixelInfo { get; }
+    PixelType PixelType { get; }
 
     /// <summary>
     /// Gets the pixel format.

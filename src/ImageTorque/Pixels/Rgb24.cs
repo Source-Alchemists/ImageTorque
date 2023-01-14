@@ -33,19 +33,13 @@ public record struct Rgb24 : IL3Pixel<byte>
         set { Blue = value; }
     }
 
+    public PixelType PixelType => PixelType.Rgb24;
+
     public Rgb24(byte red, byte green, byte blue)
     {
         Red = red;
         Green = green;
         Blue = blue;
-    }
-
-    public PixelInfo PixelInfo
-    {
-        get
-        {
-            return new PixelInfo(PixelType.Rgb24, 3, 3, 1, true);
-        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

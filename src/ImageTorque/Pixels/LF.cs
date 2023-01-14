@@ -10,17 +10,11 @@ public record struct LF : IL1Pixel<float>
 
     public float Value { get; set; }
 
+    public PixelType PixelType => PixelType.LF;
+
     public LF(float value)
     {
         Value = value;
-    }
-
-    public PixelInfo PixelInfo
-    {
-        get
-        {
-            return new PixelInfo(PixelType.Mono, 4, 1, 1, false);
-        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,13 +30,13 @@ public record struct LF : IL1Pixel<float>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public L8 ToMono8()
+    public L8 ToL8()
     {
         return new L8(Convert.ToByte(Value));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public L16 ToMono16()
+    public L16 ToL16()
     {
         return new L16(Convert.ToUInt16(Value));
     }

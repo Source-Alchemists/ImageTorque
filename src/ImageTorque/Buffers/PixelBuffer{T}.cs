@@ -4,7 +4,7 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
-public abstract record PixelBuffer<T> : IPixelBuffer<T>
+public record PixelBuffer<T> : IPixelBuffer<T>
     where T : unmanaged, IPixel
 {
     private readonly Memory<T> _memory;
@@ -46,12 +46,17 @@ public abstract record PixelBuffer<T> : IPixelBuffer<T>
     /// <summary>
     /// Gets the number of channels.
     /// </summary>
-    public int NumberOfChannels { get; }
+    public int NumberOfChannels { get; protected set; }
 
     /// <summary>
     /// Gets the size.
     /// </summary>
     public int Size { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether this instance is color.
+    /// </summary>
+    public bool IsColor { get; }
 
     /// <summary>
     /// Gets the pixels.
@@ -64,9 +69,9 @@ public abstract record PixelBuffer<T> : IPixelBuffer<T>
     public Span<byte> Buffer => MemoryMarshal.AsBytes(_memory.Span);
 
     /// <summary>
-    /// Gets the pixel info.
+    /// Gets the pixel type.
     /// </summary>
-    public PixelInfo PixelInfo { get; }
+    public PixelType PixelType { get; }
 
     /// <summary>
     /// Gets the pixel format.
@@ -76,33 +81,62 @@ public abstract record PixelBuffer<T> : IPixelBuffer<T>
     /// <summary>
     /// Gets the pixel buffer type.
     /// </summary>
-    public abstract PixelBufferType PixelBufferType { get; }
+    public virtual PixelBufferType PixelBufferType => PixelBufferType.Packed;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PixelBuffer{TPixel}"/> class.
     /// </summary>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
-    protected PixelBuffer(int width, int height)
+    public PixelBuffer(int width, int height)
     {
         Width = width;
         Height = height;
         T pixel = Activator.CreateInstance<T>();
-        PixelInfo = pixel.PixelInfo;
-        NumberOfChannels = pixel.PixelInfo.ChannelsPerImage;
+        PixelType = pixel.PixelType;
+        switch (PixelType)
+        {
+            case PixelType.LF:
+            case PixelType.L8:
+            case PixelType.L16:
+                NumberOfChannels = 1;
+                IsColor = false;
+                break;
+            case PixelType.Rgb:
+            case PixelType.Rgb24:
+            case PixelType.Rgb48:
+                NumberOfChannels = 3;
+                IsColor = true;
+                break;
+        }
+
+        PixelFormat = PixelBufferMarshal.GetPixelFormat(PixelBufferType, PixelType);
         Size = width * height * NumberOfChannels;
 
         _memoryOwner = MemoryPool<T>.Shared.Rent(Width * Height * NumberOfChannels);
         _memory = _memoryOwner.Memory;
     }
 
-    protected PixelBuffer(PixelBuffer<T> other)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PixelBuffer{TPixel}"/> class.
+    /// </summary>
+    /// <param name="width">The width.</param>
+    /// <param name="height">The height.</param>
+    /// <param name="pixels">The pixels.</param>
+    public PixelBuffer(int width, int height, ReadOnlySpan<T> pixels)
+        : this(width, height)
+    {
+        pixels.CopyTo(Pixels);
+    }
+
+    public PixelBuffer(PixelBuffer<T> other)
     {
         Width = other.Width;
         Height = other.Height;
         NumberOfChannels = other.NumberOfChannels;
         Size = other.Size;
-        PixelInfo = other.PixelInfo;
+        IsColor = other.IsColor;
+        PixelType = other.PixelType;
         PixelFormat = other.PixelFormat;
 
         _memoryOwner = MemoryPool<T>.Shared.Rent(Width * Height * NumberOfChannels);
@@ -124,7 +158,15 @@ public abstract record PixelBuffer<T> : IPixelBuffer<T>
     /// </summary>
     /// <param name="channelIndex">Index of the channel.</param>
     /// <returns>Span of the channel.</returns>
-    public abstract Span<T> GetChannel(int channelIndex);
+    public virtual Span<T> GetChannel(int channelIndex)
+    {
+        if (channelIndex != 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(channelIndex));
+        }
+
+        return Pixels;
+    }
 
     /// <summary>
     /// Gets the row.
@@ -137,7 +179,7 @@ public abstract record PixelBuffer<T> : IPixelBuffer<T>
     /// Gets the pixel buffer as read only.
     /// </summary>
     /// <returns>The pixel buffer as read only.</returns>
-    public abstract IReadOnlyPixelBuffer<T> AsReadOnly();
+    public virtual IReadOnlyPixelBuffer<T> AsReadOnly() => new ReadOnlyPackedPixelBuffer<T>(this);
 
     IReadOnlyPixelBuffer IPixelBuffer.AsReadOnly() => AsReadOnly();
 
@@ -172,7 +214,7 @@ public abstract record PixelBuffer<T> : IPixelBuffer<T>
     /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
     public override int GetHashCode()
     {
-        return HashCode.Combine(Width, Height, PixelInfo);
+        return HashCode.Combine(Width, Height, PixelType);
     }
 
     protected virtual void Dispose(bool disposing)

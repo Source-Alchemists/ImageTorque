@@ -16,7 +16,8 @@ public sealed record PlanarPixelBuffer<T> : PixelBuffer<T>
     /// <param name="height">The height.</param>
     public PlanarPixelBuffer(int width, int height) : base(width, height)
     {
-        PixelFormat = PixelBufferMarshal.GetPixelFormat(PixelBufferType, PixelInfo.PixelType);
+        NumberOfChannels *= 3;
+        PixelFormat = PixelBufferMarshal.GetPixelFormat(PixelBufferType, PixelType);
     }
 
     /// <summary>

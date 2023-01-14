@@ -7,30 +7,30 @@ namespace AyBorg.SDK.ImageProcessing.Tests;
 
 public class ImageTests
 {
-    private readonly PackedPixelBuffer<Rgb> _packedPixelBufferRgb;
-    private readonly PackedPixelBuffer<Rgb24> _packedPixelBufferRgb24;
-    private readonly PlanarPixelBuffer<Rgb888> _planarPixelBufferRgb888;
-    private readonly PackedPixelBuffer<LF> _packedPixelBufferMono;
-    private readonly PackedPixelBuffer<L8> _packedPixelBufferMono8;
+    private readonly PixelBuffer<Rgb> _packedPixelBufferRgb;
+    private readonly PixelBuffer<Rgb24> _packedPixelBufferRgb24;
+    private readonly PlanarPixelBuffer<L8> _planarPixelBufferRgb888;
+    private readonly PixelBuffer<LF> _packedPixelBufferMono;
+    private readonly PixelBuffer<L8> _packedPixelBufferMono8;
 
     public ImageTests()
     {
-        _packedPixelBufferRgb = new PackedPixelBuffer<Rgb>(2, 2, new[] {
+        _packedPixelBufferRgb = new PixelBuffer<Rgb>(2, 2, new[] {
                                                                 new Rgb(0f, 0f, 0f),
                                                                 new Rgb(0.0039215687f, 0.0078431373f, 0.0117647059f),
                                                                 new Rgb(0.015686275f, 0.0196078432f, 0.0235294118f),
                                                                 new Rgb(1f, 1f, 1f) });
-        _packedPixelBufferRgb24 = new PackedPixelBuffer<Rgb24>(2, 2, new[] {
+        _packedPixelBufferRgb24 = new PixelBuffer<Rgb24>(2, 2, new[] {
                                                                 new Rgb24(0x00, 0x00, 0x00),
                                                                 new Rgb24(0x01, 0x02, 0x03),
                                                                 new Rgb24(0x04, 0x05, 0x06),
                                                                 new Rgb24(0xFF, 0xFF, 0xFF) });
-        _planarPixelBufferRgb888 = new PlanarPixelBuffer<Rgb888>(2, 2, new[] {
-                                                                new Rgb888(0x00), new Rgb888(0x01), new Rgb888(0x04), new Rgb888(0xFF),
-                                                                new Rgb888(0x00), new Rgb888(0x02), new Rgb888(0x05), new Rgb888(0xFF),
-                                                                new Rgb888(0x00), new Rgb888(0x03), new Rgb888(0x06), new Rgb888(0xFF) });
-        _packedPixelBufferMono = new PackedPixelBuffer<LF>(2, 2, new LF[] { 0f, 0.003921569f, 0.5019608f, 1f });
-        _packedPixelBufferMono8 = new PackedPixelBuffer<L8>(2, 2, new L8[] { 0x00, 0x01, 0x80, 0xFF });
+        _planarPixelBufferRgb888 = new PlanarPixelBuffer<L8>(2, 2, new[] {
+                                                                new L8(0x00), new L8(0x01), new L8(0x04), new L8(0xFF),
+                                                                new L8(0x00), new L8(0x02), new L8(0x05), new L8(0xFF),
+                                                                new L8(0x00), new L8(0x03), new L8(0x06), new L8(0xFF) });
+        _packedPixelBufferMono = new PixelBuffer<LF>(2, 2, new LF[] { 0f, 0.003921569f, 0.5019608f, 1f });
+        _packedPixelBufferMono8 = new PixelBuffer<L8>(2, 2, new L8[] { 0x00, 0x01, 0x80, 0xFF });
     }
 
     [Fact]
@@ -67,10 +67,10 @@ public class ImageTests
         using var image = new Image(_packedPixelBufferRgb);
 
         // Act
-        ReadOnlyPlanarPixelBuffer<Rgb888> resultBuffer = image.AsPlanar<Rgb888>();
+        ReadOnlyPlanarPixelBuffer<L8> resultBuffer = image.AsPlanar<L8>();
 
         // Assert
-        Assert.IsType<ReadOnlyPlanarPixelBuffer<Rgb888>>(resultBuffer);
+        Assert.IsType<ReadOnlyPlanarPixelBuffer<L8>>(resultBuffer);
         Assert.Equal(_planarPixelBufferRgb888.AsReadOnly(), resultBuffer);
     }
 
