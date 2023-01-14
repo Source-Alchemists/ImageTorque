@@ -37,8 +37,8 @@ public interface IImage : IDisposable
     /// <returns>The image as a packed pixel buffer.</returns>
     /// <remarks>The buffer is owned by the image and should not be disposed.</remarks>
     ReadOnlyPackedPixelBuffer<TPixel> AsPacked<TPixel>()
-        where TPixel : unmanaged, IPackedPixel<TPixel>;
-    
+        where TPixel : unmanaged, IPixel;
+
     /// <summary>
     /// Gets the image as a planar pixel buffer.
     /// </summary>
@@ -46,5 +46,5 @@ public interface IImage : IDisposable
     /// <returns>The image as a planar pixel buffer.</returns>
     /// <remarks>The buffer is owned by the image and should not be disposed.</remarks>
     ReadOnlyPlanarPixelBuffer<TPixel> AsPlanar<TPixel>()
-        where TPixel : unmanaged, IPlanarPixel<TPixel>;
+        where TPixel : unmanaged, IPixel;
 }

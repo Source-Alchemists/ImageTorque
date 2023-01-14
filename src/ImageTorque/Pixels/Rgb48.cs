@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace ImageTorque.Pixels;
 
 [StructLayout(LayoutKind.Explicit, Size = 6)]
-public record struct Rgb48 : IPackedPixel<Rgb48>
+public record struct Rgb48 : IPackedPixel<ushort>
 {
     [FieldOffset(0)]
     public ushort Red;

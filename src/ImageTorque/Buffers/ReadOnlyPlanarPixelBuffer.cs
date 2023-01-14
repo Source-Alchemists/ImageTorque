@@ -3,7 +3,7 @@ using ImageTorque.Pixels;
 namespace ImageTorque.Buffers;
 
 public sealed record ReadOnlyPlanarPixelBuffer<TPixel> : ReadOnlyPixelBuffer<TPixel>
-    where TPixel : unmanaged, IPlanarPixel<TPixel>
+    where TPixel : unmanaged, IPixel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ReadOnlyPlanarPixelBuffer{TPixel}"/> class.

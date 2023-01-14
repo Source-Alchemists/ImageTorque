@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace ImageTorque.Pixels;
 
-public record struct Mono : IPackedPixel<Mono>
+public record struct Mono : IPackedPixel<float>
 {
     public const float White = 1f;
 

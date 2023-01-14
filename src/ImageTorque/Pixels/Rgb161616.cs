@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace ImageTorque.Pixels;
 
-public record struct Rgb161616 : IPlanarPixel<Rgb161616>
+public record struct Rgb161616 : IPlanarPixel<ushort>
 {
     public ushort Value;
 

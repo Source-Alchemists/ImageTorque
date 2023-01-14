@@ -1,6 +1,6 @@
 namespace ImageTorque.Pixels;
 
-public interface IPixel<T> where T : unmanaged, IPixel<T>
+public interface IPixel
 {
     /// <summary>
     /// Gets the pixel info.

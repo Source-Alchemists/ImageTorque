@@ -3,7 +3,7 @@ using ImageTorque.Pixels;
 namespace ImageTorque.Buffers;
 
 public sealed record PlanarPixelBuffer<TPixel> : PixelBuffer<TPixel>
-    where TPixel : unmanaged, IPlanarPixel<TPixel>
+    where TPixel : unmanaged, IPixel
 {
     /// <inheritdoc/>
     public override PixelBufferType PixelBufferType => PixelBufferType.Planar;

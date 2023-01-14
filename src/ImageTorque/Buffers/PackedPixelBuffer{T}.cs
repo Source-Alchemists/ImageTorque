@@ -3,7 +3,7 @@ using ImageTorque.Pixels;
 namespace ImageTorque.Buffers;
 
 public sealed record PackedPixelBuffer<TPixel> : PixelBuffer<TPixel>
-    where TPixel : unmanaged, IPackedPixel<TPixel>
+    where TPixel : unmanaged, IPixel
 {
     /// <inheritdoc/>
     public override PixelBufferType PixelBufferType => PixelBufferType.Packed;

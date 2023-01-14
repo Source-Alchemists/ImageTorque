@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace ImageTorque.Pixels;
 
-public record struct RgbFFF : IPlanarPixel<RgbFFF>
+public record struct RgbFFF : IPlanarPixel<float>
 {
     public float Value;
 

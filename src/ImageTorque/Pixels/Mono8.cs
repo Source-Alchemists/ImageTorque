@@ -2,10 +2,10 @@ using System.Runtime.CompilerServices;
 
 namespace ImageTorque.Pixels;
 
-public record struct Mono8 : IPackedPixel<Mono8>
+public record struct Mono8 : IPackedPixel<byte>
 {
     public const byte White = 255;
-    
+
     public const byte Black = 0;
 
     public byte Value { get; set; }

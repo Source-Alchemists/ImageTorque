@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace ImageTorque.Pixels;
 
-public record struct Rgb888 : IPlanarPixel<Rgb888>
+public record struct Rgb888 : IPlanarPixel<byte>
 {
     public byte Value;
 

@@ -3,7 +3,7 @@ using ImageTorque.Pixels;
 namespace ImageTorque.Buffers;
 
 public abstract record ReadOnlyPixelBuffer<TPixel> : IReadOnlyPixelBuffer<TPixel>
-    where TPixel : unmanaged, IPixel<TPixel>
+    where TPixel : unmanaged, IPixel
 {
     /// <summary>
     /// Gets the pixel buffer.
@@ -39,7 +39,7 @@ public abstract record ReadOnlyPixelBuffer<TPixel> : IReadOnlyPixelBuffer<TPixel
     /// Gets the size.
     /// </summary>
     public int Size { get => PixelBuffer.Size; }
-    
+
     /// <summary>
     /// Gets the pixel buffer type.
     /// </summary>
@@ -72,7 +72,7 @@ public abstract record ReadOnlyPixelBuffer<TPixel> : IReadOnlyPixelBuffer<TPixel
     protected ReadOnlyPixelBuffer(IPixelBuffer<TPixel> pixelBuffer)
     {
         PixelBuffer = pixelBuffer;
-    } 
+    }
 
     /// <summary>
     /// Gets the channel.

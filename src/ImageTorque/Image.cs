@@ -78,7 +78,7 @@ public partial record Image : IImage
     /// <returns>The image as a packed pixel buffer.</returns>
     /// <remarks>The buffer is owned by the image and should not be disposed.</remarks>
     public ReadOnlyPackedPixelBuffer<TPixel> AsPacked<TPixel>()
-        where TPixel : unmanaged, IPackedPixel<TPixel>
+        where TPixel : unmanaged, IPixel
     {
         return (ReadOnlyPackedPixelBuffer<TPixel>)AsPixelBuffer<PackedPixelBuffer<TPixel>>();
     }
@@ -90,7 +90,7 @@ public partial record Image : IImage
     /// <returns>The image as a planar pixel buffer.</returns>
     /// <remarks>The buffer is owned by the image and should not be disposed.</remarks>
     public ReadOnlyPlanarPixelBuffer<TPixel> AsPlanar<TPixel>()
-        where TPixel : unmanaged, IPlanarPixel<TPixel>
+        where TPixel : unmanaged, IPixel
     {
         return (ReadOnlyPlanarPixelBuffer<TPixel>)AsPixelBuffer<PlanarPixelBuffer<TPixel>>();
     }

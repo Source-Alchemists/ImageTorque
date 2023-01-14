@@ -5,7 +5,7 @@ using ImageTorque.Pixels;
 namespace ImageTorque.Buffers;
 
 public abstract record PixelBuffer<TPixel> : IPixelBuffer<TPixel>
-    where TPixel : unmanaged, IPixel<TPixel>
+    where TPixel : unmanaged, IPixel
 {
     private readonly Memory<TPixel> _memory;
     private readonly IMemoryOwner<TPixel> _memoryOwner;

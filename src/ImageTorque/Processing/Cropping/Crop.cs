@@ -231,7 +231,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static bool TryCrop<TPixel>(ReadOnlyPixelBuffer<TPixel> sourcePixelBuffer, IPixelBuffer<TPixel> targetPixelBuffer, ParallelOptions parallelOptions, CropRectangle rectangle)
-            where TPixel : unmanaged, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel
     {
         if (Math.Abs(rectangle.Rotation) <= float.Epsilon)
         {
@@ -261,7 +261,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void Crop0Degree<TPixel>(ReadOnlyPixelBuffer<TPixel> sourcePixelBuffer, IPixelBuffer<TPixel> targetPixelBuffer, ParallelOptions parallelOptions, CropRectangle rectangle)
-            where TPixel : unmanaged, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel
     {
         int x0 = (int)(rectangle.X - rectangle.HalfWidth);
         int y0 = (int)(rectangle.Y - rectangle.HalfHeight);
@@ -307,7 +307,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void Crop90Degree<TPixel>(ReadOnlyPixelBuffer<TPixel> sourcePixelBuffer, IPixelBuffer<TPixel> targetPixelBuffer, ParallelOptions parallelOptions, CropRectangle rectangle)
-            where TPixel : unmanaged, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel
     {
         int x0 = (int)(rectangle.X + rectangle.HalfWidth - 1);
         int y0 = (int)(rectangle.Y - rectangle.HalfHeight);
@@ -352,7 +352,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void Crop180Degree<TPixel>(ReadOnlyPixelBuffer<TPixel> sourcePixelBuffer, IPixelBuffer<TPixel> targetPixelBuffer, ParallelOptions parallelOptions, CropRectangle rectangle)
-            where TPixel : unmanaged, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel
     {
         int x0 = (int)(rectangle.X + rectangle.HalfWidth - 1);
         int y0 = (int)(rectangle.Y + rectangle.HalfHeight - 1);
@@ -398,7 +398,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void Crop270Degree<TPixel>(ReadOnlyPixelBuffer<TPixel> sourcePixelBuffer, IPixelBuffer<TPixel> targetPixelBuffer, ParallelOptions parallelOptions, CropRectangle rectangle)
-            where TPixel : unmanaged, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel
     {
         int x0 = (int)(rectangle.X - rectangle.HalfWidth);
         int y0 = (int)(rectangle.Y + rectangle.HalfHeight - 1);

@@ -4,7 +4,7 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing;
 
-public sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
+internal sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
 {
     public IPixelBuffer Execute(MirrorParameters parameters)
     {
@@ -79,7 +79,7 @@ public sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static PackedPixelBuffer<TPixel> MirrorPacked<TPixel>(ReadOnlyPackedPixelBuffer<TPixel> sourcePixelBuffer, MirrorParameters parameters)
-        where TPixel : unmanaged, IPackedPixel<TPixel>
+        where TPixel : unmanaged, IPixel
     {
         MirrorMode mode = parameters.MirrorMode;
         var targetPixelBuffer = new PackedPixelBuffer<TPixel>(sourcePixelBuffer.Width, sourcePixelBuffer.Height);
@@ -123,7 +123,7 @@ public sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static PlanarPixelBuffer<TPixel> MirrorPlanar<TPixel>(ReadOnlyPlanarPixelBuffer<TPixel> sourcePixelBuffer, MirrorParameters parameters)
-        where TPixel : unmanaged, IPlanarPixel<TPixel>
+        where TPixel : unmanaged, IPixel
     {
         MirrorMode mode = parameters.MirrorMode;
         var targetPixelBuffer = new PlanarPixelBuffer<TPixel>(sourcePixelBuffer.Width, sourcePixelBuffer.Height);
