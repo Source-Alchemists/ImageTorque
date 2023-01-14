@@ -24,13 +24,13 @@ public static class ImageExtensions
     {
         IReadOnlyPixelBuffer pixelBuffer = image.PixelFormat switch
         {
-            PixelFormat.Mono8 => image.AsPacked<Mono8>(),
-            PixelFormat.Mono16 => image.AsPacked<Mono8>(),
+            PixelFormat.Mono8 => image.AsPacked<L8>(),
+            PixelFormat.Mono16 => image.AsPacked<L8>(),
             PixelFormat.Rgb24Packed => image.AsPacked<Rgb24>(),
             PixelFormat.Rgb48Packed => image.AsPacked<Rgb48>(),
             PixelFormat.Rgb888Planar => image.AsPacked<Rgb24>(),
             PixelFormat.Rgb161616Planar => image.AsPacked<Rgb48>(),
-            PixelFormat.Mono => image.AsPacked<Mono8>(),
+            PixelFormat.Mono => image.AsPacked<L8>(),
             PixelFormat.RgbPacked => image.AsPacked<Rgb24>(),
             _ => throw new NotSupportedException($"The pixel format {image.PixelFormat} is not supported."),
         };
@@ -129,27 +129,27 @@ public static class ImageExtensions
         {
             case PixelFormat.RgbPacked:
                 sourceBuffer = image.AsPacked<Rgb>();
-                targetType = typeof(PackedPixelBuffer<Mono>);
+                targetType = typeof(PackedPixelBuffer<LF>);
                 break;
             case PixelFormat.Rgb24Packed:
                 sourceBuffer = image.AsPacked<Rgb24>();
-                targetType = typeof(PackedPixelBuffer<Mono8>);
+                targetType = typeof(PackedPixelBuffer<L8>);
                 break;
             case PixelFormat.Rgb48Packed:
                 sourceBuffer = image.AsPacked<Rgb48>();
-                targetType = typeof(PackedPixelBuffer<Mono16>);
+                targetType = typeof(PackedPixelBuffer<L16>);
                 break;
             case PixelFormat.RgbPlanar:
                 sourceBuffer = image.AsPlanar<RgbFFF>();
-                targetType = typeof(PackedPixelBuffer<Mono>);
+                targetType = typeof(PackedPixelBuffer<LF>);
                 break;
             case PixelFormat.Rgb888Planar:
                 sourceBuffer = image.AsPlanar<Rgb888>();
-                targetType = typeof(PackedPixelBuffer<Mono8>);
+                targetType = typeof(PackedPixelBuffer<L8>);
                 break;
             case PixelFormat.Rgb161616Planar:
                 sourceBuffer = image.AsPlanar<Rgb161616>();
-                targetType = typeof(PackedPixelBuffer<Mono16>);
+                targetType = typeof(PackedPixelBuffer<L16>);
                 break;
         }
         IPixelBuffer grayscaleBuffer = s_grayscaleFilter.Execute(new GrayscaleFilterParameters
@@ -227,9 +227,9 @@ public static class ImageExtensions
     {
         return image.PixelFormat switch
         {
-            PixelFormat.Mono => image.AsPacked<Mono>(),
-            PixelFormat.Mono8 => image.AsPacked<Mono8>(),
-            PixelFormat.Mono16 => image.AsPacked<Mono16>(),
+            PixelFormat.Mono => image.AsPacked<LF>(),
+            PixelFormat.Mono8 => image.AsPacked<L8>(),
+            PixelFormat.Mono16 => image.AsPacked<L16>(),
             PixelFormat.RgbPacked => image.AsPacked<Rgb>(),
             PixelFormat.Rgb24Packed => image.AsPacked<Rgb24>(),
             PixelFormat.Rgb48Packed => image.AsPacked<Rgb48>(),

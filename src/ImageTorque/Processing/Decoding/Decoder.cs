@@ -35,8 +35,8 @@ internal class Decoder : IProcessor<DecoderParameters, IPixelBuffer>
                 {
                     if (imageL8.DangerousTryGetSinglePixelMemory(out Memory<SixLabors.ImageSharp.PixelFormats.L8> pixelsL8))
                     {
-                        Span<Mono8> buffer = MemoryMarshal.Cast<SixLabors.ImageSharp.PixelFormats.L8, Mono8>(pixelsL8.Span);
-                        pixelBuffer = new PackedPixelBuffer<Mono8>(imageL8.Width, imageL8.Height, buffer);
+                        Span<L8> buffer = MemoryMarshal.Cast<SixLabors.ImageSharp.PixelFormats.L8, L8>(pixelsL8.Span);
+                        pixelBuffer = new PackedPixelBuffer<L8>(imageL8.Width, imageL8.Height, buffer);
                     }
                     else
                     {

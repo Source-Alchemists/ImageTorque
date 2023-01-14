@@ -13,17 +13,17 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     {
         Type inputType = parameters.Input!.GetType();
 
-        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Mono>))
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<LF>))
         {
             return CropMono(parameters);
         }
 
-        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
         {
             return CropMono8(parameters);
         }
 
-        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<L16>))
         {
             return CropMono16(parameters);
         }
@@ -62,10 +62,10 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Mono> CropMono(CropParameters parameters)
+    private static PackedPixelBuffer<LF> CropMono(CropParameters parameters)
     {
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<Mono>)parameters.Input!;
-        var targetBuffer = new PackedPixelBuffer<Mono>(parameters.Rectangle.Width, parameters.Rectangle.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<LF>)parameters.Input!;
+        var targetBuffer = new PackedPixelBuffer<LF>(parameters.Rectangle.Width, parameters.Rectangle.Height);
         var rectangle = new CropRectangle(parameters.Rectangle);
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
@@ -80,10 +80,10 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Mono8> CropMono8(CropParameters parameters)
+    private static PackedPixelBuffer<L8> CropMono8(CropParameters parameters)
     {
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<Mono8>)parameters.Input!;
-        var targetBuffer = new PackedPixelBuffer<Mono8>(parameters.Rectangle.Width, parameters.Rectangle.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<L8>)parameters.Input!;
+        var targetBuffer = new PackedPixelBuffer<L8>(parameters.Rectangle.Width, parameters.Rectangle.Height);
         var rectangle = new CropRectangle(parameters.Rectangle);
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
@@ -98,10 +98,10 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Mono16> CropMono16(CropParameters parameters)
+    private static PackedPixelBuffer<L16> CropMono16(CropParameters parameters)
     {
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<Mono16>)parameters.Input!;
-        var targetBuffer = new PackedPixelBuffer<Mono16>(parameters.Rectangle.Width, parameters.Rectangle.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<L16>)parameters.Input!;
+        var targetBuffer = new PackedPixelBuffer<L16>(parameters.Rectangle.Width, parameters.Rectangle.Height);
         var rectangle = new CropRectangle(parameters.Rectangle);
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))

@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace ImageTorque.Pixels;
 
-public record struct Mono16 : IPackedL1Pixel<ushort>
+public record struct L16 : IL1Pixel<ushort>
 {
     public const ushort White = 65535;
 
@@ -10,7 +10,7 @@ public record struct Mono16 : IPackedL1Pixel<ushort>
 
     public ushort Value { get; set; }
 
-    public Mono16(ushort value)
+    public L16(ushort value)
     {
         Value = value;
     }
@@ -24,26 +24,26 @@ public record struct Mono16 : IPackedL1Pixel<ushort>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Mono16(ushort value)
+    public static implicit operator L16(ushort value)
     {
-        return new Mono16(value);
+        return new L16(value);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator ushort(Mono16 mono)
+    public static implicit operator ushort(L16 mono)
     {
         return mono.Value;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Mono ToMono()
+    public LF ToMono()
     {
-        return new Mono(Convert.ToSingle(Value));
+        return new LF(Convert.ToSingle(Value));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Mono8 ToMono8()
+    public L8 ToMono8()
     {
-        return new Mono8(Convert.ToByte(Value));
+        return new L8(Convert.ToByte(Value));
     }
 }

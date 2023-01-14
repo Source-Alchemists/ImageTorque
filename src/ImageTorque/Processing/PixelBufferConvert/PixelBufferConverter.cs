@@ -9,17 +9,17 @@ internal partial class PixelBufferConverter : IProcessor<PixelBufferConvertParam
     {
         Type inputType = parameters.Input.GetType();
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LF>))
         {
             return ConvertMono(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
         {
             return ConvertMono8(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L16>))
         {
             return ConvertMono16(parameters);
         }

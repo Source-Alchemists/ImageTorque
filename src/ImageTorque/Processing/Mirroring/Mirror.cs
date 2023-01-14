@@ -10,17 +10,17 @@ internal sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
     {
         Type inputType = parameters.Input!.GetType();
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LF>))
         {
             return MirrorMono(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
         {
             return MirrorMono8(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L16>))
         {
             return MirrorMono16(parameters);
         }
@@ -59,11 +59,11 @@ internal sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Mono> MirrorMono(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Mono>)parameters.Input!, parameters);
+    private static PackedPixelBuffer<LF> MirrorMono(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<LF>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Mono8> MirrorMono8(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Mono8>)parameters.Input!, parameters);
+    private static PackedPixelBuffer<L8> MirrorMono8(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<L8>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Mono16> MirrorMono16(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Mono16>)parameters.Input!, parameters);
+    private static PackedPixelBuffer<L16> MirrorMono16(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<L16>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static PackedPixelBuffer<Rgb> MirrorRgb(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]

@@ -63,9 +63,9 @@ public static class PixelBufferMarshal
     {
         return pixelFormat switch
         {
-            PixelFormat.Mono => new PackedPixelBuffer<Mono>(width, height),
-            PixelFormat.Mono8 => new PackedPixelBuffer<Mono8>(width, height),
-            PixelFormat.Mono16 => new PackedPixelBuffer<Mono16>(width, height),
+            PixelFormat.Mono => new PackedPixelBuffer<LF>(width, height),
+            PixelFormat.Mono8 => new PackedPixelBuffer<L8>(width, height),
+            PixelFormat.Mono16 => new PackedPixelBuffer<L16>(width, height),
             PixelFormat.RgbPacked => new PackedPixelBuffer<Rgb>(width, height),
             PixelFormat.Rgb24Packed => new PackedPixelBuffer<Rgb24>(width, height),
             PixelFormat.Rgb48Packed => new PackedPixelBuffer<Rgb48>(width, height),

@@ -10,17 +10,17 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     {
         Type inputType = parameters.Input!.GetType();
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LF>))
         {
             return ResizeMono(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
         {
             return ResizeMono8(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L16>))
         {
             return ResizeMono16(parameters);
         }
@@ -59,10 +59,10 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono> ResizeMono(ResizerParameters parameters)
+    private static PackedPixelBuffer<LF> ResizeMono(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PackedPixelBuffer<Mono>(parameters.Width, parameters.Height);
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<Mono>)parameters.Input!;
+        var targetPixelBuffer = new PackedPixelBuffer<LF>(parameters.Width, parameters.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<LF>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
             case ResizeMode.NearestNeighbor:
@@ -107,10 +107,10 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono8> ResizeMono8(ResizerParameters parameters)
+    private static PackedPixelBuffer<L8> ResizeMono8(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PackedPixelBuffer<Mono8>(parameters.Width, parameters.Height);
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<Mono8>)parameters.Input!;
+        var targetPixelBuffer = new PackedPixelBuffer<L8>(parameters.Width, parameters.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<L8>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
             case ResizeMode.NearestNeighbor:
@@ -154,10 +154,10 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
         return targetPixelBuffer;
     }
 
-    private static PackedPixelBuffer<Mono16> ResizeMono16(ResizerParameters parameters)
+    private static PackedPixelBuffer<L16> ResizeMono16(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PackedPixelBuffer<Mono16>(parameters.Width, parameters.Height);
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<Mono16>)parameters.Input!;
+        var targetPixelBuffer = new PackedPixelBuffer<L16>(parameters.Width, parameters.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<L16>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
             case ResizeMode.NearestNeighbor:

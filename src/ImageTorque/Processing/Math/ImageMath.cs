@@ -10,17 +10,17 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
     public IPixelBuffer Execute(ImageMathParameters parameters)
     {
         Type inputType = parameters.InputA!.GetType();
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LF>))
         {
-            return PackedL1Operation<Mono, float>((ReadOnlyPackedPixelBuffer<Mono>)parameters.InputA, (ReadOnlyPackedPixelBuffer<Mono>)parameters.InputB!, parameters);
+            return PackedL1Operation<LF, float>((ReadOnlyPackedPixelBuffer<LF>)parameters.InputA, (ReadOnlyPackedPixelBuffer<LF>)parameters.InputB!, parameters);
         }
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
         {
-            return PackedL1Operation<Mono8, byte>((ReadOnlyPackedPixelBuffer<Mono8>)parameters.InputA, (ReadOnlyPackedPixelBuffer<Mono8>)parameters.InputB!, parameters);
+            return PackedL1Operation<L8, byte>((ReadOnlyPackedPixelBuffer<L8>)parameters.InputA, (ReadOnlyPackedPixelBuffer<L8>)parameters.InputB!, parameters);
         }
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L16>))
         {
-            return PackedL1Operation<Mono16, ushort>((ReadOnlyPackedPixelBuffer<Mono16>)parameters.InputA, (ReadOnlyPackedPixelBuffer<Mono16>)parameters.InputB!, parameters);
+            return PackedL1Operation<L16, ushort>((ReadOnlyPackedPixelBuffer<L16>)parameters.InputA, (ReadOnlyPackedPixelBuffer<L16>)parameters.InputB!, parameters);
         }
         if (inputType == typeof(ReadOnlyPackedPixelBuffer<Rgb>))
         {
@@ -40,7 +40,7 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static IPixelBuffer PackedL1Operation<TPixel, T>(ReadOnlyPackedPixelBuffer<TPixel> sourceA, ReadOnlyPackedPixelBuffer<TPixel> sourceB, ImageMathParameters parameters)
-        where TPixel : unmanaged, IPackedL1Pixel<T>
+        where TPixel : unmanaged, IL1Pixel<T>
         where T : unmanaged, INumber<T>
     {
         var targetBuffer = new PackedPixelBuffer<TPixel>(sourceA.Width, sourceA.Height);
@@ -94,7 +94,7 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static IPixelBuffer PackedL3Operation<TPixel, T>(ReadOnlyPackedPixelBuffer<TPixel> sourceA, ReadOnlyPackedPixelBuffer<TPixel> sourceB, ImageMathParameters parameters)
-        where TPixel : unmanaged, IPackedL3Pixel<T>
+        where TPixel : unmanaged, IL3Pixel<T>
         where T : unmanaged, INumber<T>
     {
         var targetBuffer = new PackedPixelBuffer<TPixel>(sourceA.Width, sourceA.Height);

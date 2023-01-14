@@ -1,9 +1,8 @@
-using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace ImageTorque.Pixels;
 
-public record struct Mono : IPackedL1Pixel<float>
+public record struct LF : IL1Pixel<float>
 {
     public const float White = 1f;
 
@@ -11,7 +10,7 @@ public record struct Mono : IPackedL1Pixel<float>
 
     public float Value { get; set; }
 
-    public Mono(float value)
+    public LF(float value)
     {
         Value = value;
     }
@@ -25,26 +24,26 @@ public record struct Mono : IPackedL1Pixel<float>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator float(Mono mono)
+    public static implicit operator float(LF mono)
     {
         return mono.Value;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Mono(float value)
+    public static implicit operator LF(float value)
     {
-        return new Mono(value);
+        return new LF(value);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Mono8 ToMono8()
+    public L8 ToMono8()
     {
-        return new Mono8(Convert.ToByte(Value));
+        return new L8(Convert.ToByte(Value));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Mono16 ToMono16()
+    public L16 ToMono16()
     {
-        return new Mono16(Convert.ToUInt16(Value));
+        return new L16(Convert.ToUInt16(Value));
     }
 }

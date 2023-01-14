@@ -6,16 +6,16 @@ namespace ImageTorque.Tests.Encoding;
 
 public class EncoderTests : IDisposable
 {
-    private readonly PackedPixelBuffer<Mono16> _packedPixelBufferMono16;
-    private readonly PackedPixelBuffer<Mono8> _packedPixelBufferMono8;
+    private readonly PackedPixelBuffer<L16> _packedPixelBufferMono16;
+    private readonly PackedPixelBuffer<L8> _packedPixelBufferMono8;
     private readonly PackedPixelBuffer<Rgb24> _packedPixelBufferRgb24;
     private readonly PackedPixelBuffer<Rgb48> _packedPixelBufferRgb48;
     private bool _disposedValue;
 
     public EncoderTests()
     {
-        _packedPixelBufferMono8 = new PackedPixelBuffer<Mono8>(2, 2, new Mono8[] { 0x00, 0x01, 0x80, 0xFF });
-        _packedPixelBufferMono16 = new PackedPixelBuffer<Mono16>(2, 2, new Mono16[] { 0x0000, 0x0101, 0x8080, 0xFFFF });
+        _packedPixelBufferMono8 = new PackedPixelBuffer<L8>(2, 2, new L8[] { 0x00, 0x01, 0x80, 0xFF });
+        _packedPixelBufferMono16 = new PackedPixelBuffer<L16>(2, 2, new L16[] { 0x0000, 0x0101, 0x8080, 0xFFFF });
         _packedPixelBufferRgb24 = new PackedPixelBuffer<Rgb24>(2, 2, new[] {
                                                                 new Rgb24(0x00, 0x00, 0x00),
                                                                 new Rgb24(0x01, 0x02, 0x03),

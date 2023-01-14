@@ -10,8 +10,8 @@ public class ImageTests
     private readonly PackedPixelBuffer<Rgb> _packedPixelBufferRgb;
     private readonly PackedPixelBuffer<Rgb24> _packedPixelBufferRgb24;
     private readonly PlanarPixelBuffer<Rgb888> _planarPixelBufferRgb888;
-    private readonly PackedPixelBuffer<Mono> _packedPixelBufferMono;
-    private readonly PackedPixelBuffer<Mono8> _packedPixelBufferMono8;
+    private readonly PackedPixelBuffer<LF> _packedPixelBufferMono;
+    private readonly PackedPixelBuffer<L8> _packedPixelBufferMono8;
 
     public ImageTests()
     {
@@ -29,8 +29,8 @@ public class ImageTests
                                                                 new Rgb888(0x00), new Rgb888(0x01), new Rgb888(0x04), new Rgb888(0xFF),
                                                                 new Rgb888(0x00), new Rgb888(0x02), new Rgb888(0x05), new Rgb888(0xFF),
                                                                 new Rgb888(0x00), new Rgb888(0x03), new Rgb888(0x06), new Rgb888(0xFF) });
-        _packedPixelBufferMono = new PackedPixelBuffer<Mono>(2, 2, new Mono[] { 0f, 0.003921569f, 0.5019608f, 1f });
-        _packedPixelBufferMono8 = new PackedPixelBuffer<Mono8>(2, 2, new Mono8[] { 0x00, 0x01, 0x80, 0xFF });
+        _packedPixelBufferMono = new PackedPixelBuffer<LF>(2, 2, new LF[] { 0f, 0.003921569f, 0.5019608f, 1f });
+        _packedPixelBufferMono8 = new PackedPixelBuffer<L8>(2, 2, new L8[] { 0x00, 0x01, 0x80, 0xFF });
     }
 
     [Fact]
@@ -81,10 +81,10 @@ public class ImageTests
         using var image = new Image(_packedPixelBufferMono);
 
         // Act
-        ReadOnlyPackedPixelBuffer<Mono8> resultBuffer = image.AsPacked<Mono8>();
+        ReadOnlyPackedPixelBuffer<L8> resultBuffer = image.AsPacked<L8>();
 
         // Assert
-        Assert.IsType<ReadOnlyPackedPixelBuffer<Mono8>>(resultBuffer);
+        Assert.IsType<ReadOnlyPackedPixelBuffer<L8>>(resultBuffer);
         Assert.Equal(_packedPixelBufferMono8.AsReadOnly(), resultBuffer);
     }
 
