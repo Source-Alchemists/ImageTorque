@@ -1,14 +1,15 @@
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace ImageTorque.Pixels;
 
-public record struct Mono : IPackedPixel<float>
+public record struct Mono : IPackedL1Pixel<float>
 {
     public const float White = 1f;
 
     public const float Black = 0f;
 
-    public float Value;
+    public float Value { get; set; }
 
     public Mono(float value)
     {

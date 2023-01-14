@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace ImageTorque.Pixels;
 
 [StructLayout(LayoutKind.Explicit, Size = 3)]
-public record struct Rgb24 : IPackedPixel<byte>
+public record struct Rgb24 : IPackedL3Pixel<byte>
 {
     [FieldOffset(0)]
     public byte Red;
@@ -14,6 +14,24 @@ public record struct Rgb24 : IPackedPixel<byte>
 
     [FieldOffset(2)]
     public byte Blue;
+
+    public byte R
+    {
+        get { return Red; }
+        set { Red = value; }
+    }
+
+    public byte G
+    {
+        get { return Green; }
+        set { Green = value; }
+    }
+
+    public byte B
+    {
+        get { return Blue; }
+        set { Blue = value; }
+    }
 
     public Rgb24(byte red, byte green, byte blue)
     {

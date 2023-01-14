@@ -4,22 +4,22 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
-public abstract record PixelBuffer<TPixel> : IPixelBuffer<TPixel>
-    where TPixel : unmanaged, IPixel
+public abstract record PixelBuffer<T> : IPixelBuffer<T>
+    where T : unmanaged, IPixel
 {
-    private readonly Memory<TPixel> _memory;
-    private readonly IMemoryOwner<TPixel> _memoryOwner;
+    private readonly Memory<T> _memory;
+    private readonly IMemoryOwner<T> _memoryOwner;
     private bool _isDisposed = false;
 
     /// <summary>
     /// Gets the pixel at the specified index.
     /// </summary>
-    public TPixel this[int index] { get => Pixels[index]; set => Pixels[index] = value; }
+    public T this[int index] { get => Pixels[index]; set => Pixels[index] = value; }
 
     /// <summary>
     /// Gets the pixel at the specified coordinates.
     /// </summary>
-    public TPixel this[int x, int y]
+    public T this[int x, int y]
     {
         get
         {
@@ -51,12 +51,12 @@ public abstract record PixelBuffer<TPixel> : IPixelBuffer<TPixel>
     /// <summary>
     /// Gets the size.
     /// </summary>
-    public int Size { get;}
+    public int Size { get; }
 
     /// <summary>
     /// Gets the pixels.
     /// </summary>
-    public Span<TPixel> Pixels => _memory.Span;
+    public Span<T> Pixels => _memory.Span;
 
     /// <summary>
     /// Gets the buffer.
@@ -87,16 +87,16 @@ public abstract record PixelBuffer<TPixel> : IPixelBuffer<TPixel>
     {
         Width = width;
         Height = height;
-        TPixel pixel = Activator.CreateInstance<TPixel>();
+        T pixel = Activator.CreateInstance<T>();
         PixelInfo = pixel.PixelInfo;
         NumberOfChannels = pixel.PixelInfo.ChannelsPerImage;
         Size = width * height * NumberOfChannels;
 
-        _memoryOwner = MemoryPool<TPixel>.Shared.Rent(Width * Height * NumberOfChannels);
+        _memoryOwner = MemoryPool<T>.Shared.Rent(Width * Height * NumberOfChannels);
         _memory = _memoryOwner.Memory;
     }
 
-    protected PixelBuffer(PixelBuffer<TPixel> other)
+    protected PixelBuffer(PixelBuffer<T> other)
     {
         Width = other.Width;
         Height = other.Height;
@@ -105,7 +105,7 @@ public abstract record PixelBuffer<TPixel> : IPixelBuffer<TPixel>
         PixelInfo = other.PixelInfo;
         PixelFormat = other.PixelFormat;
 
-        _memoryOwner = MemoryPool<TPixel>.Shared.Rent(Width * Height * NumberOfChannels);
+        _memoryOwner = MemoryPool<T>.Shared.Rent(Width * Height * NumberOfChannels);
         _memory = _memoryOwner.Memory;
         other.Pixels.CopyTo(_memory.Span);
     }
@@ -124,20 +124,20 @@ public abstract record PixelBuffer<TPixel> : IPixelBuffer<TPixel>
     /// </summary>
     /// <param name="channelIndex">Index of the channel.</param>
     /// <returns>Span of the channel.</returns>
-    public abstract Span<TPixel> GetChannel(int channelIndex);
+    public abstract Span<T> GetChannel(int channelIndex);
 
     /// <summary>
     /// Gets the row.
     /// </summary>
     /// <param name="rowIndex">Index of the row.</param>
     /// <returns>Span of the row.</returns>
-    public Span<TPixel> GetRow(int rowIndex) => _memory.Span.Slice(rowIndex * Width, Width);
+    public Span<T> GetRow(int rowIndex) => _memory.Span.Slice(rowIndex * Width, Width);
 
     /// <summary>
     /// Gets the pixel buffer as read only.
     /// </summary>
     /// <returns>The pixel buffer as read only.</returns>
-    public abstract IReadOnlyPixelBuffer<TPixel> AsReadOnly();
+    public abstract IReadOnlyPixelBuffer<T> AsReadOnly();
 
     IReadOnlyPixelBuffer IPixelBuffer.AsReadOnly() => AsReadOnly();
 
@@ -146,7 +146,7 @@ public abstract record PixelBuffer<TPixel> : IPixelBuffer<TPixel>
     /// </summary>
     /// <param name="other">The <see cref="PixelBuffer<TPixel>"/> to compare with this instance.</param>
     /// <returns><c>true</c> if the specified <see cref="PixelBuffer<TPixel>"/> is equal to this instance; otherwise, <c>false</c>.</returns>
-    public virtual bool Equals(PixelBuffer<TPixel>? other)
+    public virtual bool Equals(PixelBuffer<T>? other)
     {
         if (other is null)
         {

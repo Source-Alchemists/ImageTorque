@@ -2,15 +2,15 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
-public sealed record PlanarPixelBuffer<TPixel> : PixelBuffer<TPixel>
-    where TPixel : unmanaged, IPixel
+public sealed record PlanarPixelBuffer<T> : PixelBuffer<T>
+    where T : unmanaged, IPixel
 {
     /// <inheritdoc/>
     public override PixelBufferType PixelBufferType => PixelBufferType.Planar;
 
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PlanarPixelBuffer{TPixel}"/> class.
+    /// Initializes a new instance of the <see cref="PlanarPixelBuffer{T}"/> class.
     /// </summary>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
@@ -20,19 +20,19 @@ public sealed record PlanarPixelBuffer<TPixel> : PixelBuffer<TPixel>
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PlanarPixelBuffer{TPixel}"/> class.
+    /// Initializes a new instance of the <see cref="PlanarPixelBuffer{T}"/> class.
     /// </summary>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
     /// <param name="pixels">The pixels.</param>
-    public PlanarPixelBuffer(int width, int height, ReadOnlySpan<TPixel> pixels)
+    public PlanarPixelBuffer(int width, int height, ReadOnlySpan<T> pixels)
         : this(width, height)
     {
         pixels.CopyTo(Pixels);
     }
 
     /// <inheritdoc/>
-    public override Span<TPixel> GetChannel(int channelIndex)
+    public override Span<T> GetChannel(int channelIndex)
     {
         if (channelIndex < 0 || channelIndex >= NumberOfChannels)
         {
@@ -49,7 +49,7 @@ public sealed record PlanarPixelBuffer<TPixel> : PixelBuffer<TPixel>
     /// <param name="channelIndex">The channel index.</param>
     /// <param name="rowIndex">The row index.</param>
     /// <returns>The row of pixels.</returns>
-    public Span<TPixel> GetRow(int channelIndex, int rowIndex)
+    public Span<T> GetRow(int channelIndex, int rowIndex)
     {
         if (channelIndex < 0 || channelIndex >= NumberOfChannels)
         {
@@ -69,5 +69,5 @@ public sealed record PlanarPixelBuffer<TPixel> : PixelBuffer<TPixel>
     /// Gets the pixel buffer as read only.
     /// </summary>
     /// <returns>The pixel buffer as read only.</returns>
-    public override IReadOnlyPixelBuffer<TPixel> AsReadOnly() => new ReadOnlyPlanarPixelBuffer<TPixel>(this);
+    public override IReadOnlyPixelBuffer<T> AsReadOnly() => new ReadOnlyPlanarPixelBuffer<T>(this);
 }

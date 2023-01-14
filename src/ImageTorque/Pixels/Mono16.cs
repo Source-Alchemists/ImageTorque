@@ -2,13 +2,13 @@ using System.Runtime.CompilerServices;
 
 namespace ImageTorque.Pixels;
 
-public record struct Mono16 : IPackedPixel<ushort>
+public record struct Mono16 : IPackedL1Pixel<ushort>
 {
     public const ushort White = 65535;
 
     public const ushort Black = 0;
 
-    public ushort Value;
+    public ushort Value { get; set; }
 
     public Mono16(ushort value)
     {

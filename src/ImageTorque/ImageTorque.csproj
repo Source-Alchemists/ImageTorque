@@ -21,7 +21,7 @@
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageTags>Image Resize Mirror Binarize Crop Packed Planar Interlaced DotNet</PackageTags>
     <Description>Open .NET image processing library</Description>
-    <Version>0.0.5</Version>
+    <Version>0.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

@@ -2,14 +2,14 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
-public sealed record PackedPixelBuffer<TPixel> : PixelBuffer<TPixel>
-    where TPixel : unmanaged, IPixel
+public sealed record PackedPixelBuffer<T> : PixelBuffer<T>
+    where T : unmanaged, IPixel
 {
     /// <inheritdoc/>
     public override PixelBufferType PixelBufferType => PixelBufferType.Packed;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PackedPixelBuffer{TPixel}"/> class.
+    /// Initializes a new instance of the <see cref="PackedPixelBuffer{T}"/> class.
     /// </summary>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
@@ -19,19 +19,19 @@ public sealed record PackedPixelBuffer<TPixel> : PixelBuffer<TPixel>
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PackedPixelBuffer{TPixel}"/> class.
+    /// Initializes a new instance of the <see cref="PackedPixelBuffer{T}"/> class.
     /// </summary>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
     /// <param name="pixels">The pixels.</param>
-    public PackedPixelBuffer(int width, int height, ReadOnlySpan<TPixel> pixels)
+    public PackedPixelBuffer(int width, int height, ReadOnlySpan<T> pixels)
         : this(width, height)
     {
         pixels.CopyTo(Pixels);
     }
 
     /// <inheritdoc/>
-    public override Span<TPixel> GetChannel(int channelIndex)
+    public override Span<T> GetChannel(int channelIndex)
     {
         if (channelIndex != 0)
         {
@@ -45,5 +45,5 @@ public sealed record PackedPixelBuffer<TPixel> : PixelBuffer<TPixel>
     /// Gets the pixel buffer as read only.
     /// </summary>
     /// <returns>The pixel buffer as read only.</returns>
-    public override IReadOnlyPixelBuffer<TPixel> AsReadOnly() => new ReadOnlyPackedPixelBuffer<TPixel>(this);
+    public override IReadOnlyPixelBuffer<T> AsReadOnly() => new ReadOnlyPackedPixelBuffer<T>(this);
 }
