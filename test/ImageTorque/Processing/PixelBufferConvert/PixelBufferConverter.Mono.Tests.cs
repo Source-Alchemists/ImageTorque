@@ -5,14 +5,14 @@ namespace ImageTorque.Processing.Tests;
 
 public class PixelBufferConverterMonoTests
 {
-    private readonly PixelBuffer<LF> _packedPixelBufferMono;
+    private readonly PixelBuffer<LS> _packedPixelBufferMono;
     private readonly PixelBuffer<L16> _packedPixelBufferMono16;
     private readonly PixelBuffer<L8> _packedPixelBufferMono8;
     private readonly PixelBufferConverter _converter = new();
 
     public PixelBufferConverterMonoTests()
     {
-        _packedPixelBufferMono = new PixelBuffer<LF>(2, 2, new LF[] { 0f, 0.003921569f, 0.5019608f, 1f });
+        _packedPixelBufferMono = new PixelBuffer<LS>(2, 2, new LS[] { 0f, 0.003921569f, 0.5019608f, 1f });
         _packedPixelBufferMono8 = new PixelBuffer<L8>(2, 2, new L8[] { 0x00, 0x01, 0x80, 0xFF });
         _packedPixelBufferMono16 = new PixelBuffer<L16>(2, 2, new L16[] { 0x0000, 0x0101, 0x8080, 0xFFFF });
     }
@@ -54,11 +54,11 @@ public class PixelBufferConverterMonoTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono8.AsReadOnly(),
-            OutputType = typeof(PixelBuffer<LF>)
+            OutputType = typeof(PixelBuffer<LS>)
         });
 
         // Assert
-        Assert.IsType<PixelBuffer<LF>>(resultBuffer);
+        Assert.IsType<PixelBuffer<LS>>(resultBuffer);
         Assert.Equal(_packedPixelBufferMono, resultBuffer);
     }
 
@@ -84,11 +84,11 @@ public class PixelBufferConverterMonoTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono16.AsReadOnly(),
-            OutputType = typeof(PixelBuffer<LF>)
+            OutputType = typeof(PixelBuffer<LS>)
         });
 
         // Assert
-        Assert.IsType<PixelBuffer<LF>>(resultBuffer);
+        Assert.IsType<PixelBuffer<LS>>(resultBuffer);
         Assert.Equal(_packedPixelBufferMono, resultBuffer);
     }
 

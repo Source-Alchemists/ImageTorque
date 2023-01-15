@@ -8,7 +8,7 @@ public class PixelBufferConverterRgbTests
     private readonly PixelBuffer<Rgb> _packedPixelBufferRgb;
     private readonly PixelBuffer<Rgb24> _packedPixelBufferRgb24;
     private readonly PixelBuffer<Rgb48> _packedPixelBufferRgb48;
-    private readonly PlanarPixelBuffer<LF> _planarPixelBufferRgbFFF;
+    private readonly PlanarPixelBuffer<LS> _planarPixelBufferRgbFFF;
     private readonly PlanarPixelBuffer<L8> _planarPixelBufferRgb888;
     private readonly PlanarPixelBuffer<L16> _planarPixelBufferRgb161616;
     private readonly PixelBufferConverter _converter = new();
@@ -31,10 +31,10 @@ public class PixelBufferConverterRgbTests
                                                                 new Rgb48(0x404, 0x505, 0x606),
                                                                 new Rgb48(0xFFFF, 0xFFFF, 0xFFFF) });
 
-        _planarPixelBufferRgbFFF = new PlanarPixelBuffer<LF>(2, 2, new[] {
-                                                                new LF(0x00), new LF(0.0039215687f), new LF(0.015686275f), new LF(1.0f),
-                                                                new LF(0x00), new LF(0.0078431373f), new LF(0.0196078432f), new LF(1.0f),
-                                                                new LF(0x00), new LF(0.0117647059f), new LF(0.0235294118f), new LF(1.0f) });
+        _planarPixelBufferRgbFFF = new PlanarPixelBuffer<LS>(2, 2, new[] {
+                                                                new LS(0x00), new LS(0.0039215687f), new LS(0.015686275f), new LS(1.0f),
+                                                                new LS(0x00), new LS(0.0078431373f), new LS(0.0196078432f), new LS(1.0f),
+                                                                new LS(0x00), new LS(0.0117647059f), new LS(0.0235294118f), new LS(1.0f) });
         _planarPixelBufferRgb888 = new PlanarPixelBuffer<L8>(2, 2, new[] {
                                                                 new L8(0x00), new L8(0x01), new L8(0x04), new L8(0xFF),
                                                                 new L8(0x00), new L8(0x02), new L8(0x05), new L8(0xFF),
@@ -232,11 +232,11 @@ public class PixelBufferConverterRgbTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferRgb.AsReadOnly(),
-            OutputType = typeof(PlanarPixelBuffer<LF>)
+            OutputType = typeof(PlanarPixelBuffer<LS>)
         });
 
         // Assert
-        Assert.IsType<PlanarPixelBuffer<LF>>(resultBuffer);
+        Assert.IsType<PlanarPixelBuffer<LS>>(resultBuffer);
         Assert.Equal(_planarPixelBufferRgbFFF, resultBuffer);
     }
 
@@ -247,11 +247,11 @@ public class PixelBufferConverterRgbTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferRgb24.AsReadOnly(),
-            OutputType = typeof(PlanarPixelBuffer<LF>)
+            OutputType = typeof(PlanarPixelBuffer<LS>)
         });
 
         // Assert
-        Assert.IsType<PlanarPixelBuffer<LF>>(resultBuffer);
+        Assert.IsType<PlanarPixelBuffer<LS>>(resultBuffer);
         Assert.Equal(_planarPixelBufferRgbFFF, resultBuffer);
     }
 
@@ -262,11 +262,11 @@ public class PixelBufferConverterRgbTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferRgb48.AsReadOnly(),
-            OutputType = typeof(PlanarPixelBuffer<LF>)
+            OutputType = typeof(PlanarPixelBuffer<LS>)
         });
 
         // Assert
-        Assert.IsType<PlanarPixelBuffer<LF>>(resultBuffer);
+        Assert.IsType<PlanarPixelBuffer<LS>>(resultBuffer);
         Assert.Equal(_planarPixelBufferRgbFFF, resultBuffer);
     }
 
@@ -292,11 +292,11 @@ public class PixelBufferConverterRgbTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _planarPixelBufferRgb161616.AsReadOnly(),
-            OutputType = typeof(PlanarPixelBuffer<LF>)
+            OutputType = typeof(PlanarPixelBuffer<LS>)
         });
 
         // Assert
-        Assert.IsType<PlanarPixelBuffer<LF>>(resultBuffer);
+        Assert.IsType<PlanarPixelBuffer<LS>>(resultBuffer);
         Assert.Equal(_planarPixelBufferRgbFFF, resultBuffer);
     }
 
@@ -307,11 +307,11 @@ public class PixelBufferConverterRgbTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _planarPixelBufferRgb888.AsReadOnly(),
-            OutputType = typeof(PlanarPixelBuffer<LF>)
+            OutputType = typeof(PlanarPixelBuffer<LS>)
         });
 
         // Assert
-        Assert.IsType<PlanarPixelBuffer<LF>>(resultBuffer);
+        Assert.IsType<PlanarPixelBuffer<LS>>(resultBuffer);
         Assert.Equal(_planarPixelBufferRgbFFF, resultBuffer);
     }
 

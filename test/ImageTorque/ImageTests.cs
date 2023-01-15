@@ -10,7 +10,7 @@ public class ImageTests
     private readonly PixelBuffer<Rgb> _packedPixelBufferRgb;
     private readonly PixelBuffer<Rgb24> _packedPixelBufferRgb24;
     private readonly PlanarPixelBuffer<L8> _planarPixelBufferRgb888;
-    private readonly PixelBuffer<LF> _packedPixelBufferMono;
+    private readonly PixelBuffer<LS> _packedPixelBufferMono;
     private readonly PixelBuffer<L8> _packedPixelBufferMono8;
 
     public ImageTests()
@@ -29,7 +29,7 @@ public class ImageTests
                                                                 new L8(0x00), new L8(0x01), new L8(0x04), new L8(0xFF),
                                                                 new L8(0x00), new L8(0x02), new L8(0x05), new L8(0xFF),
                                                                 new L8(0x00), new L8(0x03), new L8(0x06), new L8(0xFF) });
-        _packedPixelBufferMono = new PixelBuffer<LF>(2, 2, new LF[] { 0f, 0.003921569f, 0.5019608f, 1f });
+        _packedPixelBufferMono = new PixelBuffer<LS>(2, 2, new LS[] { 0f, 0.003921569f, 0.5019608f, 1f });
         _packedPixelBufferMono8 = new PixelBuffer<L8>(2, 2, new L8[] { 0x00, 0x01, 0x80, 0xFF });
     }
 

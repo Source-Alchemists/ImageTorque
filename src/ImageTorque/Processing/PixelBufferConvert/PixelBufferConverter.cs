@@ -9,7 +9,7 @@ internal partial class PixelBufferConverter : IProcessor<PixelBufferConvertParam
     {
         Type inputType = parameters.Input.GetType();
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LF>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LS>))
         {
             return ConvertMono(parameters);
         }
@@ -39,7 +39,7 @@ internal partial class PixelBufferConverter : IProcessor<PixelBufferConvertParam
             return ConvertPackedRgb48(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LF>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LS>))
         {
             return ConvertPlanarRgbFFF(parameters);
         }

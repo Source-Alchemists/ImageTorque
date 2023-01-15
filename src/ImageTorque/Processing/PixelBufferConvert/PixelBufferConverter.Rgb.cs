@@ -31,7 +31,7 @@ internal partial class PixelBufferConverter
             return RgbToRgb888(parameters);
         }
 
-        if (outputType == typeof(PlanarPixelBuffer<LF>))
+        if (outputType == typeof(PlanarPixelBuffer<LS>))
         {
             return RgbToRgbFFF(parameters);
         }
@@ -64,7 +64,7 @@ internal partial class PixelBufferConverter
             return Rgb24ToRgb888(parameters);
         }
 
-        if (outputType == typeof(PlanarPixelBuffer<LF>))
+        if (outputType == typeof(PlanarPixelBuffer<LS>))
         {
             return Rgb24ToRgbFFF(parameters);
         }
@@ -97,7 +97,7 @@ internal partial class PixelBufferConverter
             return Rgb48ToRgb888(parameters);
         }
 
-        if (outputType == typeof(PlanarPixelBuffer<LF>))
+        if (outputType == typeof(PlanarPixelBuffer<LS>))
         {
             return Rgb48ToRgbFFF(parameters);
         }
@@ -148,7 +148,7 @@ internal partial class PixelBufferConverter
             return Rgb888ToRgb161616(parameters);
         }
 
-        if (outputType == typeof(PlanarPixelBuffer<LF>))
+        if (outputType == typeof(PlanarPixelBuffer<LS>))
         {
             return Rgb888ToRgbFFF(parameters);
         }
@@ -181,7 +181,7 @@ internal partial class PixelBufferConverter
             return Rgb161616ToRgb888(parameters);
         }
 
-        if (outputType == typeof(PlanarPixelBuffer<LF>))
+        if (outputType == typeof(PlanarPixelBuffer<LS>))
         {
             return Rgb161616ToRgbFFF(parameters);
         }
@@ -439,16 +439,16 @@ internal partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<LF> RgbToRgbFFF(PixelBufferConvertParameters parameters)
+    private static PlanarPixelBuffer<LS> RgbToRgbFFF(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input;
-        var resultBuffer = new PlanarPixelBuffer<LF>(inputBuffer.Width, inputBuffer.Height);
+        var resultBuffer = new PlanarPixelBuffer<LS>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
             ReadOnlySpan<Rgb> row = inputBuffer.GetRow(y);
-            Span<LF> resultRowRed = resultBuffer.GetRow(0, y);
-            Span<LF> resultRowGreen = resultBuffer.GetRow(1, y);
-            Span<LF> resultRowBlue = resultBuffer.GetRow(2, y);
+            Span<LS> resultRowRed = resultBuffer.GetRow(0, y);
+            Span<LS> resultRowGreen = resultBuffer.GetRow(1, y);
+            Span<LS> resultRowBlue = resultBuffer.GetRow(2, y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 Rgb pixel = row[x];
@@ -461,16 +461,16 @@ internal partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<LF> Rgb24ToRgbFFF(PixelBufferConvertParameters parameters)
+    private static PlanarPixelBuffer<LS> Rgb24ToRgbFFF(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb24>)parameters.Input;
-        var resultBuffer = new PlanarPixelBuffer<LF>(inputBuffer.Width, inputBuffer.Height);
+        var resultBuffer = new PlanarPixelBuffer<LS>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
             ReadOnlySpan<Rgb24> row = inputBuffer.GetRow(y);
-            Span<LF> resultRowRed = resultBuffer.GetRow(0, y);
-            Span<LF> resultRowGreen = resultBuffer.GetRow(1, y);
-            Span<LF> resultRowBlue = resultBuffer.GetRow(2, y);
+            Span<LS> resultRowRed = resultBuffer.GetRow(0, y);
+            Span<LS> resultRowGreen = resultBuffer.GetRow(1, y);
+            Span<LS> resultRowBlue = resultBuffer.GetRow(2, y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 Rgb24 pixel = row[x];
@@ -483,16 +483,16 @@ internal partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<LF> Rgb48ToRgbFFF(PixelBufferConvertParameters parameters)
+    private static PlanarPixelBuffer<LS> Rgb48ToRgbFFF(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input;
-        var resultBuffer = new PlanarPixelBuffer<LF>(inputBuffer.Width, inputBuffer.Height);
+        var resultBuffer = new PlanarPixelBuffer<LS>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
             ReadOnlySpan<Rgb48> row = inputBuffer.GetRow(y);
-            Span<LF> resultRowRed = resultBuffer.GetRow(0, y);
-            Span<LF> resultRowGreen = resultBuffer.GetRow(1, y);
-            Span<LF> resultRowBlue = resultBuffer.GetRow(2, y);
+            Span<LS> resultRowRed = resultBuffer.GetRow(0, y);
+            Span<LS> resultRowGreen = resultBuffer.GetRow(1, y);
+            Span<LS> resultRowBlue = resultBuffer.GetRow(2, y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 Rgb48 pixel = row[x];
@@ -529,19 +529,19 @@ internal partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<LF> Rgb161616ToRgbFFF(PixelBufferConvertParameters parameters)
+    private static PlanarPixelBuffer<LS> Rgb161616ToRgbFFF(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<L16>)parameters.Input;
-        var resultBuffer = new PlanarPixelBuffer<LF>(inputBuffer.Width, inputBuffer.Height);
+        var resultBuffer = new PlanarPixelBuffer<LS>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
             ReadOnlySpan<L16> orgRowRed = inputBuffer.GetRow(0, y);
             ReadOnlySpan<L16> orgRowGreen = inputBuffer.GetRow(1, y);
             ReadOnlySpan<L16> orgRowBlue = inputBuffer.GetRow(2, y);
 
-            Span<LF> resultRowRed = resultBuffer.GetRow(0, y);
-            Span<LF> resultRowGreen = resultBuffer.GetRow(1, y);
-            Span<LF> resultRowBlue = resultBuffer.GetRow(2, y);
+            Span<LS> resultRowRed = resultBuffer.GetRow(0, y);
+            Span<LS> resultRowGreen = resultBuffer.GetRow(1, y);
+            Span<LS> resultRowBlue = resultBuffer.GetRow(2, y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 resultRowRed[x] = orgRowRed[x].ToLF();
@@ -577,19 +577,19 @@ internal partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<LF> Rgb888ToRgbFFF(PixelBufferConvertParameters parameters)
+    private static PlanarPixelBuffer<LS> Rgb888ToRgbFFF(PixelBufferConvertParameters parameters)
     {
         var inputBuffer = (ReadOnlyPlanarPixelBuffer<L8>)parameters.Input;
-        var resultBuffer = new PlanarPixelBuffer<LF>(inputBuffer.Width, inputBuffer.Height);
+        var resultBuffer = new PlanarPixelBuffer<LS>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
             ReadOnlySpan<L8> orgRowRed = inputBuffer.GetRow(0, y);
             ReadOnlySpan<L8> orgRowGreen = inputBuffer.GetRow(1, y);
             ReadOnlySpan<L8> orgRowBlue = inputBuffer.GetRow(2, y);
 
-            Span<LF> resultRowRed = resultBuffer.GetRow(0, y);
-            Span<LF> resultRowGreen = resultBuffer.GetRow(1, y);
-            Span<LF> resultRowBlue = resultBuffer.GetRow(2, y);
+            Span<LS> resultRowRed = resultBuffer.GetRow(0, y);
+            Span<LS> resultRowGreen = resultBuffer.GetRow(1, y);
+            Span<LS> resultRowBlue = resultBuffer.GetRow(2, y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 resultRowRed[x] = orgRowRed[x].ToLF();
@@ -603,13 +603,13 @@ internal partial class PixelBufferConverter
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static PlanarPixelBuffer<L16> RgbFFFToRgb161616(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPlanarPixelBuffer<LF>)parameters.Input;
+        var inputBuffer = (ReadOnlyPlanarPixelBuffer<LS>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<L16>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<LF> orgRowRed = inputBuffer.GetRow(0, y);
-            ReadOnlySpan<LF> orgRowGreen = inputBuffer.GetRow(1, y);
-            ReadOnlySpan<LF> orgRowBlue = inputBuffer.GetRow(2, y);
+            ReadOnlySpan<LS> orgRowRed = inputBuffer.GetRow(0, y);
+            ReadOnlySpan<LS> orgRowGreen = inputBuffer.GetRow(1, y);
+            ReadOnlySpan<LS> orgRowBlue = inputBuffer.GetRow(2, y);
 
             Span<L16> resultRowRed = resultBuffer.GetRow(0, y);
             Span<L16> resultRowGreen = resultBuffer.GetRow(1, y);
@@ -627,13 +627,13 @@ internal partial class PixelBufferConverter
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static PlanarPixelBuffer<L8> RgbFFFToRgb888(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPlanarPixelBuffer<LF>)parameters.Input;
+        var inputBuffer = (ReadOnlyPlanarPixelBuffer<LS>)parameters.Input;
         var resultBuffer = new PlanarPixelBuffer<L8>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<LF> orgRowRed = inputBuffer.GetRow(0, y);
-            ReadOnlySpan<LF> orgRowGreen = inputBuffer.GetRow(1, y);
-            ReadOnlySpan<LF> orgRowBlue = inputBuffer.GetRow(2, y);
+            ReadOnlySpan<LS> orgRowRed = inputBuffer.GetRow(0, y);
+            ReadOnlySpan<LS> orgRowGreen = inputBuffer.GetRow(1, y);
+            ReadOnlySpan<LS> orgRowBlue = inputBuffer.GetRow(2, y);
 
             Span<L8> resultRowRed = resultBuffer.GetRow(0, y);
             Span<L8> resultRowGreen = resultBuffer.GetRow(1, y);
@@ -783,13 +783,13 @@ internal partial class PixelBufferConverter
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static PixelBuffer<Rgb> RgbFFFToRgb(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPlanarPixelBuffer<LF>)parameters.Input;
+        var inputBuffer = (ReadOnlyPlanarPixelBuffer<LS>)parameters.Input;
         var resultBuffer = new PixelBuffer<Rgb>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<LF> orgRowRed = inputBuffer.GetRow(0, y);
-            ReadOnlySpan<LF> orgRowGreen = inputBuffer.GetRow(1, y);
-            ReadOnlySpan<LF> orgRowBlue = inputBuffer.GetRow(2, y);
+            ReadOnlySpan<LS> orgRowRed = inputBuffer.GetRow(0, y);
+            ReadOnlySpan<LS> orgRowGreen = inputBuffer.GetRow(1, y);
+            ReadOnlySpan<LS> orgRowBlue = inputBuffer.GetRow(2, y);
 
             Span<Rgb> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < inputBuffer.Width; x++)
@@ -805,13 +805,13 @@ internal partial class PixelBufferConverter
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static PixelBuffer<Rgb24> RgbFFFToRgb24(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPlanarPixelBuffer<LF>)parameters.Input;
+        var inputBuffer = (ReadOnlyPlanarPixelBuffer<LS>)parameters.Input;
         var resultBuffer = new PixelBuffer<Rgb24>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<LF> orgRowRed = inputBuffer.GetRow(0, y);
-            ReadOnlySpan<LF> orgRowGreen = inputBuffer.GetRow(1, y);
-            ReadOnlySpan<LF> orgRowBlue = inputBuffer.GetRow(2, y);
+            ReadOnlySpan<LS> orgRowRed = inputBuffer.GetRow(0, y);
+            ReadOnlySpan<LS> orgRowGreen = inputBuffer.GetRow(1, y);
+            ReadOnlySpan<LS> orgRowBlue = inputBuffer.GetRow(2, y);
 
             Span<Rgb24> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < inputBuffer.Width; x++)
@@ -827,13 +827,13 @@ internal partial class PixelBufferConverter
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static PixelBuffer<Rgb48> RgbFFFToRgb48(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPlanarPixelBuffer<LF>)parameters.Input;
+        var inputBuffer = (ReadOnlyPlanarPixelBuffer<LS>)parameters.Input;
         var resultBuffer = new PixelBuffer<Rgb48>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<LF> orgRowRed = inputBuffer.GetRow(0, y);
-            ReadOnlySpan<LF> orgRowGreen = inputBuffer.GetRow(1, y);
-            ReadOnlySpan<LF> orgRowBlue = inputBuffer.GetRow(2, y);
+            ReadOnlySpan<LS> orgRowRed = inputBuffer.GetRow(0, y);
+            ReadOnlySpan<LS> orgRowGreen = inputBuffer.GetRow(1, y);
+            ReadOnlySpan<LS> orgRowBlue = inputBuffer.GetRow(2, y);
 
             Span<Rgb48> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < inputBuffer.Width; x++)

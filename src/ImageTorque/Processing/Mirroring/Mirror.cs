@@ -10,7 +10,7 @@ internal sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
     {
         Type inputType = parameters.Input!.GetType();
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LF>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LS>))
         {
             return MirrorMono(parameters);
         }
@@ -40,7 +40,7 @@ internal sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
             return MirrorRgb48(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LF>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LS>))
         {
             return MirrorRgbFFF(parameters);
         }
@@ -59,7 +59,7 @@ internal sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PixelBuffer<LF> MirrorMono(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<LF>)parameters.Input!, parameters);
+    private static PixelBuffer<LS> MirrorMono(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<LS>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static PixelBuffer<L8> MirrorMono8(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<L8>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -71,7 +71,7 @@ internal sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static PixelBuffer<Rgb48> MirrorRgb48(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PlanarPixelBuffer<LF> MirrorRgbFFF(MirrorParameters parameters) => MirrorPlanar((ReadOnlyPlanarPixelBuffer<LF>)parameters.Input!, parameters);
+    private static PlanarPixelBuffer<LS> MirrorRgbFFF(MirrorParameters parameters) => MirrorPlanar((ReadOnlyPlanarPixelBuffer<LS>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static PlanarPixelBuffer<L8> MirrorRgb888(MirrorParameters parameters) => MirrorPlanar((ReadOnlyPlanarPixelBuffer<L8>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]

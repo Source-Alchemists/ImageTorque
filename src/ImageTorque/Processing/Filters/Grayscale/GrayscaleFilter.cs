@@ -25,7 +25,7 @@ internal class GrayscaleFilter : IProcessor<GrayscaleFilterParameters, IPixelBuf
             return Rgb48ToMono16(parameters);
         }
 
-        if(inputType == typeof(ReadOnlyPlanarPixelBuffer<LF>))
+        if(inputType == typeof(ReadOnlyPlanarPixelBuffer<LS>))
         {
             return RgbFFFToMono(parameters);
         }
@@ -44,14 +44,14 @@ internal class GrayscaleFilter : IProcessor<GrayscaleFilterParameters, IPixelBuf
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PixelBuffer<LF> RgbToMono(GrayscaleFilterParameters parameters)
+    private static PixelBuffer<LS> RgbToMono(GrayscaleFilterParameters parameters)
     {
         var sourcePixelBuffer = (ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input;
-        var targetPixelBuffer = new PixelBuffer<LF>(parameters.Input.Width, parameters.Input.Height);
+        var targetPixelBuffer = new PixelBuffer<LS>(parameters.Input.Width, parameters.Input.Height);
         _ = Parallel.For(0, targetPixelBuffer.Height, parameters.ParallelOptions, row =>
         {
             ReadOnlySpan<Rgb> sourceRow = sourcePixelBuffer.GetRow(row);
-            Span<LF> targetRow = targetPixelBuffer.GetRow(row);
+            Span<LS> targetRow = targetPixelBuffer.GetRow(row);
             for (int column = 0; column < targetPixelBuffer.Width; column++)
             {
                 Rgb sourcePixel = sourceRow[column];
@@ -98,16 +98,16 @@ internal class GrayscaleFilter : IProcessor<GrayscaleFilterParameters, IPixelBuf
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PixelBuffer<LF> RgbFFFToMono(GrayscaleFilterParameters parameters)
+    private static PixelBuffer<LS> RgbFFFToMono(GrayscaleFilterParameters parameters)
     {
-        var sourcePixelBuffer = (ReadOnlyPlanarPixelBuffer<LF>)parameters.Input;
-        var targetPixelBuffer = new PixelBuffer<LF>(parameters.Input.Width, parameters.Input.Height);
+        var sourcePixelBuffer = (ReadOnlyPlanarPixelBuffer<LS>)parameters.Input;
+        var targetPixelBuffer = new PixelBuffer<LS>(parameters.Input.Width, parameters.Input.Height);
         _ = Parallel.For(0, targetPixelBuffer.Height, parameters.ParallelOptions, row =>
         {
-            ReadOnlySpan<LF> sourceRowRed = sourcePixelBuffer.GetRow(0, row);
-            ReadOnlySpan<LF> sourceRowGreen = sourcePixelBuffer.GetRow(1, row);
-            ReadOnlySpan<LF> sourceRowBlue = sourcePixelBuffer.GetRow(2, row);
-            Span<LF> targetRow = targetPixelBuffer.GetRow(row);
+            ReadOnlySpan<LS> sourceRowRed = sourcePixelBuffer.GetRow(0, row);
+            ReadOnlySpan<LS> sourceRowGreen = sourcePixelBuffer.GetRow(1, row);
+            ReadOnlySpan<LS> sourceRowBlue = sourcePixelBuffer.GetRow(2, row);
+            Span<LS> targetRow = targetPixelBuffer.GetRow(row);
             for (int column = 0; column < targetPixelBuffer.Width; column++)
             {
                 targetRow[column] = ToGrayscale(sourceRowRed[column], sourceRowGreen[column], sourceRowBlue[column]);

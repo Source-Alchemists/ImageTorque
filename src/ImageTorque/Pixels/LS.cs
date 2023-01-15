@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace ImageTorque.Pixels;
 
-public record struct LF : IL1Pixel<float>
+public record struct LS : IL1Pixel<float>
 {
     public const float White = 1f;
 
@@ -16,21 +16,21 @@ public record struct LF : IL1Pixel<float>
 
     public PixelType PixelType => PixelType.LF;
 
-    public LF(float value)
+    public LS(float value)
     {
         Value = value;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator float(LF mono)
+    public static implicit operator float(LS mono)
     {
         return mono.Value;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator LF(float value)
+    public static implicit operator LS(float value)
     {
-        return new LF(value);
+        return new LS(value);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

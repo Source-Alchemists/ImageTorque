@@ -129,7 +129,7 @@ public static class ImageExtensions
         {
             case PixelFormat.RgbPacked:
                 sourceBuffer = image.AsPacked<Rgb>();
-                targetType = typeof(PixelBuffer<LF>);
+                targetType = typeof(PixelBuffer<LS>);
                 break;
             case PixelFormat.Rgb24Packed:
                 sourceBuffer = image.AsPacked<Rgb24>();
@@ -140,8 +140,8 @@ public static class ImageExtensions
                 targetType = typeof(PixelBuffer<L16>);
                 break;
             case PixelFormat.RgbPlanar:
-                sourceBuffer = image.AsPlanar<LF>();
-                targetType = typeof(PixelBuffer<LF>);
+                sourceBuffer = image.AsPlanar<LS>();
+                targetType = typeof(PixelBuffer<LS>);
                 break;
             case PixelFormat.Rgb888Planar:
                 sourceBuffer = image.AsPlanar<L8>();
@@ -227,13 +227,13 @@ public static class ImageExtensions
     {
         return image.PixelFormat switch
         {
-            PixelFormat.Mono => image.AsPacked<LF>(),
+            PixelFormat.Mono => image.AsPacked<LS>(),
             PixelFormat.Mono8 => image.AsPacked<L8>(),
             PixelFormat.Mono16 => image.AsPacked<L16>(),
             PixelFormat.RgbPacked => image.AsPacked<Rgb>(),
             PixelFormat.Rgb24Packed => image.AsPacked<Rgb24>(),
             PixelFormat.Rgb48Packed => image.AsPacked<Rgb48>(),
-            PixelFormat.RgbPlanar => image.AsPlanar<LF>(),
+            PixelFormat.RgbPlanar => image.AsPlanar<LS>(),
             PixelFormat.Rgb888Planar => image.AsPlanar<L8>(),
             PixelFormat.Rgb161616Planar => image.AsPlanar<L16>(),
             _ => throw new NotSupportedException($"The pixel format {image.PixelFormat} is not supported."),

@@ -13,7 +13,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     {
         Type inputType = parameters.Input!.GetType();
 
-        if(inputType == typeof(ReadOnlyPackedPixelBuffer<LF>))
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<LS>))
         {
             return CropMono(parameters);
         }
@@ -43,7 +43,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
             return CropRgb48(parameters);
         }
 
-        if(inputType == typeof(ReadOnlyPlanarPixelBuffer<LF>))
+        if(inputType == typeof(ReadOnlyPlanarPixelBuffer<LS>))
         {
             return CropRgbFFF(parameters);
         }
@@ -62,10 +62,10 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PixelBuffer<LF> CropMono(CropParameters parameters)
+    private static PixelBuffer<LS> CropMono(CropParameters parameters)
     {
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<LF>)parameters.Input!;
-        var targetBuffer = new PixelBuffer<LF>(parameters.Rectangle.Width, parameters.Rectangle.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<LS>)parameters.Input!;
+        var targetBuffer = new PixelBuffer<LS>(parameters.Rectangle.Width, parameters.Rectangle.Height);
         var rectangle = new CropRectangle(parameters.Rectangle);
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
@@ -170,10 +170,10 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PlanarPixelBuffer<LF> CropRgbFFF(CropParameters parameters)
+    private static PlanarPixelBuffer<LS> CropRgbFFF(CropParameters parameters)
     {
-        var sourceBuffer = (ReadOnlyPlanarPixelBuffer<LF>)parameters.Input!;
-        var targetBuffer = new PlanarPixelBuffer<LF>(parameters.Rectangle.Width, parameters.Rectangle.Height);
+        var sourceBuffer = (ReadOnlyPlanarPixelBuffer<LS>)parameters.Input!;
+        var targetBuffer = new PlanarPixelBuffer<LS>(parameters.Rectangle.Width, parameters.Rectangle.Height);
         var rectangle = new CropRectangle(parameters.Rectangle);
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))

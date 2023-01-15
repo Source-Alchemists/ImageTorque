@@ -10,9 +10,9 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
     public IPixelBuffer Execute(ImageMathParameters parameters)
     {
         Type inputType = parameters.InputA!.GetType();
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LF>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LS>))
         {
-            return PackedL1Operation<LF, float>((ReadOnlyPackedPixelBuffer<LF>)parameters.InputA, (ReadOnlyPackedPixelBuffer<LF>)parameters.InputB!, parameters);
+            return PackedL1Operation<LS, float>((ReadOnlyPackedPixelBuffer<LS>)parameters.InputA, (ReadOnlyPackedPixelBuffer<LS>)parameters.InputB!, parameters);
         }
         if (inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
         {
@@ -34,9 +34,9 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
         {
             return PackedL3Operation<Rgb48, ushort>((ReadOnlyPackedPixelBuffer<Rgb48>)parameters.InputA, (ReadOnlyPackedPixelBuffer<Rgb48>)parameters.InputB!, parameters);
         }
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LF>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LS>))
         {
-            return PlanarOperation<LF, float>((ReadOnlyPlanarPixelBuffer<LF>)parameters.InputA, (ReadOnlyPlanarPixelBuffer<LF>)parameters.InputB!, parameters);
+            return PlanarOperation<LS, float>((ReadOnlyPlanarPixelBuffer<LS>)parameters.InputA, (ReadOnlyPlanarPixelBuffer<LS>)parameters.InputB!, parameters);
         }
         if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L8>))
         {
@@ -91,9 +91,9 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
                     {
                         for (int x = 0; x < length; x++)
                         {
-                            targetRow[x].R = Numerics.Clamp(rowA[x].R + rowB[x].R, min, max);
-                            targetRow[x].G = Numerics.Clamp(rowA[x].G + rowB[x].G, min, max);
-                            targetRow[x].B = Numerics.Clamp(rowA[x].B + rowB[x].B, min, max);
+                            targetRow[x].R = Numerics.ClampAdd(rowA[x].R, rowB[x].R, min, max);
+                            targetRow[x].G = Numerics.ClampAdd(rowA[x].G, rowB[x].G, min, max);
+                            targetRow[x].B = Numerics.ClampAdd(rowA[x].B, rowB[x].B, min, max);
                         }
                         break;
                     }
@@ -101,9 +101,9 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
                     {
                         for (int x = 0; x < length; x++)
                         {
-                            targetRow[x].R = Numerics.Clamp(rowA[x].R - rowB[x].R, min, max);
-                            targetRow[x].G = Numerics.Clamp(rowA[x].G - rowB[x].G, min, max);
-                            targetRow[x].B = Numerics.Clamp(rowA[x].B - rowB[x].B, min, max);
+                            targetRow[x].R = Numerics.ClampSubtract(rowA[x].R, rowB[x].R, min, max);
+                            targetRow[x].G = Numerics.ClampSubtract(rowA[x].G, rowB[x].G, min, max);
+                            targetRow[x].B = Numerics.ClampSubtract(rowA[x].B, rowB[x].B, min, max);
                         }
                         break;
                     }
@@ -111,9 +111,9 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
                     {
                         for (int x = 0; x < length; x++)
                         {
-                            targetRow[x].R = Numerics.Clamp(rowA[x].R * rowB[x].R, min, max);
-                            targetRow[x].G = Numerics.Clamp(rowA[x].G * rowB[x].G, min, max);
-                            targetRow[x].B = Numerics.Clamp(rowA[x].B * rowB[x].B, min, max);
+                            targetRow[x].R = Numerics.ClampMultiply(rowA[x].R, rowB[x].R, min, max);
+                            targetRow[x].G = Numerics.ClampMultiply(rowA[x].G, rowB[x].G, min, max);
+                            targetRow[x].B = Numerics.ClampMultiply(rowA[x].B, rowB[x].B, min, max);
                         }
                         break;
                     }

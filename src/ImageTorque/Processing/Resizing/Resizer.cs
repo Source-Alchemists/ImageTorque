@@ -10,7 +10,7 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     {
         Type inputType = parameters.Input!.GetType();
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LF>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LS>))
         {
             return ResizeMono(parameters);
         }
@@ -40,7 +40,7 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
             return ResizeRgb48(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LF>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LS>))
         {
             return ResizeRgbFFF(parameters);
         }
@@ -59,10 +59,10 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PixelBuffer<LF> ResizeMono(ResizerParameters parameters)
+    private static PixelBuffer<LS> ResizeMono(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PixelBuffer<LF>(parameters.Width, parameters.Height);
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<LF>)parameters.Input!;
+        var targetPixelBuffer = new PixelBuffer<LS>(parameters.Width, parameters.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<LS>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
             case ResizeMode.NearestNeighbor:
@@ -346,10 +346,10 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PlanarPixelBuffer<LF> ResizeRgbFFF(ResizerParameters parameters)
+    private static PlanarPixelBuffer<LS> ResizeRgbFFF(ResizerParameters parameters)
     {
-        var targetPixelBuffer = new PlanarPixelBuffer<LF>(parameters.Width, parameters.Height);
-        var sourceBuffer = (ReadOnlyPlanarPixelBuffer<LF>)parameters.Input!;
+        var targetPixelBuffer = new PlanarPixelBuffer<LS>(parameters.Width, parameters.Height);
+        var sourceBuffer = (ReadOnlyPlanarPixelBuffer<LS>)parameters.Input!;
         switch (parameters.ResizeMode)
         {
             case ResizeMode.NearestNeighbor:

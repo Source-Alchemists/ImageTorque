@@ -34,9 +34,9 @@ public record struct L8 : IL1Pixel<byte>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public LF ToLF()
+    public LS ToLF()
     {
-        return new LF(Convert.ToSingle(Value));
+        return new LS(Convert.ToSingle(Value));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

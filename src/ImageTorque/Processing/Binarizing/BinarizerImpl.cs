@@ -7,7 +7,7 @@ namespace ImageTorque.Processing;
 internal partial class Binarizer
 {
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void BinarizeMono(ReadOnlySpan<LF> sourceRow, Span<LF> targetRow, ReadOnlyPackedPixelBuffer<LF> sourceBuffer, float threshold, BinaryThresholdMode mode)
+    private static void BinarizeMono(ReadOnlySpan<LS> sourceRow, Span<LS> targetRow, ReadOnlyPackedPixelBuffer<LS> sourceBuffer, float threshold, BinaryThresholdMode mode)
     {
         int width = sourceBuffer.Width;
         float realThreshold = threshold;
@@ -18,7 +18,7 @@ internal partial class Binarizer
             case BinaryThresholdMode.MaxChroma:
                 for (int x = 0; x < width; x++)
                 {
-                    targetRow[x] = sourceRow[x] >= realThreshold ? LF.White : LF.Black;
+                    targetRow[x] = sourceRow[x] >= realThreshold ? LS.White : LS.Black;
                 }
                 break;
 
@@ -62,7 +62,7 @@ internal partial class Binarizer
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void BinarizeRgb(ReadOnlySpan<Rgb> sourceRow, Span<LF> targetRow, ReadOnlyPackedPixelBuffer<Rgb> sourceBuffer, float threshold, BinaryThresholdMode mode)
+    private static void BinarizeRgb(ReadOnlySpan<Rgb> sourceRow, Span<LS> targetRow, ReadOnlyPackedPixelBuffer<Rgb> sourceBuffer, float threshold, BinaryThresholdMode mode)
     {
         int width = sourceBuffer.Width;
         float realThreshold = threshold;
@@ -80,7 +80,7 @@ internal partial class Binarizer
                 for (int x = 0; x < width; x++)
                 {
                     float saturation = ColorNumerics.GetSaturation(sourceRow[x]);
-                    ref LF color = ref targetRow[x];
+                    ref LS color = ref targetRow[x];
                     color = saturation >= threshold ? L8.White : L8.Black;
                 }
                 break;
@@ -89,7 +89,7 @@ internal partial class Binarizer
                 for (int x = 0; x < width; x++)
                 {
                     float maxChroma = ColorNumerics.GetMaxChroma(sourceRow[x]);
-                    ref LF color = ref targetRow[x];
+                    ref LS color = ref targetRow[x];
                     color = maxChroma >= ct ? L8.White : L8.Black;
                 }
                 break;

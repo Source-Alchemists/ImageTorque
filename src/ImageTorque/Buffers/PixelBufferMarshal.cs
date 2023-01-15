@@ -63,13 +63,13 @@ public static class PixelBufferMarshal
     {
         return pixelFormat switch
         {
-            PixelFormat.Mono => new PixelBuffer<LF>(width, height),
+            PixelFormat.Mono => new PixelBuffer<LS>(width, height),
             PixelFormat.Mono8 => new PixelBuffer<L8>(width, height),
             PixelFormat.Mono16 => new PixelBuffer<L16>(width, height),
             PixelFormat.RgbPacked => new PixelBuffer<Rgb>(width, height),
             PixelFormat.Rgb24Packed => new PixelBuffer<Rgb24>(width, height),
             PixelFormat.Rgb48Packed => new PixelBuffer<Rgb48>(width, height),
-            PixelFormat.RgbPlanar => new PlanarPixelBuffer<LF>(width, height),
+            PixelFormat.RgbPlanar => new PlanarPixelBuffer<LS>(width, height),
             PixelFormat.Rgb888Planar => new PlanarPixelBuffer<L8>(width, height),
             PixelFormat.Rgb161616Planar => new PlanarPixelBuffer<L16>(width, height),
             _ => throw new NotImplementedException($"Pixel format {pixelFormat} is not supported.")
