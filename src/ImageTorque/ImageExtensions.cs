@@ -4,7 +4,10 @@ using ImageTorque.Processing;
 
 namespace ImageTorque;
 
-public static class ImageExtensions
+/// <summary>
+/// Image extensions.
+/// </summary>
+public static partial class ImageExtensions
 {
     private static readonly Encoder s_encoder = new();
     private static readonly Resizer s_resizer = new();
@@ -223,9 +226,11 @@ public static class ImageExtensions
         return new Image(binarizedBuffer);
     }
 
-    internal static IReadOnlyPixelBuffer GetPixelBuffer(this Image image)
+    internal static IReadOnlyPixelBuffer GetPixelBuffer(this Image image) => image.GetPixelBuffer(image.PixelFormat);
+
+    internal static IReadOnlyPixelBuffer GetPixelBuffer(this Image image, PixelFormat pixelFormat)
     {
-        return image.PixelFormat switch
+        return pixelFormat switch
         {
             PixelFormat.Mono => image.AsPacked<LS>(),
             PixelFormat.Mono8 => image.AsPacked<L8>(),

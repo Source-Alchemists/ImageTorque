@@ -4,6 +4,9 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
+/// <summary>
+/// Represents a pixel buffer.
+/// </summary>
 public record PixelBuffer<T> : IPixelBuffer<T>
     where T : unmanaged, IPixel
 {
@@ -84,7 +87,7 @@ public record PixelBuffer<T> : IPixelBuffer<T>
     public virtual PixelBufferType PixelBufferType => PixelBufferType.Packed;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PixelBuffer{TPixel}"/> class.
+    /// Initializes a new instance of the <see cref="PixelBuffer{T}"/> class.
     /// </summary>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
@@ -118,7 +121,7 @@ public record PixelBuffer<T> : IPixelBuffer<T>
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PixelBuffer{TPixel}"/> class.
+    /// Initializes a new instance of the <see cref="PixelBuffer{T}"/> class.
     /// </summary>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
@@ -129,6 +132,10 @@ public record PixelBuffer<T> : IPixelBuffer<T>
         pixels.CopyTo(Pixels);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PixelBuffer{T}"/> class.
+    /// </summary>
+    /// <param name="other">The pixel buffer to copy.</param>
     public PixelBuffer(PixelBuffer<T> other)
     {
         Width = other.Width;
@@ -184,10 +191,10 @@ public record PixelBuffer<T> : IPixelBuffer<T>
     IReadOnlyPixelBuffer IPixelBuffer.AsReadOnly() => AsReadOnly();
 
     /// <summary>
-    /// Indicates whether the specified <see cref="PixelBuffer<TPixel>"/>, is equal to this instance.
+    /// Indicates whether the specified <see cref="PixelBuffer{T}"/>, is equal to this instance.
     /// </summary>
-    /// <param name="other">The <see cref="PixelBuffer<TPixel>"/> to compare with this instance.</param>
-    /// <returns><c>true</c> if the specified <see cref="PixelBuffer<TPixel>"/> is equal to this instance; otherwise, <c>false</c>.</returns>
+    /// <param name="other">The <see cref="PixelBuffer{T}"/> to compare with this instance.</param>
+    /// <returns><c>true</c> if the specified <see cref="PixelBuffer{T}"/> is equal to this instance; otherwise, <c>false</c>.</returns>
     public virtual bool Equals(PixelBuffer<T>? other)
     {
         if (other is null)
@@ -217,6 +224,10 @@ public record PixelBuffer<T> : IPixelBuffer<T>
         return HashCode.Combine(Width, Height, PixelType);
     }
 
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing">if set to <c>true</c> [disposing].</param>
     protected virtual void Dispose(bool disposing)
     {
         if (!_isDisposed)

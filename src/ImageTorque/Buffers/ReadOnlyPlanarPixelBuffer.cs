@@ -2,6 +2,9 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
+/// <summary>
+/// Represents a read only planar pixel buffer.
+/// </summary>
 public sealed record ReadOnlyPlanarPixelBuffer<TPixel> : ReadOnlyPixelBuffer<TPixel>
     where TPixel : unmanaged, IPixel
 {

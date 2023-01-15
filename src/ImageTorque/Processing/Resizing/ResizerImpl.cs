@@ -8,13 +8,13 @@ internal partial class Resizer
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static float CubicHermite(float A, float B, float C, float D, float t)
     {
-        float a = -A / 2.0f + 3.0f * B / 2.0f - 3.0f * C / 2.0f + D / 2.0f;
-        float b = A - 5.0f * B / 2.0f + 2.0f * C - D / 2.0f;
-        float c = -A / 2.0f + C / 2.0f;
+        float a = (-A / 2.0f) + (3.0f * B / 2.0f) - (3.0f * C / 2.0f) + (D / 2.0f);
+        float b = A - (5.0f * B / 2.0f) + (2.0f * C) - (D / 2.0f);
+        float c = (-A / 2.0f) + (C / 2.0f);
         float d = B;
 
         float t2 = t * t;
-        return a * t * t2 + b * t2 + c * t + d;
+        return (a * t * t2) + (b * (t2 + c) * (t + d));
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ internal partial class Resizer
     {
         int cx = Math.Clamp(x, 0, originalWidth - 1);
         int cy = Math.Clamp(y, 0, originalHeight - 1);
-        return src[cy * originalWidth + cx]; // We need to use float, else the GPU would produce wrong results
+        return src[(cy * originalWidth) + cx]; // We need to use float, else the GPU would produce wrong results
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ internal partial class Resizer
     {
         int cx = Math.Clamp(x, 0, originalWidth - 1);
         int cy = Math.Clamp(y, 0, originalHeight - 1);
-        return src[cy * originalWidth + cx]; // We need to use float, else the GPU would produce wrong results
+        return src[(cy * originalWidth) + cx]; // We need to use float, else the GPU would produce wrong results
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ internal partial class Resizer
     {
         int cx = Math.Clamp(x, 0, originalWidth - 1);
         int cy = Math.Clamp(y, 0, originalHeight - 1);
-        Rgb outPixel = src[cy * originalWidth + cx];
+        Rgb outPixel = src[(cy * originalWidth) + cx];
         return new Rgb(outPixel.Red, outPixel.Green, outPixel.Blue); // We need to use float, else the GPU would produce wrong
     }
 
@@ -87,7 +87,7 @@ internal partial class Resizer
     {
         int cx = Math.Clamp(x, 0, originalWidth - 1);
         int cy = Math.Clamp(y, 0, originalHeight - 1);
-        Rgb24 outPixel = src[cy * originalWidth + cx];
+        Rgb24 outPixel = src[(cy * originalWidth) + cx];
         return new Rgb(outPixel.Red, outPixel.Green, outPixel.Blue); // We need to use float, else the GPU would produce wrong
     }
 
@@ -106,7 +106,7 @@ internal partial class Resizer
     {
         int cx = Math.Clamp(x, 0, originalWidth - 1);
         int cy = Math.Clamp(y, 0, originalHeight - 1);
-        Rgb48 outPixel = src[cy * originalWidth + cx];
+        Rgb48 outPixel = src[(cy * originalWidth) + cx];
         return new Rgb(outPixel.Red, outPixel.Green, outPixel.Blue); // We need to use float, else the GPU would produce wrong
     }
 
@@ -125,7 +125,7 @@ internal partial class Resizer
     {
         int cx = Math.Clamp(x, 0, originalWidth - 1);
         int cy = Math.Clamp(y, 0, originalHeight - 1);
-        return src[cy * originalWidth + cx]; // We need to use float, else the GPU would produce wrong results
+        return src[(cy * originalWidth) + cx]; // We need to use float, else the GPU would produce wrong results
     }
 
     /// <summary>
@@ -150,13 +150,10 @@ internal partial class Resizer
     /// <param name="ty">vertical relative position on the c(i)j - c(i-1)j axis.</param>
     /// <returns>Bilinear interpolated value for the pixel located at X(result) = X(c00)+tx, Y(result)=X(c00)+ty.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static float Blerp(float c00, float c10, float c01, float c11, float tx, float ty)
-    {
-        return Lerp(
+    private static float Blerp(float c00, float c10, float c01, float c11, float tx, float ty) => Lerp(
               Lerp(c00, c10, tx) // interpolation of c00 and c10, "top row" point A value
             , Lerp(c01, c11, tx) // interpolation of c01 & c11, "bottom row" point B value
             , ty); // relative position on the vertical axis, interpolating between point A & B values for the final point pixel value
-    }
 
     /// <summary>
     /// Linear interpolation, imprecise when t=1.
@@ -167,10 +164,7 @@ internal partial class Resizer
     /// <param name="t">relative position between [0.0-1.0) along the axis between the 2 points.</param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static float Lerp(float s, float e, float t)
-    {
-        return s + (e - s) * t;
-    }
+    private static float Lerp(float s, float e, float t) => s + ((e - s) * t);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void ResizeBicubicByte(ReadOnlySpan<byte> byteSrc, Span<byte> byteDest, int originalWidth, int originalHeight, int destinationWidth, int destinationHeight, int yDest)
@@ -184,11 +178,11 @@ internal partial class Resizer
 
             float v = destY / (float)(destinationHeight - 1);
             float u = destX / (float)(destinationWidth - 1);
-            float x2 = u * originalWidth - 0.5f;
+            float x2 = (u * originalWidth) - 0.5f;
             int xint = (int)x2;
             float xfract = x2 - MathF.Floor(x2);
 
-            float y2 = v * originalHeight - 0.5f;
+            float y2 = (v * originalHeight) - 0.5f;
             int yint = (int)y2;
             float yfract = y2 - MathF.Floor(y2);
 
@@ -222,7 +216,7 @@ internal partial class Resizer
             float col3 = CubicHermite(p03, p13, p23, p33, yfract);
             float value = CubicHermite(col0, col1, col2, col3, xfract);
             value = Math.Clamp(value, 0.0f, 255.0f);
-            int dstIndex = Math.Clamp(destY * destinationWidth + destX, 0, byteDest.Length - 1);
+            int dstIndex = Math.Clamp((destY * destinationWidth) + destX, 0, byteDest.Length - 1);
             byteDest[dstIndex] = (byte)value;
         }
     }
@@ -239,11 +233,11 @@ internal partial class Resizer
 
             float v = destY / (float)(destinationHeight - 1);
             float u = destX / (float)(destinationWidth - 1);
-            float x2 = u * originalWidth - 0.5f;
+            float x2 = (u * originalWidth) - 0.5f;
             int xint = (int)x2;
             float xfract = x2 - MathF.Floor(x2);
 
-            float y2 = v * originalHeight - 0.5f;
+            float y2 = (v * originalHeight) - 0.5f;
             int yint = (int)y2;
             float yfract = y2 - MathF.Floor(y2);
 
@@ -293,7 +287,7 @@ internal partial class Resizer
             float valueB = CubicHermite(col0B, col1B, col2B, col3B, xfract);
             valueB = Math.Clamp(valueB, 0.0f, 1.0f);
             // combine
-            rgbDest[destY * destinationWidth + destX] = new Rgb(valueR, valueG, valueB);
+            rgbDest[(destY * destinationWidth) + destX] = new Rgb(valueR, valueG, valueB);
         }
     }
 
@@ -307,13 +301,13 @@ internal partial class Resizer
             int destX = xDest;
             int destY = yDest;
 
-            float v = destY / (float)(destinationHeight);
-            float u = destX / (float)(destinationWidth);
-            float x2 = u * originalWidth - 0.5f;
+            float v = destY / (float)destinationHeight;
+            float u = destX / (float)destinationWidth;
+            float x2 = (u * originalWidth) - 0.5f;
             int xint = (int)x2;
             float xfract = x2 - MathF.Floor(x2);
 
-            float y2 = v * originalHeight - 0.5f;
+            float y2 = (v * originalHeight) - 0.5f;
             int yint = (int)y2;
             float yfract = y2 - MathF.Floor(y2);
 
@@ -363,7 +357,7 @@ internal partial class Resizer
             float valueB = CubicHermite(col0B, col1B, col2B, col3B, xfract);
             valueB = Math.Clamp(valueB, 0.0f, 255.0f);
             // combine
-            rgb24Dest[destY * destinationWidth + destX] = new Rgb24((byte)valueR, (byte)valueG, (byte)valueB);
+            rgb24Dest[(destY * destinationWidth) + destX] = new Rgb24((byte)valueR, (byte)valueG, (byte)valueB);
         }
     }
 
@@ -379,11 +373,11 @@ internal partial class Resizer
 
             float v = destY / (float)(destinationHeight - 1);
             float u = destX / (float)(destinationWidth - 1);
-            float x2 = u * originalWidth - 0.5f;
+            float x2 = (u * originalWidth) - 0.5f;
             int xint = (int)x2;
             float xfract = x2 - MathF.Floor(x2);
 
-            float y2 = v * originalHeight - 0.5f;
+            float y2 = (v * originalHeight) - 0.5f;
             int yint = (int)y2;
             float yfract = y2 - MathF.Floor(y2);
 
@@ -433,7 +427,7 @@ internal partial class Resizer
             float valueB = CubicHermite(col0B, col1B, col2B, col3B, xfract);
             valueB = Math.Clamp(valueB, 0.0f, 65535.0f);
             // combine
-            rgb48Dest[destY * destinationWidth + destX] = new Rgb48((ushort)valueR, (ushort)valueG, (ushort)valueB);
+            rgb48Dest[(destY * destinationWidth) + destX] = new Rgb48((ushort)valueR, (ushort)valueG, (ushort)valueB);
         }
     }
 
@@ -449,11 +443,11 @@ internal partial class Resizer
 
             float v = destY / (float)(destinationHeight - 1);
             float u = destX / (float)(destinationWidth - 1);
-            float x2 = u * originalWidth - 0.5f;
+            float x2 = (u * originalWidth) - 0.5f;
             int xint = (int)x2;
             float xfract = x2 - MathF.Floor(x2);
 
-            float y2 = v * originalHeight - 0.5f;
+            float y2 = (v * originalHeight) - 0.5f;
             int yint = (int)y2;
             float yfract = y2 - MathF.Floor(y2);
 
@@ -487,7 +481,7 @@ internal partial class Resizer
             float col3 = CubicHermite(p03, p13, p23, p33, yfract);
             float value = CubicHermite(col0, col1, col2, col3, xfract);
             value = Math.Clamp(value, 0.0f, 1.0f);
-            int dstIndex = Math.Clamp(destY * destinationWidth + destX, 0, byteDest.Length - 1);
+            int dstIndex = Math.Clamp((destY * destinationWidth) + destX, 0, byteDest.Length - 1);
             byteDest[dstIndex] = value;
         }
     }
@@ -504,11 +498,11 @@ internal partial class Resizer
 
             float v = destY / (float)(destinationHeight - 1);
             float u = destX / (float)(destinationWidth - 1);
-            float x2 = u * originalWidth - 0.5f;
+            float x2 = (u * originalWidth) - 0.5f;
             int xint = (int)x2;
             float xfract = x2 - MathF.Floor(x2);
 
-            float y2 = v * originalHeight - 0.5f;
+            float y2 = (v * originalHeight) - 0.5f;
             int yint = (int)y2;
             float yfract = y2 - MathF.Floor(y2);
 
@@ -542,7 +536,7 @@ internal partial class Resizer
             float col3 = CubicHermite(p03, p13, p23, p33, yfract);
             float value = CubicHermite(col0, col1, col2, col3, xfract);
             value = Math.Clamp(value, 0.0f, 65535.0f);
-            int dstIndex = Math.Clamp(destY * destinationWidth + destX, 0, byteDest.Length - 1);
+            int dstIndex = Math.Clamp((destY * destinationWidth) + destX, 0, byteDest.Length - 1);
             byteDest[dstIndex] = (ushort)value;
         }
     }
@@ -563,17 +557,17 @@ internal partial class Resizer
             int gyi0 = (int)Math.Floor(gy);
             int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
             int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = gyi0 * originalWidth + gxi0;
-            int srcIndexX1 = gyi0 * originalWidth + gxi1;
-            int srcIndexY1 = gyi1 * originalWidth + gxi0;
-            int srcIndexXY1 = gyi1 * originalWidth + gxi1;
+            int srcIndex = (gyi0 * originalWidth) + gxi0;
+            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
+            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
+            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
             float c00 = byteSrc[srcIndex];
             float c10 = byteSrc[srcIndexX1];
             float c01 = byteSrc[srcIndexY1];
             float c11 = byteSrc[srcIndexXY1];
 
             byte value = (byte)Blerp(c00, c10, c01, c11, gx - gxi0, gy - gyi0);
-            int dstIndex = destY * destinationWidth + destX;
+            int dstIndex = (destY * destinationWidth) + destX;
             byteDest[dstIndex] = value;
         }
     }
@@ -594,10 +588,10 @@ internal partial class Resizer
             int gyi0 = (int)Math.Floor(gy);
             int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
             int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = gyi0 * originalWidth + gxi0;
-            int srcIndexX1 = gyi0 * originalWidth + gxi1;
-            int srcIndexY1 = gyi1 * originalWidth + gxi0;
-            int srcIndexXY1 = gyi1 * originalWidth + gxi1;
+            int srcIndex = (gyi0 * originalWidth) + gxi0;
+            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
+            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
+            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
             float c00R = byteSrc[srcIndex].Red;
             float c00G = byteSrc[srcIndex].Green;
             float c00B = byteSrc[srcIndex].Blue;
@@ -614,7 +608,7 @@ internal partial class Resizer
             float valueR = Blerp(c00R, c10R, c01R, c11R, gx - gxi0, gy - gyi0);
             float valueG = Blerp(c00G, c10G, c01G, c11G, gx - gxi0, gy - gyi0);
             float valueB = Blerp(c00B, c10B, c01B, c11B, gx - gxi0, gy - gyi0);
-            int dstIndex = destY * destinationWidth + destX;
+            int dstIndex = (destY * destinationWidth) + destX;
             byteDest[dstIndex] = new Rgb(valueR, valueG, valueB);
         }
     }
@@ -635,10 +629,10 @@ internal partial class Resizer
             int gyi0 = (int)Math.Floor(gy);
             int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
             int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = gyi0 * originalWidth + gxi0;
-            int srcIndexX1 = gyi0 * originalWidth + gxi1;
-            int srcIndexY1 = gyi1 * originalWidth + gxi0;
-            int srcIndexXY1 = gyi1 * originalWidth + gxi1;
+            int srcIndex = (gyi0 * originalWidth) + gxi0;
+            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
+            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
+            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
             float c00R = byteSrc[srcIndex].Red;
             float c00G = byteSrc[srcIndex].Green;
             float c00B = byteSrc[srcIndex].Blue;
@@ -655,7 +649,7 @@ internal partial class Resizer
             byte valueR = (byte)Blerp(c00R, c10R, c01R, c11R, gx - gxi0, gy - gyi0);
             byte valueG = (byte)Blerp(c00G, c10G, c01G, c11G, gx - gxi0, gy - gyi0);
             byte valueB = (byte)Blerp(c00B, c10B, c01B, c11B, gx - gxi0, gy - gyi0);
-            int dstIndex = destY * destinationWidth + destX;
+            int dstIndex = (destY * destinationWidth) + destX;
             byteDest[dstIndex] = new Rgb24(valueR, valueG, valueB);
         }
     }
@@ -676,10 +670,10 @@ internal partial class Resizer
             int gyi0 = (int)Math.Floor(gy);
             int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
             int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = gyi0 * originalWidth + gxi0;
-            int srcIndexX1 = gyi0 * originalWidth + gxi1;
-            int srcIndexY1 = gyi1 * originalWidth + gxi0;
-            int srcIndexXY1 = gyi1 * originalWidth + gxi1;
+            int srcIndex = (gyi0 * originalWidth) + gxi0;
+            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
+            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
+            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
             float c00R = byteSrc[srcIndex].Red;
             float c00G = byteSrc[srcIndex].Green;
             float c00B = byteSrc[srcIndex].Blue;
@@ -696,7 +690,7 @@ internal partial class Resizer
             ushort valueR = (ushort)Blerp(c00R, c10R, c01R, c11R, gx - gxi0, gy - gyi0);
             ushort valueG = (ushort)Blerp(c00G, c10G, c01G, c11G, gx - gxi0, gy - gyi0);
             ushort valueB = (ushort)Blerp(c00B, c10B, c01B, c11B, gx - gxi0, gy - gyi0);
-            int dstIndex = destY * destinationWidth + destX;
+            int dstIndex = (destY * destinationWidth) + destX;
             byteDest[dstIndex] = new Rgb48(valueR, valueG, valueB);
         }
     }
@@ -717,17 +711,17 @@ internal partial class Resizer
             int gyi0 = (int)Math.Floor(gy);
             int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
             int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = gyi0 * originalWidth + gxi0;
-            int srcIndexX1 = gyi0 * originalWidth + gxi1;
-            int srcIndexY1 = gyi1 * originalWidth + gxi0;
-            int srcIndexXY1 = gyi1 * originalWidth + gxi1;
+            int srcIndex = (gyi0 * originalWidth) + gxi0;
+            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
+            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
+            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
             float c00 = byteSrc[srcIndex];
             float c10 = byteSrc[srcIndexX1];
             float c01 = byteSrc[srcIndexY1];
             float c11 = byteSrc[srcIndexXY1];
 
             float value = (float)Blerp(c00, c10, c01, c11, gx - gxi0, gy - gyi0);
-            int dstIndex = destY * destinationWidth + destX;
+            int dstIndex = (destY * destinationWidth) + destX;
             byteDest[dstIndex] = value;
         }
     }
@@ -748,17 +742,17 @@ internal partial class Resizer
             int gyi0 = (int)Math.Floor(gy);
             int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
             int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = gyi0 * originalWidth + gxi0;
-            int srcIndexX1 = gyi0 * originalWidth + gxi1;
-            int srcIndexY1 = gyi1 * originalWidth + gxi0;
-            int srcIndexXY1 = gyi1 * originalWidth + gxi1;
+            int srcIndex = (gyi0 * originalWidth) + gxi0;
+            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
+            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
+            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
             float c00 = byteSrc[srcIndex];
             float c10 = byteSrc[srcIndexX1];
             float c01 = byteSrc[srcIndexY1];
             float c11 = byteSrc[srcIndexXY1];
 
             ushort value = (ushort)Blerp(c00, c10, c01, c11, gx - gxi0, gy - gyi0);
-            int dstIndex = destY * destinationWidth + destX;
+            int dstIndex = (destY * destinationWidth) + destX;
             byteDest[dstIndex] = value;
         }
     }
@@ -774,8 +768,8 @@ internal partial class Resizer
             int gxi = (int)((float)destX / destinationWidth * originalWidth);
             int gyi = (int)((float)destY / destinationHeight * originalHeight);
 
-            int srcIndex = gyi * originalWidth + gxi;
-            int dstIndex = destY * destinationWidth + destX;
+            int srcIndex = (gyi * originalWidth) + gxi;
+            int dstIndex = (destY * destinationWidth) + destX;
             destination[dstIndex] = source[srcIndex];
         }
     }
@@ -791,8 +785,8 @@ internal partial class Resizer
             int gxi = (int)((float)destX / destinationWidth * originalWidth);
             int gyi = (int)((float)destY / destinationHeight * originalHeight);
 
-            int srcIndex = gyi * originalWidth + gxi;
-            int dstIndex = destY * destinationWidth + destX;
+            int srcIndex = (gyi * originalWidth) + gxi;
+            int dstIndex = (destY * destinationWidth) + destX;
             destination[dstIndex] = source[srcIndex];
         }
     }
@@ -808,8 +802,8 @@ internal partial class Resizer
             int gxi = (int)((float)destX / destinationWidth * originalWidth);
             int gyi = (int)((float)destY / destinationHeight * originalHeight);
 
-            int srcIndex = gyi * originalWidth + gxi;
-            int dstIndex = destY * destinationWidth + destX;
+            int srcIndex = (gyi * originalWidth) + gxi;
+            int dstIndex = (destY * destinationWidth) + destX;
             destination[dstIndex] = source[srcIndex];
         }
     }
@@ -825,8 +819,8 @@ internal partial class Resizer
             int gxi = (int)((float)destX / destinationWidth * originalWidth);
             int gyi = (int)((float)destY / destinationHeight * originalHeight);
 
-            int srcIndex = gyi * originalWidth + gxi;
-            int dstIndex = destY * destinationWidth + destX;
+            int srcIndex = (gyi * originalWidth) + gxi;
+            int dstIndex = (destY * destinationWidth) + destX;
             destination[dstIndex] = source[srcIndex];
         }
     }
@@ -842,8 +836,8 @@ internal partial class Resizer
             int gxi = (int)((float)destX / destinationWidth * originalWidth);
             int gyi = (int)((float)destY / destinationHeight * originalHeight);
 
-            int srcIndex = gyi * originalWidth + gxi;
-            int dstIndex = destY * destinationWidth + destX;
+            int srcIndex = (gyi * originalWidth) + gxi;
+            int dstIndex = (destY * destinationWidth) + destX;
             destination[dstIndex] = source[srcIndex];
         }
     }
@@ -859,8 +853,8 @@ internal partial class Resizer
             int gxi = (int)((float)destX / destinationWidth * originalWidth);
             int gyi = (int)((float)destY / destinationHeight * originalHeight);
 
-            int srcIndex = gyi * originalWidth + gxi;
-            int dstIndex = destY * destinationWidth + destX;
+            int srcIndex = (gyi * originalWidth) + gxi;
+            int dstIndex = (destY * destinationWidth) + destX;
             destination[dstIndex] = source[srcIndex];
         }
     }

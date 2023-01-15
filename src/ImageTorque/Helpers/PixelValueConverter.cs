@@ -1,8 +1,8 @@
 using System.Runtime.CompilerServices;
 
-namespace ImageTorque.Pixels;
+namespace ImageTorque;
 
-internal static class Convert
+internal static class PixelValueConverter
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     public static float ToSingle(byte value)

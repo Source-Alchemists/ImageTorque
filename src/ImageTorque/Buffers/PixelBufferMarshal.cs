@@ -2,6 +2,9 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
+/// <summary>
+/// Marshal operations for pixel buffers.
+/// </summary>
 public static class PixelBufferMarshal
 {
     /// <summary>

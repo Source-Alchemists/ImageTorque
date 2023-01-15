@@ -1,5 +1,8 @@
 namespace ImageTorque.Buffers;
 
+/// <summary>
+/// Represents a pixel buffer.
+/// </summary>
 public interface IPixelBuffer<TPixel> : IPixelBuffer where TPixel : unmanaged
 {
     /// <summary>

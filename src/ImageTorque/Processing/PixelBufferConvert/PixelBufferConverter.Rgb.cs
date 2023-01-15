@@ -320,9 +320,9 @@ internal partial class PixelBufferConverter
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 Rgb pixel = row[x];
-                resultRowRed[x] = Pixels.Convert.ToUInt16(pixel.Red);
-                resultRowGreen[x] = Pixels.Convert.ToUInt16(pixel.Green);
-                resultRowBlue[x] = Pixels.Convert.ToUInt16(pixel.Blue);
+                resultRowRed[x] = PixelValueConverter.ToUInt16(pixel.Red);
+                resultRowGreen[x] = PixelValueConverter.ToUInt16(pixel.Green);
+                resultRowBlue[x] = PixelValueConverter.ToUInt16(pixel.Blue);
             }
         });
         return resultBuffer;
@@ -342,9 +342,9 @@ internal partial class PixelBufferConverter
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 Rgb24 pixel = row[x];
-                resultRowRed[x] = Pixels.Convert.ToUInt16(pixel.Red);
-                resultRowGreen[x] = Pixels.Convert.ToUInt16(pixel.Green);
-                resultRowBlue[x] = Pixels.Convert.ToUInt16(pixel.Blue);
+                resultRowRed[x] = PixelValueConverter.ToUInt16(pixel.Red);
+                resultRowGreen[x] = PixelValueConverter.ToUInt16(pixel.Green);
+                resultRowBlue[x] = PixelValueConverter.ToUInt16(pixel.Blue);
             }
         });
         return resultBuffer;
@@ -386,9 +386,9 @@ internal partial class PixelBufferConverter
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 Rgb pixel = row[x];
-                resultRowRed[x] = Pixels.Convert.ToByte(pixel.Red);
-                resultRowGreen[x] = Pixels.Convert.ToByte(pixel.Green);
-                resultRowBlue[x] = Pixels.Convert.ToByte(pixel.Blue);
+                resultRowRed[x] = PixelValueConverter.ToByte(pixel.Red);
+                resultRowGreen[x] = PixelValueConverter.ToByte(pixel.Green);
+                resultRowBlue[x] = PixelValueConverter.ToByte(pixel.Blue);
             }
         });
         return resultBuffer;
@@ -430,9 +430,9 @@ internal partial class PixelBufferConverter
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 Rgb48 pixel = row[x];
-                resultRowRed[x] = Pixels.Convert.ToByte(pixel.Red);
-                resultRowGreen[x] = Pixels.Convert.ToByte(pixel.Green);
-                resultRowBlue[x] = Pixels.Convert.ToByte(pixel.Blue);
+                resultRowRed[x] = PixelValueConverter.ToByte(pixel.Red);
+                resultRowGreen[x] = PixelValueConverter.ToByte(pixel.Green);
+                resultRowBlue[x] = PixelValueConverter.ToByte(pixel.Blue);
             }
         });
         return resultBuffer;
@@ -474,9 +474,9 @@ internal partial class PixelBufferConverter
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 Rgb24 pixel = row[x];
-                resultRowRed[x] = Pixels.Convert.ToSingle(pixel.Red);
-                resultRowGreen[x] = Pixels.Convert.ToSingle(pixel.Green);
-                resultRowBlue[x] = Pixels.Convert.ToSingle(pixel.Blue);
+                resultRowRed[x] = PixelValueConverter.ToSingle(pixel.Red);
+                resultRowGreen[x] = PixelValueConverter.ToSingle(pixel.Green);
+                resultRowBlue[x] = PixelValueConverter.ToSingle(pixel.Blue);
             }
         });
         return resultBuffer;
@@ -496,9 +496,9 @@ internal partial class PixelBufferConverter
             for (int x = 0; x < inputBuffer.Width; x++)
             {
                 Rgb48 pixel = row[x];
-                resultRowRed[x] = Pixels.Convert.ToSingle(pixel.Red);
-                resultRowGreen[x] = Pixels.Convert.ToSingle(pixel.Green);
-                resultRowBlue[x] = Pixels.Convert.ToSingle(pixel.Blue);
+                resultRowRed[x] = PixelValueConverter.ToSingle(pixel.Red);
+                resultRowGreen[x] = PixelValueConverter.ToSingle(pixel.Green);
+                resultRowBlue[x] = PixelValueConverter.ToSingle(pixel.Blue);
             }
         });
         return resultBuffer;
@@ -544,9 +544,9 @@ internal partial class PixelBufferConverter
             Span<LS> resultRowBlue = resultBuffer.GetRow(2, y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
-                resultRowRed[x] = orgRowRed[x].ToLF();
-                resultRowGreen[x] = orgRowGreen[x].ToLF();
-                resultRowBlue[x] = orgRowBlue[x].ToLF();
+                resultRowRed[x] = orgRowRed[x].ToLS();
+                resultRowGreen[x] = orgRowGreen[x].ToLS();
+                resultRowBlue[x] = orgRowBlue[x].ToLS();
             }
         });
         return resultBuffer;
@@ -592,9 +592,9 @@ internal partial class PixelBufferConverter
             Span<LS> resultRowBlue = resultBuffer.GetRow(2, y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
-                resultRowRed[x] = orgRowRed[x].ToLF();
-                resultRowGreen[x] = orgRowGreen[x].ToLF();
-                resultRowBlue[x] = orgRowBlue[x].ToLF();
+                resultRowRed[x] = orgRowRed[x].ToLS();
+                resultRowGreen[x] = orgRowGreen[x].ToLS();
+                resultRowBlue[x] = orgRowBlue[x].ToLS();
             }
         });
         return resultBuffer;
@@ -662,9 +662,9 @@ internal partial class PixelBufferConverter
             Span<Rgb> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
-                resultRow[x] = new Rgb(Pixels.Convert.ToSingle(orgRowRed[x]),
-                                        Pixels.Convert.ToSingle(orgRowGreen[x]),
-                                        Pixels.Convert.ToSingle(orgRowBlue[x]));
+                resultRow[x] = new Rgb(PixelValueConverter.ToSingle(orgRowRed[x]),
+                                        PixelValueConverter.ToSingle(orgRowGreen[x]),
+                                        PixelValueConverter.ToSingle(orgRowBlue[x]));
             }
         });
         return resultBuffer;
@@ -684,9 +684,9 @@ internal partial class PixelBufferConverter
             Span<Rgb24> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
-                resultRow[x] = new Rgb24(Pixels.Convert.ToByte(orgRowRed[x]),
-                                        Pixels.Convert.ToByte(orgRowGreen[x]),
-                                        Pixels.Convert.ToByte(orgRowBlue[x]));
+                resultRow[x] = new Rgb24(PixelValueConverter.ToByte(orgRowRed[x]),
+                                        PixelValueConverter.ToByte(orgRowGreen[x]),
+                                        PixelValueConverter.ToByte(orgRowBlue[x]));
             }
         });
         return resultBuffer;
@@ -728,9 +728,9 @@ internal partial class PixelBufferConverter
             Span<Rgb> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
-                resultRow[x] = new Rgb(Pixels.Convert.ToSingle(orgRowRed[x]),
-                                        Pixels.Convert.ToSingle(orgRowGreen[x]),
-                                        Pixels.Convert.ToSingle(orgRowBlue[x]));
+                resultRow[x] = new Rgb(PixelValueConverter.ToSingle(orgRowRed[x]),
+                                        PixelValueConverter.ToSingle(orgRowGreen[x]),
+                                        PixelValueConverter.ToSingle(orgRowBlue[x]));
             }
         });
         return resultBuffer;
@@ -772,9 +772,9 @@ internal partial class PixelBufferConverter
             Span<Rgb48> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
-                resultRow[x] = new Rgb48(Pixels.Convert.ToUInt16(orgRowRed[x]),
-                                        Pixels.Convert.ToUInt16(orgRowGreen[x]),
-                                        Pixels.Convert.ToUInt16(orgRowBlue[x]));
+                resultRow[x] = new Rgb48(PixelValueConverter.ToUInt16(orgRowRed[x]),
+                                        PixelValueConverter.ToUInt16(orgRowGreen[x]),
+                                        PixelValueConverter.ToUInt16(orgRowBlue[x]));
             }
         });
         return resultBuffer;
@@ -816,9 +816,9 @@ internal partial class PixelBufferConverter
             Span<Rgb24> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
-                resultRow[x] = new Rgb24(Pixels.Convert.ToByte(orgRowRed[x]),
-                                        Pixels.Convert.ToByte(orgRowGreen[x]),
-                                        Pixels.Convert.ToByte(orgRowBlue[x]));
+                resultRow[x] = new Rgb24(PixelValueConverter.ToByte(orgRowRed[x]),
+                                        PixelValueConverter.ToByte(orgRowGreen[x]),
+                                        PixelValueConverter.ToByte(orgRowBlue[x]));
             }
         });
         return resultBuffer;
@@ -838,9 +838,9 @@ internal partial class PixelBufferConverter
             Span<Rgb48> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < inputBuffer.Width; x++)
             {
-                resultRow[x] = new Rgb48(Pixels.Convert.ToUInt16(orgRowRed[x]),
-                                        Pixels.Convert.ToUInt16(orgRowGreen[x]),
-                                        Pixels.Convert.ToUInt16(orgRowBlue[x]));
+                resultRow[x] = new Rgb48(PixelValueConverter.ToUInt16(orgRowRed[x]),
+                                        PixelValueConverter.ToUInt16(orgRowGreen[x]),
+                                        PixelValueConverter.ToUInt16(orgRowBlue[x]));
             }
         });
         return resultBuffer;

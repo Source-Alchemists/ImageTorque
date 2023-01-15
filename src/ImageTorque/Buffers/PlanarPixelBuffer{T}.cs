@@ -2,6 +2,9 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
+/// <summary>
+/// Represents a planar pixel buffer.
+/// </summary>
 public sealed record PlanarPixelBuffer<T> : PixelBuffer<T>
     where T : unmanaged, IPixel
 {

@@ -105,7 +105,7 @@ internal partial class PixelBufferConverter
             Span<LS> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < row.Length; x++)
             {
-                resultRow[x] = row[x].ToLF();
+                resultRow[x] = row[x].ToLS();
             }
         });
         return resultBuffer;
@@ -139,7 +139,7 @@ internal partial class PixelBufferConverter
             Span<LS> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < row.Length; x++)
             {
-                resultRow[x] = row[x].ToLF();
+                resultRow[x] = row[x].ToLS();
             }
         });
         return resultBuffer;

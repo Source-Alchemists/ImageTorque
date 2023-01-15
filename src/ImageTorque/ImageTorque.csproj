@@ -2,30 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <PackageId>ImageTorque</PackageId>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyName>ImageTorque</AssemblyName>
     <AssemblyTitle>ImageTorque</AssemblyTitle>
     <RootNamespace>ImageTorque</RootNamespace>
-    <Company>Source Alchemists</Company>
-    <Copyright>Copyright © Source Alchemists</Copyright>
-    <RepositoryUrl Condition="'$(RepositoryUrl)' == ''">https://github.com/Source-Alchemists/ImageTorque/</RepositoryUrl>
-    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
-    <PackageTags>Image Resize Mirror Binarize Crop Packed Planar Interlaced DotNet</PackageTags>
-    <Description>Open .NET image processing library</Description>
     <Version>0.1.0</Version>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>

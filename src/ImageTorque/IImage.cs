@@ -3,6 +3,9 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque;
 
+/// <summary>
+/// Represents an image.
+/// </summary>
 public interface IImage : IDisposable
 {
     /// <summary>
