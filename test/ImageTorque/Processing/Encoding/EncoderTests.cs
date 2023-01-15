@@ -1,8 +1,7 @@
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
-using ImageTorque.Processing;
 
-namespace ImageTorque.Tests.Encoding;
+namespace ImageTorque.Processing.Tests;
 
 public class EncoderTests : IDisposable
 {

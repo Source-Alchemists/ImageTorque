@@ -10,6 +10,10 @@ public record struct L8 : IL1Pixel<byte>
 
     public byte Value { get; set; }
 
+    public byte Min { get => Black; }
+
+    public byte Max { get => White; }
+
     public PixelType PixelType => PixelType.L8;
 
     public L8(byte value)

@@ -33,6 +33,10 @@ public record struct Rgb24 : IL3Pixel<byte>
         set { Blue = value; }
     }
 
+    public byte Min { get => byte.MinValue; }
+
+    public byte Max { get => byte.MaxValue; }
+
     public PixelType PixelType => PixelType.Rgb24;
 
     public Rgb24(byte red, byte green, byte blue)

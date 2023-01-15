@@ -33,6 +33,10 @@ public record struct Rgb48 : IL3Pixel<ushort>
         set { Blue = value; }
     }
 
+    public ushort Min { get => ushort.MinValue; }
+
+    public ushort Max { get => ushort.MaxValue; }
+
     public PixelType PixelType => PixelType.Rgb48;
 
     public Rgb48(ushort red, ushort green, ushort blue)

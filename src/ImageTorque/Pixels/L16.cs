@@ -10,6 +10,10 @@ public record struct L16 : IL1Pixel<ushort>
 
     public ushort Value { get; set; }
 
+    public ushort Min { get => Black; }
+
+    public ushort Max { get => White; }
+
     public PixelType PixelType => PixelType.L16;
 
     public L16(ushort value)

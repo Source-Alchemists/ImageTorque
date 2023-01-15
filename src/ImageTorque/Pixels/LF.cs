@@ -10,6 +10,10 @@ public record struct LF : IL1Pixel<float>
 
     public float Value { get; set; }
 
+    public float Min { get => Black; }
+
+    public float Max { get => White; }
+
     public PixelType PixelType => PixelType.LF;
 
     public LF(float value)

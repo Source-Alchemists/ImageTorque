@@ -34,6 +34,18 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
         {
             return PackedL3Operation<Rgb48, ushort>((ReadOnlyPackedPixelBuffer<Rgb48>)parameters.InputA, (ReadOnlyPackedPixelBuffer<Rgb48>)parameters.InputB!, parameters);
         }
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LF>))
+        {
+            return PlanarOperation<LF, float>((ReadOnlyPlanarPixelBuffer<LF>)parameters.InputA, (ReadOnlyPlanarPixelBuffer<LF>)parameters.InputB!, parameters);
+        }
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L8>))
+        {
+            return PlanarOperation<L8, byte>((ReadOnlyPlanarPixelBuffer<L8>)parameters.InputA, (ReadOnlyPlanarPixelBuffer<L8>)parameters.InputB!, parameters);
+        }
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L16>))
+        {
+            return PlanarOperation<L16, ushort>((ReadOnlyPlanarPixelBuffer<L16>)parameters.InputA, (ReadOnlyPlanarPixelBuffer<L16>)parameters.InputB!, parameters);
+        }
 
         throw new NotSupportedException($"The input type is not supported.");
     }
@@ -51,42 +63,7 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
             ReadOnlySpan<TPixel> rowB = sourceB.GetRow(rowIndex);
             Span<TPixel> targetRow = targetBuffer.GetRow(rowIndex);
 
-            int length = rowA.Length;
-            switch (parameters.ImageMathMode)
-            {
-                case ImageMathMode.Add:
-                    {
-                        for (int x = 0; x < length; x++)
-                        {
-                            targetRow[x].Value = rowA[x].Value + rowB[x].Value;
-                        }
-                        break;
-                    }
-                case ImageMathMode.Subtract:
-                    {
-                        for (int x = 0; x < length; x++)
-                        {
-                            targetRow[x].Value = rowA[x].Value - rowB[x].Value;
-                        }
-                        break;
-                    }
-                case ImageMathMode.Multiply:
-                    {
-                        for (int x = 0; x < length; x++)
-                        {
-                            targetRow[x].Value = rowA[x].Value * rowB[x].Value;
-                        }
-                        break;
-                    }
-                case ImageMathMode.Divide:
-                    {
-                        for (int x = 0; x < length; x++)
-                        {
-                            targetRow[x].Value = rowA[x].Value / rowB[x].Value;
-                        }
-                        break;
-                    }
-            }
+            L1ChannelOperation<TPixel, T>(rowA, rowB, targetRow, parameters.ImageMathMode);
         });
 
         return targetBuffer;
@@ -106,15 +83,17 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
             Span<TPixel> targetRow = targetBuffer.GetRow(rowIndex);
 
             int length = rowA.Length;
+            T min = rowA[0].Min;
+            T max = rowA[0].Max;
             switch (parameters.ImageMathMode)
             {
                 case ImageMathMode.Add:
                     {
                         for (int x = 0; x < length; x++)
                         {
-                            targetRow[x].R = rowA[x].R + rowB[x].R;
-                            targetRow[x].G = rowA[x].G + rowB[x].G;
-                            targetRow[x].B = rowA[x].B + rowB[x].B;
+                            targetRow[x].R = Numerics.Clamp(rowA[x].R + rowB[x].R, min, max);
+                            targetRow[x].G = Numerics.Clamp(rowA[x].G + rowB[x].G, min, max);
+                            targetRow[x].B = Numerics.Clamp(rowA[x].B + rowB[x].B, min, max);
                         }
                         break;
                     }
@@ -122,9 +101,9 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
                     {
                         for (int x = 0; x < length; x++)
                         {
-                            targetRow[x].R = rowA[x].R - rowB[x].R;
-                            targetRow[x].G = rowA[x].G - rowB[x].G;
-                            targetRow[x].B = rowA[x].B - rowB[x].B;
+                            targetRow[x].R = Numerics.Clamp(rowA[x].R - rowB[x].R, min, max);
+                            targetRow[x].G = Numerics.Clamp(rowA[x].G - rowB[x].G, min, max);
+                            targetRow[x].B = Numerics.Clamp(rowA[x].B - rowB[x].B, min, max);
                         }
                         break;
                     }
@@ -132,19 +111,9 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
                     {
                         for (int x = 0; x < length; x++)
                         {
-                            targetRow[x].R = rowA[x].R * rowB[x].R;
-                            targetRow[x].G = rowA[x].G * rowB[x].G;
-                            targetRow[x].B = rowA[x].B * rowB[x].B;
-                        }
-                        break;
-                    }
-                case ImageMathMode.Divide:
-                    {
-                        for (int x = 0; x < length; x++)
-                        {
-                            targetRow[x].R = rowA[x].R / rowB[x].R;
-                            targetRow[x].G = rowA[x].G / rowB[x].G;
-                            targetRow[x].B = rowA[x].B / rowB[x].B;
+                            targetRow[x].R = Numerics.Clamp(rowA[x].R * rowB[x].R, min, max);
+                            targetRow[x].G = Numerics.Clamp(rowA[x].G * rowB[x].G, min, max);
+                            targetRow[x].B = Numerics.Clamp(rowA[x].B * rowB[x].B, min, max);
                         }
                         break;
                     }
@@ -154,10 +123,78 @@ internal sealed class ImageMath : IProcessor<ImageMathParameters, IPixelBuffer>
         return targetBuffer;
     }
 
-    // [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    // private static IPixelBuffer PlanarL3Operation<TPixel, T>(ReadOnlyPlanarPixelBuffer<TPixel> sourceA, ReadOnlyPlanarPixelBuffer<TPixel> sourceB, ImageMathParameters parameters)
-    //     where TPixel : unmanaged, IPackedL3Pixel<T>
-    //     where T : unmanaged, INumber<T>
-    // {
-    // }
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    private static IPixelBuffer PlanarOperation<TPixel, T>(ReadOnlyPlanarPixelBuffer<TPixel> sourceA, ReadOnlyPlanarPixelBuffer<TPixel> sourceB, ImageMathParameters parameters)
+        where TPixel : unmanaged, IL1Pixel<T>
+        where T : unmanaged, INumber<T>
+    {
+        var targetBuffer = new PlanarPixelBuffer<TPixel>(sourceA.Width, sourceA.Height);
+
+        _ = Parallel.For(0, sourceA.Height, parameters.ParallelOptions, rowIndex =>
+        {
+            for (int channelIndex = 0; channelIndex < 3; channelIndex++)
+            {
+                ReadOnlySpan<TPixel> rowA = sourceA.GetRow(channelIndex, rowIndex);
+                ReadOnlySpan<TPixel> rowB = sourceB.GetRow(channelIndex, rowIndex);
+                Span<TPixel> targetRow = targetBuffer.GetRow(channelIndex, rowIndex);
+
+                L1ChannelOperation<TPixel, T>(rowA, rowB, targetRow, parameters.ImageMathMode);
+            }
+        });
+
+        return targetBuffer;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    private static void L1ChannelOperation<TPixel, T>(ReadOnlySpan<TPixel> rowA, ReadOnlySpan<TPixel> rowB, Span<TPixel> targetRow, ImageMathMode mode)
+        where TPixel : unmanaged, IL1Pixel<T>
+        where T : unmanaged, INumber<T>
+    {
+        int length = rowA.Length;
+        switch (mode)
+        {
+            case ImageMathMode.Add:
+                {
+                    for (int x = 0; x < length; x++)
+                    {
+                        targetRow[x].Value = ClampAdd(rowA[x], rowB[x]);
+                    }
+                    break;
+                }
+            case ImageMathMode.Subtract:
+                {
+                    for (int x = 0; x < length; x++)
+                    {
+                        targetRow[x].Value = ClampSubtract(rowA[x], rowB[x]);
+                    }
+                    break;
+                }
+            case ImageMathMode.Multiply:
+                {
+                    for (int x = 0; x < length; x++)
+                    {
+                        targetRow[x].Value = ClampMultiply(rowA[x], rowB[x]);
+                    }
+                    break;
+                }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    private static T ClampAdd<T>(IL1Pixel<T> p1, IL1Pixel<T> p2) where T : unmanaged, INumber<T>
+    {
+        return Numerics.ClampAdd(p1.Value, p2.Value, p1.Min, p1.Max);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    private static T ClampSubtract<T>(IL1Pixel<T> p1, IL1Pixel<T> p2) where T : unmanaged, INumber<T>
+    {
+        return Numerics.ClampSubtract(p1.Value, p2.Value, p1.Min, p1.Max);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    private static T ClampMultiply<T>(IL1Pixel<T> p1, IL1Pixel<T> p2) where T : unmanaged, INumber<T>
+    {
+        return Numerics.ClampMultiply(p1.Value, p2.Value, p1.Min, p1.Max);
+    }
 }

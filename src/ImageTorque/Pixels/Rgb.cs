@@ -33,6 +33,10 @@ public record struct Rgb : IL3Pixel<float>
         set { Blue = value; }
     }
 
+    public float Min { get => 0f; }
+
+    public float Max { get => 1f; }
+
     public PixelType PixelType => PixelType.Rgb;
 
     public Rgb(float red, float green, float blue)

@@ -4,6 +4,5 @@ public enum ImageMathMode
 {
     Add,
     Subtract,
-    Multiply,
-    Divide
+    Multiply
 }
