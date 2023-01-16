@@ -49,7 +49,7 @@ public record PixelBuffer<T> : IPixelBuffer<T>
     /// <summary>
     /// Gets the number of channels.
     /// </summary>
-    public int NumberOfChannels { get; protected set; }
+    public int NumberOfChannels { get; protected set; } = 1;
 
     /// <summary>
     /// Gets the size.
@@ -97,21 +97,6 @@ public record PixelBuffer<T> : IPixelBuffer<T>
         Height = height;
         T pixel = Activator.CreateInstance<T>();
         PixelType = pixel.PixelType;
-        switch (PixelType)
-        {
-            case PixelType.LF:
-            case PixelType.L8:
-            case PixelType.L16:
-                NumberOfChannels = 1;
-                IsColor = false;
-                break;
-            case PixelType.Rgb:
-            case PixelType.Rgb24:
-            case PixelType.Rgb48:
-                NumberOfChannels = 3;
-                IsColor = true;
-                break;
-        }
 
         PixelFormat = PixelBufferMarshal.GetPixelFormat(PixelBufferType, PixelType);
         Size = width * height * NumberOfChannels;
