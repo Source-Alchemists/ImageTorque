@@ -5,7 +5,7 @@
     <AssemblyName>ImageTorque</AssemblyName>
     <AssemblyTitle>ImageTorque</AssemblyTitle>
     <RootNamespace>ImageTorque</RootNamespace>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

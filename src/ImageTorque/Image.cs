@@ -103,7 +103,7 @@ public partial record Image : IImage
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <returns>The image.</returns>
-    public static IImage Load(Stream stream)
+    public static Image Load(Stream stream)
     {
         IPixelBuffer pixelBuffer = s_decoder.Execute(new DecoderParameters
         {
@@ -119,7 +119,7 @@ public partial record Image : IImage
     /// </summary>
     /// <param name="path">The path.</param>
     /// <returns>The image.</returns>
-    public static IImage Load(string path)
+    public static Image Load(string path)
     {
         using FileStream stream = File.OpenRead(path);
         return Load(stream);
