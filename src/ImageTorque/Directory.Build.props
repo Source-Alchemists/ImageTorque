@@ -21,6 +21,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>full</DebugType>
+    <DebugSymbols>True</DebugSymbols>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
     <DevelopmentDependency>true</DevelopmentDependency>
     <RepositoryUrl Condition="'$(RepositoryUrl)' == ''">https://github.com/Source-Alchemists/ImageTorque/</RepositoryUrl>
