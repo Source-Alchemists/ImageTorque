@@ -48,4 +48,4 @@ jobs:
       shell: pwsh
       env:
         SECRET_KEY: ${{ secrets.IMAGETORQUE_NUGET_ORG }}
-      run: dotnet nuget push ./src/ImageTorque/bin/Release/ImageTorque.*.nupkg --api-key $env:SECRET_KEY --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push artifacts/*.nupkg --api-key $env:SECRET_KEY --source https://api.nuget.org/v3/index.json
