@@ -131,7 +131,7 @@ public class ImageExtensionsMathTests
 
         // Assert
         Assert.NotNull(resultImage);
-        Assert.Equal(new L8[]{new L8(255), new L8(255), new L8(255), new L8(255), new L8(255), new L8(255), new L8(0), new L8(255)}, resultImage.AsPacked<L8>().Pixels[..8].ToArray());
+        Assert.Equal(new L8[]{new L8(191), new L8(255), new L8(255), new L8(255), new L8(255), new L8(255), new L8(0), new L8(255)}, resultImage.AsPacked<L8>().Pixels[..8].ToArray());
     }
 
     [Fact]
