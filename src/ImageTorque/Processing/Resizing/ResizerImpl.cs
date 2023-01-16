@@ -14,7 +14,7 @@ internal partial class Resizer
         float d = B;
 
         float t2 = t * t;
-        return (a * t * t2) + (b * (t2 + c) * (t + d));
+        return a * t * t2 + b * t2 + c * t + d;
     }
 
     /// <summary>

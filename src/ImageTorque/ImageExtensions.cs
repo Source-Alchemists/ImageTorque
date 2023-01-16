@@ -10,7 +10,6 @@ namespace ImageTorque;
 public static partial class ImageExtensions
 {
     private static readonly Encoder s_encoder = new();
-    private static readonly Resizer s_resizer = new();
     private static readonly GrayscaleFilter s_grayscaleFilter = new();
     private static readonly Mirror s_mirror = new();
     private static readonly Crop s_crop = new();
@@ -85,33 +84,6 @@ public static partial class ImageExtensions
             width = maxSize;
             height = maxSize;
         }
-    }
-
-    /// <summary>
-    /// Resizes the image.
-    /// </summary>
-    /// <param name="image">The image.</param>
-    /// <param name="width">The width.</param>
-    /// <param name="height">The height.</param>
-    /// <param name="resizeMode">The resize mode.</param>
-    /// <returns>The resized image.</returns>
-    public static Image Resize(this Image image, int width, int height, ResizeMode resizeMode = ResizeMode.Bicubic)
-    {
-        if (width < 1)
-            throw new ArgumentOutOfRangeException(nameof(width), "Width must be greater than 0.");
-        if (height < 1)
-            throw new ArgumentOutOfRangeException(nameof(height), "Height must be greater than 0.");
-
-        IReadOnlyPixelBuffer sourceBuffer = image.GetPixelBuffer();
-        IPixelBuffer resizedPixelBuffer = s_resizer.Execute(new ResizerParameters
-        {
-            Input = sourceBuffer,
-            Width = width,
-            Height = height,
-            ResizeMode = resizeMode
-        });
-
-        return new Image(resizedPixelBuffer);
     }
 
     /// <summary>
