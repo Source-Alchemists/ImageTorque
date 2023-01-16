@@ -36,6 +36,10 @@ public static partial class ImageExtensions
 
     private static Image MathOperation(Image image1, Image image2, ImageMathMode mode)
     {
+        if(image1.IsColor != image2.IsColor)
+        {
+            throw new InvalidOperationException("Cannot perform math operations on images with different color types.");
+        }
         IReadOnlyPixelBuffer b1 = image1.GetPixelBuffer();
         Image tmpImage = image2;
         bool resized = false;
