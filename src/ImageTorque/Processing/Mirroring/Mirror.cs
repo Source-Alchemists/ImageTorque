@@ -4,23 +4,23 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing;
 
-public sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
+internal sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
 {
     public IPixelBuffer Execute(MirrorParameters parameters)
     {
         Type inputType = parameters.Input!.GetType();
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LS>))
         {
             return MirrorMono(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
         {
             return MirrorMono8(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L16>))
         {
             return MirrorMono16(parameters);
         }
@@ -40,17 +40,17 @@ public sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
             return MirrorRgb48(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<RgbFFF>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LS>))
         {
             return MirrorRgbFFF(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb888>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L8>))
         {
             return MirrorRgb888(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb161616>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L16>))
         {
             return MirrorRgb161616(parameters);
         }
@@ -59,30 +59,30 @@ public sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Mono> MirrorMono(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Mono>)parameters.Input!, parameters);
+    private static PixelBuffer<LS> MirrorMono(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<LS>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Mono8> MirrorMono8(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Mono8>)parameters.Input!, parameters);
+    private static PixelBuffer<L8> MirrorMono8(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<L8>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Mono16> MirrorMono16(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Mono16>)parameters.Input!, parameters);
+    private static PixelBuffer<L16> MirrorMono16(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<L16>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Rgb> MirrorRgb(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input!, parameters);
+    private static PixelBuffer<Rgb> MirrorRgb(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Rgb24> MirrorRgb24(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Rgb24>)parameters.Input!, parameters);
+    private static PixelBuffer<Rgb24> MirrorRgb24(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Rgb24>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<Rgb48> MirrorRgb48(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input!, parameters);
+    private static PixelBuffer<Rgb48> MirrorRgb48(MirrorParameters parameters) => MirrorPacked((ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PlanarPixelBuffer<RgbFFF> MirrorRgbFFF(MirrorParameters parameters) => MirrorPlanar((ReadOnlyPlanarPixelBuffer<RgbFFF>)parameters.Input!, parameters);
+    private static PlanarPixelBuffer<LS> MirrorRgbFFF(MirrorParameters parameters) => MirrorPlanar((ReadOnlyPlanarPixelBuffer<LS>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PlanarPixelBuffer<Rgb888> MirrorRgb888(MirrorParameters parameters) => MirrorPlanar((ReadOnlyPlanarPixelBuffer<Rgb888>)parameters.Input!, parameters);
+    private static PlanarPixelBuffer<L8> MirrorRgb888(MirrorParameters parameters) => MirrorPlanar((ReadOnlyPlanarPixelBuffer<L8>)parameters.Input!, parameters);
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PlanarPixelBuffer<Rgb161616> MirrorRgb161616(MirrorParameters parameters) => MirrorPlanar((ReadOnlyPlanarPixelBuffer<Rgb161616>)parameters.Input!, parameters);
+    private static PlanarPixelBuffer<L16> MirrorRgb161616(MirrorParameters parameters) => MirrorPlanar((ReadOnlyPlanarPixelBuffer<L16>)parameters.Input!, parameters);
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static PackedPixelBuffer<TPixel> MirrorPacked<TPixel>(ReadOnlyPackedPixelBuffer<TPixel> sourcePixelBuffer, MirrorParameters parameters)
-        where TPixel : unmanaged, IPackedPixel<TPixel>
+    private static PixelBuffer<TPixel> MirrorPacked<TPixel>(ReadOnlyPackedPixelBuffer<TPixel> sourcePixelBuffer, MirrorParameters parameters)
+        where TPixel : unmanaged, IPixel
     {
         MirrorMode mode = parameters.MirrorMode;
-        var targetPixelBuffer = new PackedPixelBuffer<TPixel>(sourcePixelBuffer.Width, sourcePixelBuffer.Height);
+        var targetPixelBuffer = new PixelBuffer<TPixel>(sourcePixelBuffer.Width, sourcePixelBuffer.Height);
 
         switch (mode)
         {
@@ -123,7 +123,7 @@ public sealed class Mirror : IProcessor<MirrorParameters, IPixelBuffer>
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static PlanarPixelBuffer<TPixel> MirrorPlanar<TPixel>(ReadOnlyPlanarPixelBuffer<TPixel> sourcePixelBuffer, MirrorParameters parameters)
-        where TPixel : unmanaged, IPlanarPixel<TPixel>
+        where TPixel : unmanaged, IPixel
     {
         MirrorMode mode = parameters.MirrorMode;
         var targetPixelBuffer = new PlanarPixelBuffer<TPixel>(sourcePixelBuffer.Width, sourcePixelBuffer.Height);

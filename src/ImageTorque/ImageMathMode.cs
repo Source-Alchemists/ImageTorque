@@ -1,20 +1,20 @@
 namespace ImageTorque;
 
 /// <summary>
-/// The mirror mode.
+/// The image math mode.
 /// </summary>
-public enum MirrorMode
+public enum ImageMathMode
 {
     /// <summary>
-    /// Horizontal.
+    /// Add.
     /// </summary>
-    Horizontal,
+    Add,
     /// <summary>
-    /// Vertical.
+    /// Subtract.
     /// </summary>
-    Vertical,
+    Subtract,
     /// <summary>
-    /// Horizontal and vertical.
+    /// Multiply.
     /// </summary>
-    VerticalHorizontal
+    Multiply
 }

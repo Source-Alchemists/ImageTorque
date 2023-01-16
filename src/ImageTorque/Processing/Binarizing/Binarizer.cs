@@ -10,17 +10,17 @@ internal sealed partial class Binarizer : IProcessor<BinarizerParameters, IPixel
     {
         Type inputType = parameters.Input!.GetType();
 
-        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Mono>))
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<LS>))
         {
             return BinarizeMono(parameters);
         }
 
-        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
         {
             return BinarizeMono8(parameters);
         }
 
-        if(inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
+        if(inputType == typeof(ReadOnlyPackedPixelBuffer<L16>))
         {
             return BinarizeMono16(parameters);
         }
@@ -44,10 +44,10 @@ internal sealed partial class Binarizer : IProcessor<BinarizerParameters, IPixel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono> BinarizeMono(BinarizerParameters parameters)
+    private static PixelBuffer<LS> BinarizeMono(BinarizerParameters parameters)
     {
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<Mono>)parameters.Input!;
-        var targetBuffer = new PackedPixelBuffer<Mono>(sourceBuffer.Width, sourceBuffer.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<LS>)parameters.Input!;
+        var targetBuffer = new PixelBuffer<LS>(sourceBuffer.Width, sourceBuffer.Height);
         Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
         {
             BinarizeMono(sourceBuffer.GetRow(rowIndex), targetBuffer.GetRow(rowIndex),
@@ -57,10 +57,10 @@ internal sealed partial class Binarizer : IProcessor<BinarizerParameters, IPixel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono8> BinarizeMono8(BinarizerParameters parameters)
+    private static PixelBuffer<L8> BinarizeMono8(BinarizerParameters parameters)
     {
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<Mono8>)parameters.Input!;
-        var targetBuffer = new PackedPixelBuffer<Mono8>(sourceBuffer.Width, sourceBuffer.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<L8>)parameters.Input!;
+        var targetBuffer = new PixelBuffer<L8>(sourceBuffer.Width, sourceBuffer.Height);
         Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
         {
             BinarizeMono8(sourceBuffer.GetRow(rowIndex), targetBuffer.GetRow(rowIndex),
@@ -70,10 +70,10 @@ internal sealed partial class Binarizer : IProcessor<BinarizerParameters, IPixel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono8> BinarizeMono16(BinarizerParameters parameters)
+    private static PixelBuffer<L8> BinarizeMono16(BinarizerParameters parameters)
     {
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<Mono16>)parameters.Input!;
-        var targetBuffer = new PackedPixelBuffer<Mono8>(sourceBuffer.Width, sourceBuffer.Height);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<L16>)parameters.Input!;
+        var targetBuffer = new PixelBuffer<L8>(sourceBuffer.Width, sourceBuffer.Height);
         Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
         {
             BinarizeMono16(sourceBuffer.GetRow(rowIndex), targetBuffer.GetRow(rowIndex),
@@ -83,10 +83,10 @@ internal sealed partial class Binarizer : IProcessor<BinarizerParameters, IPixel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono> BinarizeRgb(BinarizerParameters parameters)
+    private static PixelBuffer<LS> BinarizeRgb(BinarizerParameters parameters)
     {
         var sourceBuffer = (ReadOnlyPackedPixelBuffer<Rgb>)parameters.Input!;
-        var targetBuffer = new PackedPixelBuffer<Mono>(sourceBuffer.Width, sourceBuffer.Height);
+        var targetBuffer = new PixelBuffer<LS>(sourceBuffer.Width, sourceBuffer.Height);
         Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
         {
             BinarizeRgb(sourceBuffer.GetRow(rowIndex), targetBuffer.GetRow(rowIndex),
@@ -96,10 +96,10 @@ internal sealed partial class Binarizer : IProcessor<BinarizerParameters, IPixel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono8> BinarizeRgb24(BinarizerParameters parameters)
+    private static PixelBuffer<L8> BinarizeRgb24(BinarizerParameters parameters)
     {
         var sourceBuffer = (ReadOnlyPackedPixelBuffer<Rgb24>)parameters.Input!;
-        var targetBuffer = new PackedPixelBuffer<Mono8>(sourceBuffer.Width, sourceBuffer.Height);
+        var targetBuffer = new PixelBuffer<L8>(sourceBuffer.Width, sourceBuffer.Height);
         Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
         {
             BinarizeRgb24(sourceBuffer.GetRow(rowIndex), targetBuffer.GetRow(rowIndex),
@@ -109,10 +109,10 @@ internal sealed partial class Binarizer : IProcessor<BinarizerParameters, IPixel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono8> BinarizeRgb48(BinarizerParameters parameters)
+    private static PixelBuffer<L8> BinarizeRgb48(BinarizerParameters parameters)
     {
         var sourceBuffer = (ReadOnlyPackedPixelBuffer<Rgb48>)parameters.Input!;
-        var targetBuffer = new PackedPixelBuffer<Mono8>(sourceBuffer.Width, sourceBuffer.Height);
+        var targetBuffer = new PixelBuffer<L8>(sourceBuffer.Width, sourceBuffer.Height);
         Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
         {
             BinarizeRgb48(sourceBuffer.GetRow(rowIndex), targetBuffer.GetRow(rowIndex),

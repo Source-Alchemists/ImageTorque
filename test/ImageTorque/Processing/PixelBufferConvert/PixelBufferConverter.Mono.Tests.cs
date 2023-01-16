@@ -1,21 +1,20 @@
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
-using ImageTorque.Processing;
 
-namespace ImageTorque.Tests.Buffers;
+namespace ImageTorque.Processing.Tests;
 
 public class PixelBufferConverterMonoTests
 {
-    private readonly PackedPixelBuffer<Mono> _packedPixelBufferMono;
-    private readonly PackedPixelBuffer<Mono16> _packedPixelBufferMono16;
-    private readonly PackedPixelBuffer<Mono8> _packedPixelBufferMono8;
+    private readonly PixelBuffer<LS> _packedPixelBufferMono;
+    private readonly PixelBuffer<L16> _packedPixelBufferMono16;
+    private readonly PixelBuffer<L8> _packedPixelBufferMono8;
     private readonly PixelBufferConverter _converter = new();
 
     public PixelBufferConverterMonoTests()
     {
-        _packedPixelBufferMono = new PackedPixelBuffer<Mono>(2, 2, new Mono[] { 0f, 0.003921569f, 0.5019608f, 1f });
-        _packedPixelBufferMono8 = new PackedPixelBuffer<Mono8>(2, 2, new Mono8[] { 0x00, 0x01, 0x80, 0xFF });
-        _packedPixelBufferMono16 = new PackedPixelBuffer<Mono16>(2, 2, new Mono16[] { 0x0000, 0x0101, 0x8080, 0xFFFF });
+        _packedPixelBufferMono = new PixelBuffer<LS>(2, 2, new LS[] { 0f, 0.003921569f, 0.5019608f, 1f });
+        _packedPixelBufferMono8 = new PixelBuffer<L8>(2, 2, new L8[] { 0x00, 0x01, 0x80, 0xFF });
+        _packedPixelBufferMono16 = new PixelBuffer<L16>(2, 2, new L16[] { 0x0000, 0x0101, 0x8080, 0xFFFF });
     }
 
     [Fact]
@@ -25,11 +24,11 @@ public class PixelBufferConverterMonoTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono.AsReadOnly(),
-            OutputType = typeof(PackedPixelBuffer<Mono8>)
+            OutputType = typeof(PixelBuffer<L8>)
         });
 
         // Assert
-        Assert.IsType<PackedPixelBuffer<Mono8>>(resultBuffer);
+        Assert.IsType<PixelBuffer<L8>>(resultBuffer);
         Assert.Equal(_packedPixelBufferMono8, resultBuffer);
     }
 
@@ -40,11 +39,11 @@ public class PixelBufferConverterMonoTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono.AsReadOnly(),
-            OutputType = typeof(PackedPixelBuffer<Mono16>)
+            OutputType = typeof(PixelBuffer<L16>)
         });
 
         // Assert
-        Assert.IsType<PackedPixelBuffer<Mono16>>(resultBuffer);
+        Assert.IsType<PixelBuffer<L16>>(resultBuffer);
         Assert.Equal(_packedPixelBufferMono16, resultBuffer);
     }
 
@@ -55,11 +54,11 @@ public class PixelBufferConverterMonoTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono8.AsReadOnly(),
-            OutputType = typeof(PackedPixelBuffer<Mono>)
+            OutputType = typeof(PixelBuffer<LS>)
         });
 
         // Assert
-        Assert.IsType<PackedPixelBuffer<Mono>>(resultBuffer);
+        Assert.IsType<PixelBuffer<LS>>(resultBuffer);
         Assert.Equal(_packedPixelBufferMono, resultBuffer);
     }
 
@@ -70,11 +69,11 @@ public class PixelBufferConverterMonoTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono8.AsReadOnly(),
-            OutputType = typeof(PackedPixelBuffer<Mono16>)
+            OutputType = typeof(PixelBuffer<L16>)
         });
 
         // Assert
-        Assert.IsType<PackedPixelBuffer<Mono16>>(resultBuffer);
+        Assert.IsType<PixelBuffer<L16>>(resultBuffer);
         Assert.Equal(_packedPixelBufferMono16, resultBuffer);
     }
 
@@ -85,11 +84,11 @@ public class PixelBufferConverterMonoTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono16.AsReadOnly(),
-            OutputType = typeof(PackedPixelBuffer<Mono>)
+            OutputType = typeof(PixelBuffer<LS>)
         });
 
         // Assert
-        Assert.IsType<PackedPixelBuffer<Mono>>(resultBuffer);
+        Assert.IsType<PixelBuffer<LS>>(resultBuffer);
         Assert.Equal(_packedPixelBufferMono, resultBuffer);
     }
 
@@ -100,11 +99,11 @@ public class PixelBufferConverterMonoTests
         using IPixelBuffer resultBuffer = _converter.Execute(new PixelBufferConvertParameters
         {
             Input = _packedPixelBufferMono16.AsReadOnly(),
-            OutputType = typeof(PackedPixelBuffer<Mono8>)
+            OutputType = typeof(PixelBuffer<L8>)
         });
 
         // Assert
-        Assert.IsType<PackedPixelBuffer<Mono8>>(resultBuffer);
+        Assert.IsType<PixelBuffer<L8>>(resultBuffer);
         Assert.Equal(_packedPixelBufferMono8, resultBuffer);
     }
 }

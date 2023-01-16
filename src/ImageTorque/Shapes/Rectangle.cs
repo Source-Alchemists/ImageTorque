@@ -1,5 +1,8 @@
 namespace ImageTorque;
 
+/// <summary>
+/// Represents a rectangle.
+/// </summary>
 public record struct Rectangle
 {
     /// <summary>

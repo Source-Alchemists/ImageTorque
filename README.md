@@ -1,2 +1,3 @@
-# Image.Torque
+# ImageTorque
+
 Open .NET image processing library

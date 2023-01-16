@@ -1,9 +1,12 @@
 namespace ImageTorque.Pixels;
 
-public interface IPixel<T> where T : unmanaged, IPixel<T>
+/// <summary>
+/// Represents a pixel.
+/// </summary>
+public interface IPixel
 {
     /// <summary>
-    /// Gets the pixel info.
+    /// Gets the pixel type.
     /// </summary>
-    PixelInfo PixelInfo { get; }
+    PixelType PixelType { get; }
 }

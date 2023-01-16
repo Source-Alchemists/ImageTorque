@@ -10,12 +10,12 @@ internal class Encoder : IProcessor<EncoderParameters, bool>
     {
 
         Type inputType = parameters.Input!.GetType();
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
         {
             return EncodeMono8(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L16>))
         {
             return EncodeMono16(parameters);
         }
@@ -62,7 +62,7 @@ internal class Encoder : IProcessor<EncoderParameters, bool>
 
     private static bool EncodeMono8(EncoderParameters parameters)
     {
-        var pixelBuffer = parameters.Input as ReadOnlyPackedPixelBuffer<Mono8>;
+        var pixelBuffer = parameters.Input as ReadOnlyPackedPixelBuffer<L8>;
 
         using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8> image = pixelBuffer!.ToImageSharp();
         Stream? stream = parameters.Stream;
@@ -72,7 +72,7 @@ internal class Encoder : IProcessor<EncoderParameters, bool>
 
     private static bool EncodeMono16(EncoderParameters parameters)
     {
-        var pixelBuffer = parameters.Input as ReadOnlyPackedPixelBuffer<Mono16>;
+        var pixelBuffer = parameters.Input as ReadOnlyPackedPixelBuffer<L16>;
 
         using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L16> image = pixelBuffer!.ToImageSharp();
         Stream? stream = parameters.Stream;

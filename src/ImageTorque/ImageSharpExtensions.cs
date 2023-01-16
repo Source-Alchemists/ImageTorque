@@ -21,7 +21,7 @@ internal static class ImageSharpExtensions
         return image;
     }
 
-    public static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8> ToImageSharp(this ReadOnlyPackedPixelBuffer<Mono8> pixelBuffer)
+    public static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8> ToImageSharp(this ReadOnlyPackedPixelBuffer<L8> pixelBuffer)
     {
         var image = SixLabors.ImageSharp.Image.LoadPixelData<SixLabors.ImageSharp.PixelFormats.L8>(pixelBuffer.Buffer,
                                                                                                     pixelBuffer.Width,
@@ -29,7 +29,7 @@ internal static class ImageSharpExtensions
         return image;
     }
 
-    public static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L16> ToImageSharp(this ReadOnlyPackedPixelBuffer<Mono16> pixelBuffer)
+    public static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L16> ToImageSharp(this ReadOnlyPackedPixelBuffer<L16> pixelBuffer)
     {
         var image = SixLabors.ImageSharp.Image.LoadPixelData<SixLabors.ImageSharp.PixelFormats.L16>(pixelBuffer.Buffer,
                                                                                                     pixelBuffer.Width,

@@ -9,17 +9,17 @@ internal partial class PixelBufferConverter : IProcessor<PixelBufferConvertParam
     {
         Type inputType = parameters.Input.GetType();
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<LS>))
         {
             return ConvertMono(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono8>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
         {
             return ConvertMono8(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Mono16>))
+        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L16>))
         {
             return ConvertMono16(parameters);
         }
@@ -39,17 +39,17 @@ internal partial class PixelBufferConverter : IProcessor<PixelBufferConvertParam
             return ConvertPackedRgb48(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<RgbFFF>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<LS>))
         {
             return ConvertPlanarRgbFFF(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb888>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L8>))
         {
             return ConvertPlanarRgb888(parameters);
         }
 
-        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<Rgb161616>))
+        if (inputType == typeof(ReadOnlyPlanarPixelBuffer<L16>))
         {
             return ConvertPlanarRgb161616(parameters);
         }

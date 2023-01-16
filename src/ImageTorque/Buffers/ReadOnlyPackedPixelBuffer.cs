@@ -2,8 +2,11 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
+/// <summary>
+/// Represents a read only packed pixel buffer.
+/// </summary>
 public sealed record ReadOnlyPackedPixelBuffer<TPixel> : ReadOnlyPixelBuffer<TPixel>
-    where TPixel : unmanaged, IPackedPixel<TPixel>
+    where TPixel : unmanaged, IPixel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ReadOnlyPackedPixelBuffer{TPixel}"/> class.

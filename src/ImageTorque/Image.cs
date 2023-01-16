@@ -5,6 +5,9 @@ using ImageTorque.Processing;
 
 namespace ImageTorque;
 
+/// <summary>
+/// Represents an image.
+/// </summary>
 public partial record Image : IImage
 {
     private static readonly Decoder s_decoder = new();
@@ -78,9 +81,9 @@ public partial record Image : IImage
     /// <returns>The image as a packed pixel buffer.</returns>
     /// <remarks>The buffer is owned by the image and should not be disposed.</remarks>
     public ReadOnlyPackedPixelBuffer<TPixel> AsPacked<TPixel>()
-        where TPixel : unmanaged, IPackedPixel<TPixel>
+        where TPixel : unmanaged, IPixel
     {
-        return (ReadOnlyPackedPixelBuffer<TPixel>)AsPixelBuffer<PackedPixelBuffer<TPixel>>();
+        return (ReadOnlyPackedPixelBuffer<TPixel>)AsPixelBuffer<PixelBuffer<TPixel>>();
     }
 
     /// <summary>
@@ -90,7 +93,7 @@ public partial record Image : IImage
     /// <returns>The image as a planar pixel buffer.</returns>
     /// <remarks>The buffer is owned by the image and should not be disposed.</remarks>
     public ReadOnlyPlanarPixelBuffer<TPixel> AsPlanar<TPixel>()
-        where TPixel : unmanaged, IPlanarPixel<TPixel>
+        where TPixel : unmanaged, IPixel
     {
         return (ReadOnlyPlanarPixelBuffer<TPixel>)AsPixelBuffer<PlanarPixelBuffer<TPixel>>();
     }
@@ -163,6 +166,10 @@ public partial record Image : IImage
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Disposes of the image.
+    /// </summary>
+    /// <param name="disposing">True if disposing, false if finalizing.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (!_isDisposed)

@@ -11,12 +11,12 @@ internal partial class PixelBufferConverter
     {
         Type outputType = parameters.OutputType;
 
-        if (outputType == typeof(PackedPixelBuffer<Mono8>))
+        if (outputType == typeof(PixelBuffer<L8>))
         {
             return MonoToMono8(parameters);
         }
 
-        if (outputType == typeof(PackedPixelBuffer<Mono16>))
+        if (outputType == typeof(PixelBuffer<L16>))
         {
             return MonoToMono16(parameters);
         }
@@ -29,12 +29,12 @@ internal partial class PixelBufferConverter
     {
         Type outputType = parameters.OutputType;
 
-        if (outputType == typeof(PackedPixelBuffer<Mono>))
+        if (outputType == typeof(PixelBuffer<LS>))
         {
             return Mono8ToMono(parameters);
         }
 
-        if (outputType == typeof(PackedPixelBuffer<Mono16>))
+        if (outputType == typeof(PixelBuffer<L16>))
         {
             return Mono8ToMono16(parameters);
         }
@@ -47,12 +47,12 @@ internal partial class PixelBufferConverter
     {
         Type outputType = parameters.OutputType;
 
-        if (outputType == typeof(PackedPixelBuffer<Mono>))
+        if (outputType == typeof(PixelBuffer<LS>))
         {
             return Mono16ToMono(parameters);
         }
 
-        if (outputType == typeof(PackedPixelBuffer<Mono8>))
+        if (outputType == typeof(PixelBuffer<L8>))
         {
             return Mono16ToMono8(parameters);
         }
@@ -61,102 +61,102 @@ internal partial class PixelBufferConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono16> MonoToMono16(PixelBufferConvertParameters parameters)
+    private static PixelBuffer<L16> MonoToMono16(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono>)parameters.Input;
-        var resultBuffer = new PackedPixelBuffer<Mono16>(inputBuffer.Width, inputBuffer.Height);
+        var inputBuffer = (ReadOnlyPackedPixelBuffer<LS>)parameters.Input;
+        var resultBuffer = new PixelBuffer<L16>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<Mono> row = inputBuffer.GetRow(y);
-            Span<Mono16> resultRow = resultBuffer.GetRow(y);
+            ReadOnlySpan<LS> row = inputBuffer.GetRow(y);
+            Span<L16> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < row.Length; x++)
             {
-                resultRow[x] = row[x].ToMono16();
+                resultRow[x] = row[x].ToL16();
             }
         });
         return resultBuffer;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono8> MonoToMono8(PixelBufferConvertParameters parameters)
+    private static PixelBuffer<L8> MonoToMono8(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono>)parameters.Input;
-        var resultBuffer = new PackedPixelBuffer<Mono8>(inputBuffer.Width, inputBuffer.Height);
+        var inputBuffer = (ReadOnlyPackedPixelBuffer<LS>)parameters.Input;
+        var resultBuffer = new PixelBuffer<L8>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<Mono> row = inputBuffer.GetRow(y);
-            Span<Mono8> resultRow = resultBuffer.GetRow(y);
+            ReadOnlySpan<LS> row = inputBuffer.GetRow(y);
+            Span<L8> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < row.Length; x++)
             {
-                resultRow[x] = row[x].ToMono8();
+                resultRow[x] = row[x].ToL8();
             }
         });
         return resultBuffer;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono> Mono8ToMono(PixelBufferConvertParameters parameters)
+    private static PixelBuffer<LS> Mono8ToMono(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono8>)parameters.Input;
-        var resultBuffer = new PackedPixelBuffer<Mono>(inputBuffer.Width, inputBuffer.Height);
+        var inputBuffer = (ReadOnlyPackedPixelBuffer<L8>)parameters.Input;
+        var resultBuffer = new PixelBuffer<LS>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<Mono8> row = inputBuffer.GetRow(y);
-            Span<Mono> resultRow = resultBuffer.GetRow(y);
+            ReadOnlySpan<L8> row = inputBuffer.GetRow(y);
+            Span<LS> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < row.Length; x++)
             {
-                resultRow[x] = row[x].ToMono();
+                resultRow[x] = row[x].ToLS();
             }
         });
         return resultBuffer;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono16> Mono8ToMono16(PixelBufferConvertParameters parameters)
+    private static PixelBuffer<L16> Mono8ToMono16(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono8>)parameters.Input;
-        var resultBuffer = new PackedPixelBuffer<Mono16>(inputBuffer.Width, inputBuffer.Height);
+        var inputBuffer = (ReadOnlyPackedPixelBuffer<L8>)parameters.Input;
+        var resultBuffer = new PixelBuffer<L16>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<Mono8> row = inputBuffer.GetRow(y);
-            Span<Mono16> resultRow = resultBuffer.GetRow(y);
+            ReadOnlySpan<L8> row = inputBuffer.GetRow(y);
+            Span<L16> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < row.Length; x++)
             {
-                resultRow[x] = row[x].ToMono16();
+                resultRow[x] = row[x].ToL16();
             }
         });
         return resultBuffer;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono> Mono16ToMono(PixelBufferConvertParameters parameters)
+    private static PixelBuffer<LS> Mono16ToMono(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono16>)parameters.Input;
-        var resultBuffer = new PackedPixelBuffer<Mono>(inputBuffer.Width, inputBuffer.Height);
+        var inputBuffer = (ReadOnlyPackedPixelBuffer<L16>)parameters.Input;
+        var resultBuffer = new PixelBuffer<LS>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<Mono16> row = inputBuffer.GetRow(y);
-            Span<Mono> resultRow = resultBuffer.GetRow(y);
+            ReadOnlySpan<L16> row = inputBuffer.GetRow(y);
+            Span<LS> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < row.Length; x++)
             {
-                resultRow[x] = row[x].ToMono();
+                resultRow[x] = row[x].ToLS();
             }
         });
         return resultBuffer;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PackedPixelBuffer<Mono8> Mono16ToMono8(PixelBufferConvertParameters parameters)
+    private static PixelBuffer<L8> Mono16ToMono8(PixelBufferConvertParameters parameters)
     {
-        var inputBuffer = (ReadOnlyPackedPixelBuffer<Mono16>)parameters.Input;
-        var resultBuffer = new PackedPixelBuffer<Mono8>(inputBuffer.Width, inputBuffer.Height);
+        var inputBuffer = (ReadOnlyPackedPixelBuffer<L16>)parameters.Input;
+        var resultBuffer = new PixelBuffer<L8>(inputBuffer.Width, inputBuffer.Height);
         _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
         {
-            ReadOnlySpan<Mono16> row = inputBuffer.GetRow(y);
-            Span<Mono8> resultRow = resultBuffer.GetRow(y);
+            ReadOnlySpan<L16> row = inputBuffer.GetRow(y);
+            Span<L8> resultRow = resultBuffer.GetRow(y);
             for (int x = 0; x < row.Length; x++)
             {
-                resultRow[x] = row[x].ToMono8();
+                resultRow[x] = row[x].ToL8();
             }
         });
         return resultBuffer;

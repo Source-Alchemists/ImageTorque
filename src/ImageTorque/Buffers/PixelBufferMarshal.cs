@@ -2,6 +2,9 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
 
+/// <summary>
+/// Marshal operations for pixel buffers.
+/// </summary>
 public static class PixelBufferMarshal
 {
     /// <summary>
@@ -33,9 +36,9 @@ public static class PixelBufferMarshal
         {
             PixelBufferType.Packed => pixelType switch
             {
-                PixelType.Mono => PixelFormat.Mono,
-                PixelType.Mono8 => PixelFormat.Mono8,
-                PixelType.Mono16 => PixelFormat.Mono16,
+                PixelType.LF => PixelFormat.Mono,
+                PixelType.L8 => PixelFormat.Mono8,
+                PixelType.L16 => PixelFormat.Mono16,
                 PixelType.Rgb => PixelFormat.RgbPacked,
                 PixelType.Rgb24 => PixelFormat.Rgb24Packed,
                 PixelType.Rgb48 => PixelFormat.Rgb48Packed,
@@ -43,9 +46,9 @@ public static class PixelBufferMarshal
             },
             PixelBufferType.Planar => pixelType switch
             {
-                PixelType.RgbFFF => PixelFormat.RgbPlanar,
-                PixelType.Rgb888 => PixelFormat.Rgb888Planar,
-                PixelType.Rgb161616 => PixelFormat.Rgb161616Planar,
+                PixelType.Rgb => PixelFormat.RgbPlanar,
+                PixelType.Rgb24 => PixelFormat.Rgb888Planar,
+                PixelType.Rgb48 => PixelFormat.Rgb161616Planar,
                 _ => PixelFormat.Unknown
             },
             _ => PixelFormat.Unknown
@@ -63,15 +66,15 @@ public static class PixelBufferMarshal
     {
         return pixelFormat switch
         {
-            PixelFormat.Mono => new PackedPixelBuffer<Mono>(width, height),
-            PixelFormat.Mono8 => new PackedPixelBuffer<Mono8>(width, height),
-            PixelFormat.Mono16 => new PackedPixelBuffer<Mono16>(width, height),
-            PixelFormat.RgbPacked => new PackedPixelBuffer<Rgb>(width, height),
-            PixelFormat.Rgb24Packed => new PackedPixelBuffer<Rgb24>(width, height),
-            PixelFormat.Rgb48Packed => new PackedPixelBuffer<Rgb48>(width, height),
-            PixelFormat.RgbPlanar => new PlanarPixelBuffer<RgbFFF>(width, height),
-            PixelFormat.Rgb888Planar => new PlanarPixelBuffer<Rgb888>(width, height),
-            PixelFormat.Rgb161616Planar => new PlanarPixelBuffer<Rgb161616>(width, height),
+            PixelFormat.Mono => new PixelBuffer<LS>(width, height),
+            PixelFormat.Mono8 => new PixelBuffer<L8>(width, height),
+            PixelFormat.Mono16 => new PixelBuffer<L16>(width, height),
+            PixelFormat.RgbPacked => new PixelBuffer<Rgb>(width, height),
+            PixelFormat.Rgb24Packed => new PixelBuffer<Rgb24>(width, height),
+            PixelFormat.Rgb48Packed => new PixelBuffer<Rgb48>(width, height),
+            PixelFormat.RgbPlanar => new PlanarPixelBuffer<LS>(width, height),
+            PixelFormat.Rgb888Planar => new PlanarPixelBuffer<L8>(width, height),
+            PixelFormat.Rgb161616Planar => new PlanarPixelBuffer<L16>(width, height),
             _ => throw new NotImplementedException($"Pixel format {pixelFormat} is not supported.")
         };
     }
