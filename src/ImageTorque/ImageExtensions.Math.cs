@@ -46,6 +46,7 @@ public static partial class ImageExtensions
         if (image2.Width != image1.Width || image2.Height != image1.Height)
         {
             tmpImage = tmpImage.Resize(image1.Width, image2.Height, ResizeMode.Bicubic);
+            resized = true;
         }
 
         IReadOnlyPixelBuffer b2 = tmpImage.GetPixelBuffer(image1.PixelFormat);
