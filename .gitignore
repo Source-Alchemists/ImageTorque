@@ -27,3 +27,5 @@ bld/
 # NuGet Packages
 *.nupkg
 *.snupkg
+
+*.DS_STORE

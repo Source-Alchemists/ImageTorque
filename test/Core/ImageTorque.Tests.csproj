@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ImageTorque\ImageTorque.csproj" />
+    <ProjectReference Include="..\..\src\Core\ImageTorque.csproj" />
   </ItemGroup>
 
   <ItemGroup>
