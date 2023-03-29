@@ -1,0 +1,51 @@
+<Project>
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>11.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <AnalysisLevel>7</AnalysisLevel>
+    <AnalysisLevelStyle>7-all</AnalysisLevelStyle>
+
+    <Features>strict</Features>
+  </PropertyGroup>
+
+  <!-- Centralized location for all generated artifacts -->
+  <PropertyGroup>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/</PackageOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>full</DebugType>
+    <DebugSymbols>True</DebugSymbols>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
+    <RepositoryUrl Condition="'$(RepositoryUrl)' == ''">https://github.com/Source-Alchemists/ImageTorque/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageId>ImageTorque.AI</PackageId>
+    <Authors>Source Alchemists</Authors>
+    <Owners>Source Alchemists</Owners>
+    <Company>Source Alchemists</Company>
+    <Copyright>Copyright © Source Alchemists</Copyright>
+    <PackageTags>Image AI DotNet</PackageTags>
+    <Description>Open .NET image processing library</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Needed for deterministic builds -->
+  <ItemGroup>
+    <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
+  </ItemGroup>
+</Project>

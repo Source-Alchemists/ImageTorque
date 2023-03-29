@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F1912608-B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.Tests", "test\Core\ImageTorque.Tests.csproj", "{5D4127BC-C06A-4C11-9BA9-07BD98E38E50}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.AI", "src\Ai\ImageTorque.AI.csproj", "{ABC57938-C456-4CA2-8B33-4AA37EF539E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +30,14 @@ Global
 		{5D4127BC-C06A-4C11-9BA9-07BD98E38E50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D4127BC-C06A-4C11-9BA9-07BD98E38E50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D4127BC-C06A-4C11-9BA9-07BD98E38E50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABC57938-C456-4CA2-8B33-4AA37EF539E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABC57938-C456-4CA2-8B33-4AA37EF539E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABC57938-C456-4CA2-8B33-4AA37EF539E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABC57938-C456-4CA2-8B33-4AA37EF539E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A9224DC4-125B-4538-84AA-07D5B82C2924} = {1083463C-2D3E-4E78-9FF2-7FBC38FC908C}
 		{5D4127BC-C06A-4C11-9BA9-07BD98E38E50} = {F1912608-B540-4423-8DFD-B1FB3BF7EF9D}
+		{ABC57938-C456-4CA2-8B33-4AA37EF539E1} = {1083463C-2D3E-4E78-9FF2-7FBC38FC908C}
 	EndGlobalSection
 EndGlobal
