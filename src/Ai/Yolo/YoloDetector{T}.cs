@@ -37,7 +37,7 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
     /// <param name="sessionOptions">The session options.</param>
     public YoloDetector(Stream weights, SessionOptions sessionOptions = null!) : this()
     {
-        using(var binaryReader = new BinaryReader(weights))
+        using (var binaryReader = new BinaryReader(weights))
         {
             _inferenceSession = new InferenceSession(binaryReader.ReadBytes((int)weights.Length), sessionOptions ?? new SessionOptions());
         }
@@ -50,9 +50,33 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
     /// <returns>The list of predictions.</returns>
     public List<YoloPrediction> Predict(Image image)
     {
-        DenseTensor<float>[] inferenceResult = Inference(_inferenceSession, _model, image);
-        List<YoloPrediction> parseResult = ParseOutput(_model, inferenceResult, (image.Width, image.Height));
-        return Suppress(_model, parseResult);
+        Image inferenceImage = null!;
+        bool resized = false;
+        try
+        {
+
+            if (image.Width != _model.Width || image.Height != _model.Height)
+            {
+                inferenceImage = image.Resize(_model.Width, _model.Height);
+                resized = true;
+            }
+            else
+            {
+                inferenceImage = image;
+            }
+
+            DenseTensor<float>[] inferenceResult = Inference(_inferenceSession, _model, inferenceImage);
+            List<YoloPrediction> parseResult = ParseOutput(_model, inferenceResult, (image.Width, image.Height));
+            return Suppress(_model, parseResult);
+
+        }
+        finally
+        {
+            if (resized)
+            {
+                inferenceImage?.Dispose();
+            }
+        }
     }
 
     /// <summary>
@@ -93,20 +117,6 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static float Sigmoid(float value) => 1 / (1 + MathF.Exp(-value));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static float[] Xywh2xyxy(float[] source)
-    {
-        float[] result = new float[4];
-        result[0] = source[0] - (source[2] / 2f);
-        result[1] = source[1] - (source[3] / 2f);
-        result[2] = source[0] + (source[2] / 2f);
-        result[3] = source[1] + (source[3] / 2f);
-        return result;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static Tensor<float> ExtractPixels(TModel model, Image image)
     {
         var tensor = new DenseTensor<float>(new[] { 1, 3, model.Height, model.Width });
@@ -130,50 +140,27 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static DenseTensor<float>[] Inference(InferenceSession inferenceSession, TModel model, Image image)
     {
-        Image inferenceImage = null!;
-        bool resized = false;
-        try
-        {
-
-            if (image.Width != model.Width || image.Height != model.Height)
+        var inputs = new List<NamedOnnxValue>
             {
-                inferenceImage = image.Resize(model.Width, model.Height);
-                resized = true;
-            }
-            else
-            {
-                inferenceImage = image;
-            }
-
-            var inputs = new List<NamedOnnxValue>
-            {
-                NamedOnnxValue.CreateFromTensor("images", ExtractPixels(model, inferenceImage))
+                NamedOnnxValue.CreateFromTensor("images", ExtractPixels(model, image))
             };
 
-            using IDisposableReadOnlyCollection<DisposableNamedOnnxValue> result = inferenceSession.Run(inputs);
+        IDisposableReadOnlyCollection<DisposableNamedOnnxValue> result = inferenceSession.Run(inputs);
 
-            var output = new List<DenseTensor<float>>();
+        var output = new List<DenseTensor<float>>();
 
-            foreach (string item in model.Outputs)
-            {
-                output.Add((DenseTensor<float>)result.First(x => x.Name == item).Value);
-            };
-
-            return output.ToArray();
-        }
-        finally
+        foreach (string item in model.Outputs)
         {
-            if (resized)
-            {
-                inferenceImage?.Dispose();
-            }
-        }
+            output.Add((DenseTensor<float>)result.First(x => x.Name == item).Value);
+        };
+
+        return output.ToArray();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static List<YoloPrediction> ParseOutput(TModel model, DenseTensor<float>[] output, (int Width, int Height) image)
     {
-        return model.DetectEnabled ? ParseDetect(model, output[0], image) : ParseSigmoid(model, output, image);
+        return ParseDetect(model, output[0], image);
     }
 
     private static List<YoloPrediction> ParseDetect(TModel model, DenseTensor<float> output, (int Width, int Height) image)
@@ -182,16 +169,15 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
         (float xGain, float yGain) = (model.Width / (float)image.Width, model.Height / (float)image.Height);
         (float xPadding, float yPadding) = ((model.Width - (image.Width * xGain)) / 2, (model.Height - (image.Height * yGain)) / 2);
 
-        Parallel.For(0, (int)output.Length / model.Dimensions, i =>
+        for (int i = 0; i < output.Length / model.Dimensions; i++)
         {
-            if (output[0, i, 4] <= model.Confidence) return;
+            if (output[0, i, 4] <= model.Confidence) continue;
 
             Parallel.For(5, model.Dimensions, j => output[0, i, j] *= output[0, i, 4]);
 
             Parallel.For(5, model.Dimensions, k =>
             {
                 if (output[0, i, k] <= model.MulConfidence) return;
-
                 float xMin = (output[0, i, 0] - (output[0, i, 2] / 2) - xPadding) / xGain;
                 float yMin = (output[0, i, 1] - (output[0, i, 3] / 2) - yPadding) / yGain;
                 float xMax = (output[0, i, 0] + (output[0, i, 2] / 2) - xPadding) / xGain;
@@ -202,62 +188,14 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
                 xMax = Clamp(xMax, 0, image.Width - 1);
                 yMax = Clamp(yMax, 0, image.Height - 1);
 
+                float width = xMax - xMin;
+                float height = yMax - yMin;
                 YoloLabel label = model.Labels[k - 5];
-                var prediction = new YoloPrediction(label, output[0, i, k], new(xMin, yMin, xMax - xMin, yMax - yMin));
+                var prediction = new YoloPrediction(label, output[0, i, k], new(xMin + (width / 2), yMin + (height / 2), width, height));
 
                 result.Add(prediction);
             });
-        });
-
-        return result.ToList();
-    }
-
-    private static List<YoloPrediction> ParseSigmoid(TModel model, DenseTensor<float>[] output, (int Width, int Height) image)
-    {
-        var result = new ConcurrentBag<YoloPrediction>();
-        (float xGain, float yGain) = (model.Width / (float)image.Width, model.Height / (float)image.Height); // x, y gains
-        (float xPadding, float yPadding) = ((model.Width - (image.Width * xGain)) / 2, (model.Height - (image.Height * yGain)) / 2); // left, right pads
-
-        int anchorLength = model.Anchors[0].Length;
-
-        Parallel.For(0, output.Length, i =>
-        {
-            int shapesCount = model.Shapes[i];
-            for (int a = 0; a < anchorLength; a++)
-            {
-                for (int y = 0; y < shapesCount; y++)
-                {
-                    for (int x = 0; x < shapesCount; x++)
-                    {
-                        int offset = ((shapesCount * shapesCount * a) + (shapesCount * y) + x) * model.Dimensions;
-                        float[] buffer = output[i].Skip(offset).Take(model.Dimensions).Select(Sigmoid).ToArray();
-                        if (buffer[4] <= model.Confidence) return;
-                        var scores = buffer.Skip(5).Select(b => b * buffer[4]).ToList();
-                        float mulConfidence = scores.Max();
-
-                        if (mulConfidence <= model.MulConfidence) return;
-
-                        float rawX = ((buffer[0] * 2) - 0.5f + x) * model.Strides[i];
-                        float rawY = ((buffer[1] * 2) - 0.5f + y) * model.Strides[i];
-
-                        float rawW = MathF.Pow(buffer[2] * 2, 2) * model.Anchors[i][a][0];
-                        float rawH = MathF.Pow(buffer[3] * 2, 2) * model.Anchors[i][a][1];
-
-                        float[] xyxy = Xywh2xyxy(new[] { rawX, rawY, rawW, rawH });
-
-                        float xMin = Clamp((xyxy[0] - xPadding) / xGain, 0, image.Width - 0);
-                        float yMin = Clamp((xyxy[1] - yPadding) / yGain, 0, image.Height - 0);
-                        float xMax = Clamp((xyxy[2] - xPadding) / xGain, 0, image.Width - 1);
-                        float yMax = Clamp((xyxy[3] - yPadding) / yGain, 0, image.Height - 1);
-
-                        YoloLabel label = model.Labels[scores.IndexOf(mulConfidence)];
-                        var prediction = new YoloPrediction(label, mulConfidence, new(xMin, yMin, xMax - xMin, yMax - yMin));
-
-                        result.Add(prediction);
-                    }
-                }
-            }
-        });
+        }
 
         return result.ToList();
     }
@@ -269,7 +207,7 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
 
         foreach (YoloPrediction item in items)
         {
-            foreach (YoloPrediction? current in result.Where(current => current != item))
+            foreach (YoloPrediction? current in result.ToList().Where(current => current != item))
             {
                 (Rectangle rect1, Rectangle rect2) = (item.Rectangle, current.Rectangle);
 
@@ -277,7 +215,7 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
 
                 int intArea = CalcArea(intersection);
                 int unionArea = CalcArea(rect1) + CalcArea(rect2) - intArea;
-                int overlap = intArea / unionArea;
+                float overlap = intArea / (float)unionArea;
 
                 if (overlap >= model.Overlap)
                 {

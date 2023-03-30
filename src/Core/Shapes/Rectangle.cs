@@ -60,12 +60,12 @@ public readonly record struct Rectangle
     }
 
     /// <summary>
-    /// Gets the x offset.
+    /// Gets the X center position.
     /// </summary>
     public int X { get; init; } = 0;
 
     /// <summary>
-    /// Gets the y offset.
+    /// Gets the Y center position.
     /// </summary>
     public int Y { get; init; } = 0;
 
@@ -82,7 +82,11 @@ public readonly record struct Rectangle
     /// <summary>
     /// Gets the left position.
     /// </summary>
-    public int Left => X;
+    public int Left
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => X - (Width / 2) + Width;
+    }
 
     /// <summary>
     /// Gets the right position.
@@ -90,13 +94,17 @@ public readonly record struct Rectangle
     public int Right
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => X + Width;
+        get => X + (Width / 2) + Width;
     }
 
     /// <summary>
     /// Gets the top position.
     /// </summary>
-    public int Top => X;
+    public int Top
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Y - (Height / 2) + Height;
+    }
 
     /// <summary>
     /// Gets the bottom position.
@@ -104,7 +112,7 @@ public readonly record struct Rectangle
     public int Bottom
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Y + Height;
+        get => Y + (Height / 2) + Height;
     }
 
     /// <summary>
@@ -115,9 +123,9 @@ public readonly record struct Rectangle
     /// <returns>The <see cref="Rectangle"/>.</returns>
     public static Rectangle Intersect(Rectangle rectangleA, Rectangle rectangleB)
     {
-        int x1 = Math.Max(rectangleA.X, rectangleB.X);
+        int x1 = Math.Max(rectangleA.Left, rectangleB.Left);
         int x2 = Math.Min(rectangleA.Right, rectangleB.Right);
-        int y1 = Math.Max(rectangleA.Y, rectangleB.Y);
+        int y1 = Math.Max(rectangleA.Top, rectangleB.Top);
         int y2 = Math.Min(rectangleA.Bottom, rectangleB.Bottom);
 
         if (x2 >= x1 && y2 >= y1)
