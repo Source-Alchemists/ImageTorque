@@ -3,6 +3,11 @@ on:
   push:
     branches:
       - main
+      - feature/*
+      - issue/*
+    paths:
+      - 'src/**'
+      - 'tests/**'
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
