@@ -35,7 +35,7 @@
     <Owners>Source Alchemists</Owners>
     <Company>Source Alchemists</Company>
     <Copyright>Copyright © Source Alchemists</Copyright>
-    <PackageTags>Image AI DotNet</PackageTags>
+    <PackageTags>Image AI Yolo DotNet</PackageTags>
     <Description>Open .NET image processing library</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>

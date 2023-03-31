@@ -44,8 +44,14 @@ jobs:
       shell: pwsh
       run: dotnet pack -c release
 
-    - name: Nuget.org Publish
+    - name: Nuget.org Publish (Core)
       shell: pwsh
       env:
         SECRET_KEY: ${{ secrets.IMAGETORQUE_NUGET_ORG }}
       run: dotnet nuget push src/Core/artifacts/*.nupkg --api-key $env:SECRET_KEY --source https://api.nuget.org/v3/index.json  --skip-duplicate
+
+    - name: Nuget.org Publish (Ai)
+      shell: pwsh
+      env:
+        SECRET_KEY: ${{ secrets.IMAGETORQUE_NUGET_ORG }}
+      run: dotnet nuget push src/Ai/artifacts/*.nupkg --api-key $env:SECRET_KEY --source https://api.nuget.org/v3/index.json  --skip-duplicate
