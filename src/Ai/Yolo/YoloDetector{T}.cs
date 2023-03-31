@@ -152,7 +152,7 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
         foreach (string item in model.Outputs)
         {
             output.Add((DenseTensor<float>)result.First(x => x.Name == item).Value);
-        };
+        }
 
         return output.ToArray();
     }
@@ -207,7 +207,7 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
 
         foreach (YoloPrediction item in items)
         {
-            foreach (YoloPrediction? current in result.ToList().Where(current => current != item))
+            foreach (YoloPrediction? current in items.Where(current => current != item))
             {
                 (Rectangle rect1, Rectangle rect2) = (item.Rectangle, current.Rectangle);
 
@@ -217,12 +217,9 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
                 int unionArea = CalcArea(rect1) + CalcArea(rect2) - intArea;
                 float overlap = intArea / (float)unionArea;
 
-                if (overlap >= model.Overlap)
+                if (overlap >= model.Overlap && item.Score >= current.Score)
                 {
-                    if (item.Score >= current.Score)
-                    {
-                        result.Remove(current);
-                    }
+                    result.Remove(current);
                 }
             }
         }
