@@ -5,7 +5,7 @@
     <AssemblyName>ImageTorque.AI</AssemblyName>
     <AssemblyTitle>ImageTorque.AI</AssemblyTitle>
     <RootNamespace>ImageTorque.AI</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.14.1" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.16.3" />
   </ItemGroup>
 
   <ItemGroup>

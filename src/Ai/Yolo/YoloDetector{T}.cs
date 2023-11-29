@@ -68,7 +68,6 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
             DenseTensor<float>[] inferenceResult = Inference(_inferenceSession, _model, inferenceImage);
             List<YoloPrediction> parseResult = ParseOutput(_model, inferenceResult, (image.Width, image.Height));
             return Suppress(_model, parseResult);
-
         }
         finally
         {
@@ -117,7 +116,7 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static Tensor<float> ExtractPixels(TModel model, Image image)
+    private static Tensor<float> ExtractRgb24Pixels(TModel model, Image image)
     {
         var tensor = new DenseTensor<float>(new[] { 1, 3, model.Height, model.Width });
         Buffers.ReadOnlyPackedPixelBuffer<Rgb24> packedImageBuffer = image.AsPacked<Rgb24>();
@@ -138,11 +137,36 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Tensor<float> ExtractMono8Pixels(TModel model, Image image)
+    {
+        var tensor = new DenseTensor<float>(new[] { 1, 3, model.Height, model.Width });
+        Buffers.ReadOnlyPackedPixelBuffer<L8> packedImageBuffer = image.AsPacked<L8>();
+
+        Parallel.For(0, image.Height, y =>
+        {
+            ReadOnlySpan<L8> row = packedImageBuffer.GetRow(y);
+            for (int x = 0; x < image.Width; x++)
+            {
+                L8 pixel = row[x];
+                float fPixel = pixel / 255.0F;
+                tensor[0, 0, y, x] = fPixel;
+                tensor[0, 1, y, x] = fPixel;
+                tensor[0, 2, y, x] = fPixel;
+            }
+        });
+
+        return tensor;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static DenseTensor<float>[] Inference(InferenceSession inferenceSession, TModel model, Image image)
     {
         var inputs = new List<NamedOnnxValue>
             {
-                NamedOnnxValue.CreateFromTensor("images", ExtractPixels(model, image))
+                NamedOnnxValue.CreateFromTensor("images",
+                    image.IsColor
+                        ? ExtractRgb24Pixels(model, image)
+                        : ExtractMono8Pixels(model, image))
             };
 
         IDisposableReadOnlyCollection<DisposableNamedOnnxValue> result = inferenceSession.Run(inputs);

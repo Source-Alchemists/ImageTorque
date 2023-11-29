@@ -39,6 +39,11 @@ internal partial class PixelBufferConverter
             return Mono8ToMono16(parameters);
         }
 
+        if (outputType == typeof(PixelBuffer<Rgb24>))
+        {
+            return Mono8ToRgb24(parameters);
+        }
+
         return null!;
     }
 
@@ -123,6 +128,24 @@ internal partial class PixelBufferConverter
             for (int x = 0; x < row.Length; x++)
             {
                 resultRow[x] = row[x].ToL16();
+            }
+        });
+        return resultBuffer;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static PixelBuffer<Rgb24> Mono8ToRgb24(PixelBufferConvertParameters parameters)
+    {
+        var inputBuffer = (ReadOnlyPackedPixelBuffer<L8>)parameters.Input;
+        var resultBuffer = new PixelBuffer<Rgb24>(inputBuffer.Width, inputBuffer.Height);
+        _ = Parallel.For(0, inputBuffer.Height, parameters.ParallelOptions, y =>
+        {
+            ReadOnlySpan<L8> row = inputBuffer.GetRow(y);
+            Span<Rgb24> resultRow = resultBuffer.GetRow(y);
+            for (int x = 0; x < row.Length; x++)
+            {
+                L8 sr = row[x];
+                resultRow[x] = new Rgb24(sr, sr, sr);
             }
         });
         return resultBuffer;
