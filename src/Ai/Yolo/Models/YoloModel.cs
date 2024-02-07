@@ -7,12 +7,14 @@ public record YoloModel(
     int Width,
     int Height,
     int BytePerPixel,
-    int Dimensions,
     int[][][] Anchors,
     float Confidence,
     float MulConfidence,
     float Overlap,
+    string Input,
+    Type InputType,
     string[] Outputs,
+    Type[] OutputTypes,
     IList<YoloLabel> Labels
 );
 
