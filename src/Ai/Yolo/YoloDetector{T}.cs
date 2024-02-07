@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using ImageTorque.Pixels;
 using Microsoft.ML.OnnxRuntime;
@@ -65,7 +64,7 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
                 inferenceImage = image;
             }
 
-            DenseTensor<float>[] inferenceResult = Inference(_inferenceSession, _model, inferenceImage);
+            InferenceResult inferenceResult = Inference(_inferenceSession, _model, inferenceImage);
             List<YoloPrediction> parseResult = ParseOutput(_model, inferenceResult, (image.Width, image.Height));
             return Suppress(_model, parseResult);
         }
@@ -116,7 +115,7 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static Tensor<float> ExtractRgb24Pixels(TModel model, Image image)
+    private static Tensor<float> ExtractRgb24PixelsToFloat(TModel model, Image image)
     {
         var tensor = new DenseTensor<float>(new[] { 1, 3, model.Height, model.Width });
         Buffers.ReadOnlyPackedPixelBuffer<Rgb24> packedImageBuffer = image.AsPacked<Rgb24>();
@@ -137,7 +136,28 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static Tensor<float> ExtractMono8Pixels(TModel model, Image image)
+    private static Tensor<byte> ExtractRgb24PixelsToByte(TModel model, Image image)
+    {
+        var tensor = new DenseTensor<byte>(new[] { 1, 3, model.Height, model.Width });
+        Buffers.ReadOnlyPackedPixelBuffer<Rgb24> packedImageBuffer = image.AsPacked<Rgb24>();
+
+        Parallel.For(0, image.Height, y =>
+        {
+            ReadOnlySpan<Rgb24> row = packedImageBuffer.GetRow(y);
+            for (int x = 0; x < image.Width; x++)
+            {
+                Rgb24 pixel = row[x];
+                tensor[0, 0, y, x] = pixel.R;
+                tensor[0, 1, y, x] = pixel.G;
+                tensor[0, 2, y, x] = pixel.B;
+            }
+        });
+
+        return tensor;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Tensor<float> ExtractMono8PixelsToFloat(TModel model, Image image)
     {
         var tensor = new DenseTensor<float>(new[] { 1, 3, model.Height, model.Width });
         Buffers.ReadOnlyPackedPixelBuffer<L8> packedImageBuffer = image.AsPacked<L8>();
@@ -159,49 +179,168 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static DenseTensor<float>[] Inference(InferenceSession inferenceSession, TModel model, Image image)
+    private static Tensor<byte> ExtractMono8PixelsToByte(TModel model, Image image)
     {
-        var inputs = new List<NamedOnnxValue>
-            {
-                NamedOnnxValue.CreateFromTensor("images",
-                    image.IsColor
-                        ? ExtractRgb24Pixels(model, image)
-                        : ExtractMono8Pixels(model, image))
-            };
+        var tensor = new DenseTensor<byte>(new[] { 1, 3, model.Height, model.Width });
+        Buffers.ReadOnlyPackedPixelBuffer<L8> packedImageBuffer = image.AsPacked<L8>();
 
-        IDisposableReadOnlyCollection<DisposableNamedOnnxValue> result = inferenceSession.Run(inputs);
-
-        var output = new List<DenseTensor<float>>();
-
-        foreach (string item in model.Outputs)
+        Parallel.For(0, image.Height, y =>
         {
-            output.Add((DenseTensor<float>)result.First(x => x.Name == item).Value);
-        }
+            ReadOnlySpan<L8> row = packedImageBuffer.GetRow(y);
+            for (int x = 0; x < image.Width; x++)
+            {
+                L8 pixel = row[x];
+                tensor[0, 0, y, x] = pixel;
+                tensor[0, 1, y, x] = pixel;
+                tensor[0, 2, y, x] = pixel;
+            }
+        });
 
-        return output.ToArray();
+        return tensor;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static List<YoloPrediction> ParseOutput(TModel model, DenseTensor<float>[] output, (int Width, int Height) image)
+    private static InferenceResult Inference(InferenceSession inferenceSession, TModel model, Image image)
     {
-        return ParseDetect(model, output[0], image);
+        var inputs = new List<NamedOnnxValue>();
+        if (model.InputType == typeof(float))
+        {
+            inputs.Add(NamedOnnxValue.CreateFromTensor(model.Input,
+                image.IsColor
+                    ? ExtractRgb24PixelsToFloat(model, image)
+                    : ExtractMono8PixelsToFloat(model, image)));
+        }
+        else if (model.InputType == typeof(byte))
+        {
+            inputs.Add(NamedOnnxValue.CreateFromTensor(model.Input,
+                image.IsColor
+                    ? ExtractRgb24PixelsToByte(model, image)
+                    : ExtractMono8PixelsToByte(model, image)));
+        }
+        else
+        {
+            throw new NotSupportedException($"Tensor data type of {model.InputType} not supported!");
+        }
+
+        IDisposableReadOnlyCollection<DisposableNamedOnnxValue> result = inferenceSession.Run(inputs);
+
+        var floatOutput = new List<DenseTensor<float>>();
+        var int64Output = new List<DenseTensor<long>>();
+
+        for (int index = 0; index < model.Outputs.Length; index++)
+        {
+            string item = model.Outputs[index];
+            Type itemType = model.OutputTypes[index];
+            if (itemType == typeof(float))
+            {
+                floatOutput.Add((DenseTensor<float>)result.First(x => x.Name == item).Value);
+            }
+            else if (itemType == typeof(long))
+            {
+                int64Output.Add((DenseTensor<long>)result.First(x => x.Name == item).Value);
+            }
+        }
+
+        return new InferenceResult(floatOutput.ToArray(), int64Output.ToArray());
     }
 
-    private static List<YoloPrediction> ParseDetect(TModel model, DenseTensor<float> output, (int Width, int Height) image)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static List<YoloPrediction> ParseOutput(TModel model, InferenceResult output, (int Width, int Height) image)
     {
-        var result = new ConcurrentBag<YoloPrediction>();
+        if (model.Outputs.Length == 4)
+        {
+            return ParseDetectionNMS(model, output, image);
+        }
+        else if (model.Outputs.Length == 1)
+        {
+            return ParseDetectNonNMS(model, output.FloatTensors[0], image);
+        }
+        else
+        {
+            throw new NotSupportedException($"Model must have NMS encoded ouputs (output length == 4) or non NMS encoded outputs (output length == 1). Got output length == {model.Outputs.Length}");
+        }
+    }
+
+    /// <summary>
+    /// Parse detections.
+    /// </summary>
+    /// <remarks>If batched output, the coordinates must be relative, else absolute.</remarks>
+    /// <param name="model">The model.</param>
+    /// <param name="output">The outputs.</param>
+    /// <param name="image">The image.</param>
+    /// <returns>Yolo detections.</returns>
+    private static List<YoloPrediction> ParseDetectNonNMS(TModel model, DenseTensor<float> output, (int Width, int Height) image)
+    {
+        var result = new List<YoloPrediction>();
         (float xGain, float yGain) = (model.Width / (float)image.Width, model.Height / (float)image.Height);
         (float xPadding, float yPadding) = ((model.Width - (image.Width * xGain)) / 2, (model.Height - (image.Height * yGain)) / 2);
 
-        for (int i = 0; i < output.Length / model.Dimensions; i++)
+        bool isBatchedOutput = output.Dimensions.Length == 3;
+        int dimensions = isBatchedOutput ? output.Dimensions[2] : output.Dimensions[1];
+
+        if (isBatchedOutput)
         {
-            if (output[0, i, 4] <= model.Confidence) continue;
+            ExtractBatchedRelativePredictions(model, output, image, result, xGain, yGain, xPadding, yPadding, dimensions);
+        }
+        else
+        {
+            ExtractNonBatchedAbsolutePredictions(model, output, image, result, xGain, yGain, xPadding, yPadding, dimensions);
+        }
 
-            Parallel.For(5, model.Dimensions, j => output[0, i, j] *= output[0, i, 4]);
+        return result;
+    }
 
-            Parallel.For(5, model.Dimensions, k =>
+    private static List<YoloPrediction> ParseDetectionNMS(TModel model, InferenceResult inferenceResult, (int Width, int Height) image)
+    {
+        var result = new List<YoloPrediction>();
+        (float xGain, float yGain) = (model.Width / (float)image.Width, model.Height / (float)image.Height);
+        (float xPadding, float yPadding) = ((model.Width - (image.Width * xGain)) / 2, (model.Height - (image.Height * yGain)) / 2);
+
+        DenseTensor<long> numPredictionsTensor = inferenceResult.Int64Tensors[0];
+        DenseTensor<float> boxesTensor = inferenceResult.FloatTensors[0];
+        DenseTensor<float> scoresTensor = inferenceResult.FloatTensors[1];
+        DenseTensor<long> classesTensor = inferenceResult.Int64Tensors[1];
+
+        for(int index = 0; index < numPredictionsTensor[0]; index++)
+        {
+            float xMin = (boxesTensor[0, index, 0] - xPadding) / xGain;
+            float yMin = (boxesTensor[0, index, 1] - yPadding) / yGain;
+            float xMax = (boxesTensor[0, index, 2] - xPadding) / xGain;
+            float yMax = (boxesTensor[0, index, 3] - yPadding) / yGain;
+            float score = scoresTensor[0, index];
+            long classIndex = classesTensor[0, index];
+
+            xMin = Clamp(xMin, 0, image.Width - 0);
+            yMin = Clamp(yMin, 0, image.Height - 0);
+            xMax = Clamp(xMax, 0, image.Width - 1);
+            yMax = Clamp(yMax, 0, image.Height - 1);
+
+            float width = xMax - xMin;
+            float height = yMax - yMin;
+            YoloLabel label = model.Labels[(int)classIndex];
+            var prediction = new YoloPrediction(label, score, new(xMin + (width / 2), yMin + (height / 2), width, height));
+            result.Add(prediction);
+        }
+
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void ExtractBatchedRelativePredictions(TModel model, DenseTensor<float> output, (int Width, int Height) image, List<YoloPrediction> result, float xGain, float yGain, float xPadding, float yPadding, int dimensions)
+    {
+        for (int i = 0; i < output.Length / dimensions; i++)
+        {
+            float confidence = output[0, i, 4];
+            if (confidence <= model.Confidence) continue;
+
+            for (int j = 5; j < dimensions; j++)
             {
-                if (output[0, i, k] <= model.MulConfidence) return;
+                output[0, i, j] *= confidence;
+            }
+
+            for (int k = 5; k < dimensions; k++)
+            {
+                if (output[0, i, k] <= model.MulConfidence) continue;
                 float xMin = (output[0, i, 0] - (output[0, i, 2] / 2) - xPadding) / xGain;
                 float yMin = (output[0, i, 1] - (output[0, i, 3] / 2) - yPadding) / yGain;
                 float xMax = (output[0, i, 0] + (output[0, i, 2] / 2) - xPadding) / xGain;
@@ -216,12 +355,44 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
                 float height = yMax - yMin;
                 YoloLabel label = model.Labels[k - 5];
                 var prediction = new YoloPrediction(label, output[0, i, k], new(xMin + (width / 2), yMin + (height / 2), width, height));
+                result.Add(prediction);
+            }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void ExtractNonBatchedAbsolutePredictions(TModel model, DenseTensor<float> output, (int Width, int Height) image, List<YoloPrediction> result, float xGain, float yGain, float xPadding, float yPadding, int dimensions)
+    {
+        for (int i = 0; i < output.Length / dimensions; i++)
+        {
+            float confidence = output[i, 6];
+            if (confidence <= model.Confidence) continue;
+
+            for (int j = 6; j < dimensions; j++)
+            {
+                output[i, j] *= confidence;
+            }
+
+            for (int k = 6; k < dimensions; k++)
+            {
+                float xMin = (output[i, 1] - xPadding) / xGain;
+                float yMin = (output[i, 2] - yPadding) / yGain;
+                float xMax = (output[i, 3] - xPadding) / xGain;
+                float yMax = (output[i, 4] - yPadding) / yGain;
+
+                xMin = Clamp(xMin, 0, image.Width - 0);
+                yMin = Clamp(yMin, 0, image.Height - 0);
+                xMax = Clamp(xMax, 0, image.Width - 1);
+                yMax = Clamp(yMax, 0, image.Height - 1);
+
+                float width = xMax - xMin;
+                float height = yMax - yMin;
+                YoloLabel label = model.Labels[k - 6];
+                var prediction = new YoloPrediction(label, output[i, k], new(xMin + (width / 2), yMin + (height / 2), width, height));
 
                 result.Add(prediction);
-            });
+            }
         }
-
-        return result.ToList();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -253,4 +424,6 @@ public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int CalcArea(Rectangle rectangle) => rectangle.Width * rectangle.Height;
+
+    private sealed record InferenceResult(DenseTensor<float>[] FloatTensors, DenseTensor<long>[] Int64Tensors);
 }
