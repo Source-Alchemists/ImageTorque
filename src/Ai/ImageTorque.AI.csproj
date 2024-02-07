@@ -5,7 +5,7 @@
     <AssemblyName>ImageTorque.AI</AssemblyName>
     <AssemblyTitle>ImageTorque.AI</AssemblyTitle>
     <RootNamespace>ImageTorque.AI</RootNamespace>
-    <Version>0.3.0</Version>
+    <Version>0.3.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
