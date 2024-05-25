@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <Version>0.4.0</Version>
     <AssemblyName>ImageTorque</AssemblyName>
     <AssemblyTitle>ImageTorque</AssemblyTitle>
     <RootNamespace>ImageTorque</RootNamespace>
-    <Version>0.2.0</Version>
+    <PackageId>ImageTorque</PackageId>
+    <PackageTags>Image Resize Mirror Binarize Crop Packed Planar Interlaced DotNet</PackageTags>
+    <Description>Open .NET image processing library</Description>
   </PropertyGroup>
 
   <ItemGroup>

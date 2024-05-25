@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <Version>0.4.0</Version>
     <AssemblyName>ImageTorque.AI</AssemblyName>
     <AssemblyTitle>ImageTorque.AI</AssemblyTitle>
     <RootNamespace>ImageTorque.AI</RootNamespace>
-    <Version>0.3.1</Version>
+    <PackageId>ImageTorque.AI</PackageId>
+    <PackageTags>Image AI Yolo DotNet</PackageTags>
+    <Description>Open .NET image processing library</Description>
   </PropertyGroup>
 
   <ItemGroup>
