@@ -12,11 +12,6 @@ internal static class Adam7
 
     public static readonly int[] RowIncrement = [8, 8, 8, 4, 4, 2, 2];
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int ComputeBlockWidth(int width, int pass) => (width + ColumnIncrement[pass] - 1 - FirstColumn[pass]) / ColumnIncrement[pass];
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int ComputeBlockHeight(int height, int pass) => (height + RowIncrement[pass] - 1 - FirstRow[pass]) / RowIncrement[pass];
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ComputeColumns(int width, int passIndex)
@@ -36,6 +31,7 @@ internal static class Adam7
         };
 
         return (int)result;
+
         static uint Throw(int passIndex) => throw new ArgumentException($"Not a valid pass index: {passIndex}");
     }
 }

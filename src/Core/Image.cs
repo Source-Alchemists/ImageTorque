@@ -10,7 +10,6 @@ namespace ImageTorque;
 /// </summary>
 public partial record Image : IImage
 {
-    private static readonly Decoder s_decoder = new();
     private static readonly PixelBufferConverter s_pixelBufferConverter = new();
     private readonly IPixelBuffer _rootPixelBuffer;
     private readonly ConcurrentDictionary<Type, IPixelBuffer> _convertedPixelBuffers = new();
@@ -105,7 +104,8 @@ public partial record Image : IImage
     /// <returns>The image.</returns>
     public static Image Load(Stream stream)
     {
-        IPixelBuffer pixelBuffer = s_decoder.Execute(new DecoderParameters
+        var decoder = new Decoder();
+        IPixelBuffer pixelBuffer = decoder.Execute(new DecoderParameters
         {
             Input = stream,
             OutputType = typeof(IPixelBuffer)
