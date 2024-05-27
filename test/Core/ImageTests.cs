@@ -92,7 +92,7 @@ public class ImageTests
     public void TestLoadAndSaveMono8()
     {
         string targetName = $"{nameof(ImageTests)}_{nameof(TestLoadAndSaveMono8)}.png";
-        using IImage loadedImage = Image.Load("./resources/lena8.bmp");
+        using IImage loadedImage = Image.Load("./lena8.bmp");
         loadedImage.Save(targetName, EncoderType.Png);
 
         Assert.True(File.Exists(targetName));
@@ -103,7 +103,7 @@ public class ImageTests
     public void TestLoadAndSaveRgb24()
     {
         string targetName = $"{nameof(ImageTests)}_{nameof(TestLoadAndSaveRgb24)}.png";
-        using IImage loadedImage = Image.Load("./resources/lena24.png");
+        using IImage loadedImage = Image.Load("./lena24.png");
         loadedImage.Save(targetName, EncoderType.Png);
 
         Assert.True(File.Exists(targetName));

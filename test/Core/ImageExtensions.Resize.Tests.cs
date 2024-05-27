@@ -13,7 +13,7 @@ public class ImageExtensionsResizeTests
     public void Test_Resize_RealRgbImage(string expectedResult, ResizeMode mode)
     {
         // Arrange
-        using var image = Image.Load("./resources/lena24.png");
+        using var image = Image.Load("./lena24.png");
 
         // Act
         using Image resizedImage = image.Resize(20, 20, mode);
@@ -30,7 +30,7 @@ public class ImageExtensionsResizeTests
     public void Test_Resize_RealGrayscaleImage(string expectedResult, ResizeMode mode)
     {
         // Arrange
-        using var image = Image.Load("./resources/lena8.bmp");
+        using var image = Image.Load("./lena8.bmp");
 
         // Act
         using Image resizedImage = image.Resize(20, 20, mode);

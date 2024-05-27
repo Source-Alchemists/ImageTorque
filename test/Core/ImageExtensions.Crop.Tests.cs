@@ -12,7 +12,7 @@ public class ImageExtensionsCropTests
     public void Test_Crop_RealRgbImage(string expectedResult, int x, int y, int width, int height)
     {
         // Arrange
-        using var image = Image.Load("./resources/lena24.png");
+        using var image = Image.Load("./lena24.png");
 
         // Act
         using Image result = image.Crop(new Rectangle { X = x, Y = y, Width = width, Height = height });
@@ -28,7 +28,7 @@ public class ImageExtensionsCropTests
     public void Test_Crop_RealGrayscaleImage(string expectedResult, int x, int y, int width, int height)
     {
         // Arrange
-        using var image = Image.Load("./resources/lena8.bmp");
+        using var image = Image.Load("./lena8.bmp");
 
         // Act
         using Image result = image.Crop(new Rectangle { X = x, Y = y, Width = width, Height = height });

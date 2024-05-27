@@ -29,3 +29,4 @@ bld/
 *.snupkg
 
 *.DS_STORE
+BenchmarkDotnet.Artifacts/

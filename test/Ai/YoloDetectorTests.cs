@@ -8,8 +8,8 @@ public class YoloDetectorTests
     public void Test_Prediction_YoloP5()
     {
         // Arrange
-        using var detector = new YoloDetector<YoloP5Model>("./resources/code_detector.onnx");
-        using var image = Image.Load("./resources/pzn_3.jpeg");
+        using var detector = new YoloDetector<YoloP5Model>("./code_detector.onnx");
+        using var image = Image.Load("./pzn_3.jpeg");
 
         // Act
         List<YoloPrediction> result = detector.Predict(image);
@@ -22,8 +22,8 @@ public class YoloDetectorTests
     public void Test_Prediction_YoloV7()
     {
         // Arrange
-        using var detector = new YoloDetector<YoloV7Model>("./resources/code_detector_v7.onnx");
-        using var image = Image.Load("./resources/pzn_3.jpeg");
+        using var detector = new YoloDetector<YoloV7Model>("./code_detector_v7.onnx");
+        using var image = Image.Load("./pzn_3.jpeg");
 
         // Act
         List<YoloPrediction> result = detector.Predict(image);
@@ -36,8 +36,8 @@ public class YoloDetectorTests
     public void Test_Prediction_YoloNas_Quant()
     {
         // Arrange
-        using var detector = new YoloDetector<YoloNasQuantModel>("./resources/code_detector_nas_quant.onnx");
-        using var image = Image.Load("./resources/pzn_3.jpeg");
+        using var detector = new YoloDetector<YoloNasQuantModel>("./code_detector_nas_quant.onnx");
+        using var image = Image.Load("./pzn_3.jpeg");
 
         // Act
         List<YoloPrediction> result = detector.Predict(image);
