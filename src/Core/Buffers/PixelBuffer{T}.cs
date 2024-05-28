@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.Runtime.InteropServices;
+using ImageTorque.Memory;
 using ImageTorque.Pixels;
 
 namespace ImageTorque.Buffers;
@@ -97,11 +98,15 @@ public record PixelBuffer<T> : IPixelBuffer<T>
         Height = height;
         T pixel = Activator.CreateInstance<T>();
         PixelType = pixel.PixelType;
-
         PixelFormat = PixelBufferMarshal.GetPixelFormat(PixelBufferType, PixelType);
+        if (PixelBufferType == PixelBufferType.Planar && (PixelType == PixelType.LF || PixelType == PixelType.L8 || PixelType == PixelType.L16))
+        {
+            NumberOfChannels *= 3;
+        }
+
         Size = width * height * NumberOfChannels;
 
-        _memoryOwner = MemoryPool<T>.Shared.Rent(Width * Height * NumberOfChannels);
+        _memoryOwner = NativeMemoryPool<T>.Shared.Rent(Width * Height * NumberOfChannels);
         _memory = _memoryOwner.Memory;
     }
 
@@ -131,7 +136,7 @@ public record PixelBuffer<T> : IPixelBuffer<T>
         PixelType = other.PixelType;
         PixelFormat = other.PixelFormat;
 
-        _memoryOwner = MemoryPool<T>.Shared.Rent(Width * Height * NumberOfChannels);
+        _memoryOwner = NativeMemoryPool<T>.Shared.Rent(Width * Height * NumberOfChannels);
         _memory = _memoryOwner.Memory;
         other.Pixels.CopyTo(_memory.Span);
     }
@@ -163,9 +168,27 @@ public record PixelBuffer<T> : IPixelBuffer<T>
     /// <summary>
     /// Gets the row.
     /// </summary>
+    /// <remarks>Instead of throwing ArgumentOutOfRange it will provide a empty/partial row.</remarks>
     /// <param name="rowIndex">Index of the row.</param>
     /// <returns>Span of the row.</returns>
-    public Span<T> GetRow(int rowIndex) => _memory.Span.Slice(rowIndex * Width, Width);
+    public Span<T> GetRow(int rowIndex)
+    {
+        int startPos = rowIndex * Width;
+        int count = Width;
+        int length = _memory.Span.Length;
+        if (startPos > length || length - startPos < 1)
+        {
+            var fallback = new Span<T>(new T[count]);
+            if (startPos < length)
+            {
+                _memory.Span.Slice(startPos, (int)(uint)length - startPos);
+            }
+
+            return fallback;
+        }
+
+        return _memory.Span.Slice(startPos, count);
+    }
 
     /// <summary>
     /// Gets the pixel buffer as read only.
