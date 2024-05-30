@@ -1,4 +1,4 @@
-namespace ImageTorque.Formats;
+namespace ImageTorque.Codecs;
 
 public interface IImageFormat {
     int HeaderSize { get; }

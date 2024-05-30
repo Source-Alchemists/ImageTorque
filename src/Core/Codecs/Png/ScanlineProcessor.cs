@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ImageTorque.Pixels;
 
-namespace ImageTorque.Formats.Png;
+namespace ImageTorque.Codecs.Png;
 
 internal static class ScanlineProcessor
 {

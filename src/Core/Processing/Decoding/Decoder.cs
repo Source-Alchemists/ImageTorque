@@ -1,5 +1,5 @@
 using ImageTorque.Buffers;
-using ImageTorque.Formats;
+using ImageTorque.Codecs;
 
 namespace ImageTorque.Processing;
 

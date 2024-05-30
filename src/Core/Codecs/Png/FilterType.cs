@@ -1,4 +1,4 @@
-namespace ImageTorque.Formats.Png;
+namespace ImageTorque.Codecs.Png;
 
 /// <summary>
 /// <see href="https://www.w3.org/TR/PNG-Filters.html"/>

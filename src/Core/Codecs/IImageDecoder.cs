@@ -1,6 +1,6 @@
 using ImageTorque.Buffers;
 
-namespace ImageTorque.Formats;
+namespace ImageTorque.Codecs;
 
 public interface IImageDecoder {
     IPixelBuffer Decode(Stream stream);

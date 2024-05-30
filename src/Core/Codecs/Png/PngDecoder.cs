@@ -10,7 +10,7 @@ using ImageTorque.Compression.Zlib;
 using ImageTorque.Memory;
 using ImageTorque.Pixels;
 
-namespace ImageTorque.Formats.Png;
+namespace ImageTorque.Codecs.Png;
 
 public class PngDecoder : IImageDecoder
 {

@@ -1,5 +1,5 @@
 using BenchmarkDotNet.Attributes;
-using ImageTorque.Formats.Png;
+using ImageTorque.Codecs.Png;
 
 namespace ImageTorque.Benchmarks;
 

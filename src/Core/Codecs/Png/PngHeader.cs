@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
 
-namespace ImageTorque.Formats.Png;
+namespace ImageTorque.Codecs.Png;
 
 internal readonly struct PngHeader(
     int width, int height, byte bitDepth, PngColorType colorType,

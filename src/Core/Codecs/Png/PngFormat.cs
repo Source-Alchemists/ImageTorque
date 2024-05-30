@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
 
-namespace ImageTorque.Formats.Png;
+namespace ImageTorque.Codecs.Png;
 
 public sealed class PngFormat : IImageFormat
 {

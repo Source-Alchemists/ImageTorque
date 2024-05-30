@@ -1,4 +1,4 @@
-namespace ImageTorque.Formats.Png;
+namespace ImageTorque.Codecs.Png;
 
 internal enum PngInterlaceMode : byte
 {

@@ -1,5 +1,5 @@
-using ImageTorque.Formats;
-using ImageTorque.Formats.Png;
+using ImageTorque.Codecs;
+using ImageTorque.Codecs.Png;
 using Microsoft.IO;
 
 namespace ImageTorque;

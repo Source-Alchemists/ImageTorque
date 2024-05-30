@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 using ImageTorque.Buffers;
-using ImageTorque.Formats.Png;
+using ImageTorque.Codecs.Png;
 using ImageTorque.Pixels;
 
 namespace ImageTorque.Tests;

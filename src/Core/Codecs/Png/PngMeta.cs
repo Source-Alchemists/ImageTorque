@@ -1,6 +1,6 @@
 using ImageTorque.Pixels;
 
-namespace ImageTorque.Formats.Png;
+namespace ImageTorque.Codecs.Png;
 
 internal sealed record PngMeta
 {

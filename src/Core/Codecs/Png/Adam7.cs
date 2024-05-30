@@ -1,16 +1,13 @@
 using System.Runtime.CompilerServices;
 
-namespace ImageTorque.Formats.Png;
+namespace ImageTorque.Codecs.Png;
 
 internal static class Adam7
 {
-    public static readonly int[] ColumnIncrement = [8, 8, 4, 4, 2, 2, 1];
-
-    public static readonly int[] FirstColumn = [0, 4, 0, 2, 0, 1, 0];
-
     public static readonly int[] FirstRow = [0, 0, 4, 0, 2, 0, 1];
-
+    public static readonly int[] FirstColumn = [0, 4, 0, 2, 0, 1, 0];
     public static readonly int[] RowIncrement = [8, 8, 8, 4, 4, 2, 2];
+    public static readonly int[] ColumnIncrement = [8, 8, 4, 4, 2, 2, 1];
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

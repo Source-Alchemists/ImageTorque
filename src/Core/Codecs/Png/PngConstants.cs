@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace ImageTorque.Formats.Png;
+namespace ImageTorque.Codecs.Png;
 
 internal static class PngConstants
 {

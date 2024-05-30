@@ -1,6 +1,6 @@
 using System.Buffers;
 
-namespace ImageTorque.Formats.Png;
+namespace ImageTorque.Codecs.Png;
 
 internal readonly record struct PngChunk
 {

@@ -1,7 +1,7 @@
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
 
-namespace ImageTorque.Formats;
+namespace ImageTorque.Codecs;
 
 public abstract class ImageEncoder : IImageEncoder
 {
