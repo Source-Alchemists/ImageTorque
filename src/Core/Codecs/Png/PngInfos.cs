@@ -2,14 +2,14 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Codecs.Png;
 
-internal sealed record PngMeta
+internal sealed record PngInfos
 {
     public byte? BitDepth { get; init; }
     public PngColorType? ColorType { get; init; }
-    public PngInterlaceMode? InterlaceMethod { get; set; } = PngInterlaceMode.None;
-    public PixelResolutionUnit ResolutionUnits { get; set; }
-    public double HorizontalResolution { get; set; }
-    public double VerticalResolution { get; set; }
+    public PngInterlaceMode? InterlaceMethod { get; init; } = PngInterlaceMode.None;
+    public PixelResolutionUnit ResolutionUnits { get; init; }
+    public double HorizontalResolution { get; init; }
+    public double VerticalResolution { get; init; }
     public byte[] ColorPalette { get; set; } = [];
     public Rgb24[] ColorTable { get; set; } = [];
     public int BytesPerPixel { get; set; }

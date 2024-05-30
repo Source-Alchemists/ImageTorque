@@ -10,6 +10,7 @@ namespace ImageTorque.Benchmarks;
 [MaxIterationCount(200)]
 public class PngImageLoad
 {
+    private const string BENCHMARK_IMAGE_PATH = "./lena24.png";
     private Image _imageTorqueImage = null!;
     private SixLabors.ImageSharp.Image _imageSharpImage = null!;
     private SKBitmap _skiaBitmap = null!;
@@ -18,7 +19,7 @@ public class PngImageLoad
     [Benchmark(Baseline = true)]
     public void ImageTorque()
     {
-        _imageTorqueImage = Image.Load("./lena24.png");
+        _imageTorqueImage = Image.Load(BENCHMARK_IMAGE_PATH);
     }
 
     [IterationCleanup(Target = nameof(ImageTorque))]
@@ -30,7 +31,7 @@ public class PngImageLoad
     [Benchmark]
     public void ImageSharp()
     {
-        _imageSharpImage = SixLabors.ImageSharp.Image.Load("./lena24.png");
+        _imageSharpImage = SixLabors.ImageSharp.Image.Load(BENCHMARK_IMAGE_PATH);
     }
 
     [IterationCleanup(Target = nameof(ImageSharp))]
@@ -42,7 +43,7 @@ public class PngImageLoad
     [Benchmark]
     public void SkiaSharp()
     {
-        _skiaBitmap = SKBitmap.Decode("./lena24.png");
+        _skiaBitmap = SKBitmap.Decode(BENCHMARK_IMAGE_PATH);
     }
 
     [IterationCleanup(Target = nameof(SkiaSharp))]
@@ -54,7 +55,7 @@ public class PngImageLoad
     [Benchmark]
     public void ImageMagick()
     {
-        _magickImage = new MagickImage("./lena24.png");
+        _magickImage = new MagickImage(BENCHMARK_IMAGE_PATH);
     }
 
     [IterationCleanup(Target = nameof(ImageMagick))]

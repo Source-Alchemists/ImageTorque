@@ -50,7 +50,7 @@ internal static class FilterUp
             Vector256<byte> vectorZero = Vector256<byte>.Zero;
             Vector256<int> sumAccumulator = Vector256<int>.Zero;
 
-            for (; x <= (uint)(scanline.Length - Vector256<byte>.Count);)
+            while (x <= (uint)(scanline.Length - Vector256<byte>.Count))
             {
                 Vector256<byte> scan = Unsafe.As<byte, Vector256<byte>>(ref Unsafe.Add(ref scanBaseRef, x));
                 Vector256<byte> above = Unsafe.As<byte, Vector256<byte>>(ref Unsafe.Add(ref prevBaseRef, x));
@@ -68,7 +68,7 @@ internal static class FilterUp
         {
             Vector<uint> sumAccumulator = Vector<uint>.Zero;
 
-            for (; x <= (uint)(scanline.Length - Vector<byte>.Count);)
+            while (x <= (uint)(scanline.Length - Vector<byte>.Count))
             {
                 Vector<byte> scan = Unsafe.As<byte, Vector<byte>>(ref Unsafe.Add(ref scanBaseRef, x));
                 Vector<byte> above = Unsafe.As<byte, Vector<byte>>(ref Unsafe.Add(ref prevBaseRef, x));
@@ -86,7 +86,7 @@ internal static class FilterUp
             }
         }
 
-        for (; x < (uint)scanline.Length;)
+        while (x < (uint)scanline.Length)
         {
             byte scan = Unsafe.Add(ref scanBaseRef, x);
             byte above = Unsafe.Add(ref prevBaseRef, x);

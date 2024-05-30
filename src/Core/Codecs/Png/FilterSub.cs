@@ -37,8 +37,9 @@ internal static class FilterSub
         ref byte resultBaseRef = ref MemoryMarshal.GetReference(result);
         sum = 0;
         resultBaseRef = (byte)FilterType.Sub;
+
         nuint x = 0;
-        for (; x < (uint)bytesPerPixel;)
+        while(x < (uint)bytesPerPixel)
         {
             byte scan = Unsafe.Add(ref scanBaseRef, x);
             ++x;

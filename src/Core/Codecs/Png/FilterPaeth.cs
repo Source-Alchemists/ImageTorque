@@ -79,7 +79,7 @@ internal static class FilterPaeth
         resultBaseRef = (byte)FilterType.Paeth;
 
         nuint x = 0;
-        for (; x < (uint)bytesPerPixel;)
+        while(x < (uint)bytesPerPixel)
         {
             byte scan = Unsafe.Add(ref scanBaseRef, x);
             byte above = Unsafe.Add(ref prevBaseRef, x);
