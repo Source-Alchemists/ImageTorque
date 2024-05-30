@@ -11,11 +11,11 @@ public class PngDecoderTests
     public void Test_Identify()
     {
         // Arrange
-        var format = new PngFormat();
+        var codec = new PngCodec();
         using var stream = new FileStream("./lena24.png", FileMode.Open);
 
         // Act
-        ImageInfo imageInfo = format.Decoder.Identify(stream);
+        ImageInfo imageInfo = codec.Decoder.Identify(stream);
 
         // Assert
         Assert.Equal(512, imageInfo.Width);
@@ -27,7 +27,7 @@ public class PngDecoderTests
     public void Test_Decode()
     {
         // Arrange
-        var format = new PngFormat();
+        var codec = new PngCodec();
         using var stream = new FileStream("./lena24.png", FileMode.Open);
         using var sixImage = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(stream);
         stream.Position = 0;
@@ -35,7 +35,7 @@ public class PngDecoderTests
         Span<Rgb24> sixBuffer = MemoryMarshal.Cast<SixLabors.ImageSharp.PixelFormats.Rgb24, Rgb24>(sixPixels.Span);
 
         // Act
-        var pixelBuffer = format.Decoder.Decode(stream) as PixelBuffer<Rgb24>;
+        var pixelBuffer = codec.Decoder.Decode(stream) as PixelBuffer<Rgb24>;
         Span<Rgb24> pixels = pixelBuffer!.Pixels;
 
         // Assert

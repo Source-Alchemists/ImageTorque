@@ -16,21 +16,21 @@ public sealed record Configuration
 
     public int MaxHeaderSize { get; init; }
 
-    public IReadOnlyCollection<IImageFormat> Formats { get; init; } = [];
+    public IReadOnlyCollection<ICodec> Codecs { get; init; } = [];
 
     public bool UseCrcValidation { get; init; } = false; // We don't use CRC validation by default, because we running in a machine vision context
 
     internal static Configuration CreateDefaultInstance()
     {
 
-        var formats = new List<IImageFormat> {
-            new PngFormat()
+        var formats = new List<ICodec> {
+            new PngCodec()
         };
 
         var configuration = new Configuration()
         {
             MaxHeaderSize = formats.Max(f => f.HeaderSize),
-            Formats = formats
+            Codecs = formats
         };
 
         return configuration;

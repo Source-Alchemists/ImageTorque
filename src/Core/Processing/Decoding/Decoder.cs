@@ -21,11 +21,11 @@ internal class Decoder : IProcessor<DecoderParameters, IPixelBuffer>
             stream.Position = 0;
         }
 
-        IImageFormat format = DetectFormat(stream, configuration);
+        ICodec format = DetectCodec(stream, configuration);
         return format.Decoder.Decode(stream, configuration);
     }
 
-    private static IImageFormat DetectFormat(Stream stream, Configuration configuration)
+    private static ICodec DetectCodec(Stream stream, Configuration configuration)
     {
         int headerSize = (int)Math.Min(configuration.MaxHeaderSize, stream.Length);
         if (headerSize <= 0)
@@ -49,21 +49,21 @@ internal class Decoder : IProcessor<DecoderParameters, IPixelBuffer>
 
         ReadOnlySpan<byte> targetHeadersBuffer = headersBuffer[..n];
 
-        IImageFormat? format = null;
-        foreach (IImageFormat formatDetector in configuration.Formats)
+        ICodec? codec = null;
+        foreach (ICodec confCodec in configuration.Codecs)
         {
-            if (formatDetector.HeaderSize <= targetHeadersBuffer.Length && formatDetector.IsSupportedFileFormat(targetHeadersBuffer))
+            if (confCodec.HeaderSize <= targetHeadersBuffer.Length && confCodec.IsSupportedFileFormat(targetHeadersBuffer))
             {
-                format = formatDetector;
+                codec = confCodec;
                 break;
             }
         }
 
-        if (format is null)
+        if (codec is null)
         {
             throw new InvalidDataException("Format could not be detected!");
         }
 
-        return format;
+        return codec;
     }
 }
