@@ -3,6 +3,9 @@ using System.IO.Compression;
 
 namespace ImageTorque.Compression.Zlib;
 
+/// <summary>
+/// <see href="https://www.zlib.net/"/>
+/// </summary>
 internal sealed class ZlibInflateStream(Stream innerStream, Func<int> getData) : Stream
 {
     private static readonly byte[] s_checksumBuffer = new byte[4];

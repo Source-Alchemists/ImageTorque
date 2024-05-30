@@ -21,8 +21,9 @@ internal class Decoder : IProcessor<DecoderParameters, IPixelBuffer>
             stream.Position = 0;
         }
 
-        ICodec format = DetectCodec(stream, configuration);
-        return format.Decoder.Decode(stream, configuration);
+        using BufferedStream bs = new(stream);
+        ICodec format = DetectCodec(bs, configuration);
+        return format.Decoder.Decode(bs, configuration);
     }
 
     private static ICodec DetectCodec(Stream stream, Configuration configuration)
