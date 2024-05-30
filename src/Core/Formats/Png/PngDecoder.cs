@@ -57,7 +57,7 @@ public class PngDecoder : IImageDecoder
         Span<byte> buffer = stackalloc byte[20];
         IMemoryOwner<byte> scanline = null!;
         IMemoryOwner<byte> lastScanline = null!;
-        PngChunk? nextChunk = null!;
+        PngChunk? lastChunk = null!;
 
         try
         {
@@ -89,7 +89,7 @@ public class PngDecoder : IImageDecoder
                                             chunk,
                                             () =>
                                             {
-                                                if (nextChunk != null)
+                                                if (lastChunk != null)
                                                 {
                                                     return 0;
                                                 }
@@ -110,7 +110,7 @@ public class PngDecoder : IImageDecoder
                                                         return chunk.Length;
                                                     }
 
-                                                    nextChunk = chunk;
+                                                    lastChunk = chunk;
                                                 }
 
                                                 return chunk.Length;
@@ -144,7 +144,7 @@ public class PngDecoder : IImageDecoder
         {
             scanline?.Dispose();
             lastScanline?.Dispose();
-            nextChunk?.Data?.Dispose();
+            lastChunk?.Data?.Dispose();
         }
     }
 
@@ -195,7 +195,7 @@ public class PngDecoder : IImageDecoder
         return new ImageInfo(header.Width, header.Height, CalculateBitsPerPixel(pngMeta, header));
     }
 
-    private bool TryReadChunk(Stream stream, Span<byte> buffer, Configuration configuration, out PngChunk chunk)
+    private bool TryReadChunk(in Stream stream, Span<byte> buffer, Configuration configuration, out PngChunk chunk)
     {
         if (stream.Position >= stream.Length - 1)
         {
@@ -296,16 +296,16 @@ public class PngDecoder : IImageDecoder
             pngMeta.BytesPerSample = header.BitDepth / 8;
         }
 
-        IMemoryOwner<byte> scanline = NativeMemoryPool<byte>.Shared.Rent(pngMeta.BytesPerScanline);
+        IMemoryOwner<byte> scanline = OptimizedMemoryPool<byte>.Shared.Rent(pngMeta.BytesPerScanline);
         scanline.Memory.Span.Clear();
-        IMemoryOwner<byte> lastScanline = NativeMemoryPool<byte>.Shared.Rent(pngMeta.BytesPerScanline);
+        IMemoryOwner<byte> lastScanline = OptimizedMemoryPool<byte>.Shared.Rent(pngMeta.BytesPerScanline);
         lastScanline.Memory.Span.Clear();
         ColorPaletteToColorTable(pngMeta);
         return (scanline, lastScanline);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) ReadScanlines<TPixel>(in Stream stream, PixelBuffer<TPixel> pixelBuffer, IMemoryOwner<byte> scanline, IMemoryOwner<byte> lastScanline, PngMeta pngMeta, PngHeader header, PngChunk chunk, Func<int> getData)
+    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) ReadScanlines<TPixel>(in Stream stream, PixelBuffer<TPixel> pixelBuffer, in IMemoryOwner<byte> scanline, in IMemoryOwner<byte> lastScanline, PngMeta pngMeta, PngHeader header, PngChunk chunk, Func<int> getData)
         where TPixel : unmanaged, IPixel
     {
         using ZlibInflateStream inflateStream = new(stream, getData);
@@ -403,13 +403,7 @@ public class PngDecoder : IImageDecoder
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) DecodePixelData<TPixel>(
-        DeflateStream compressedStream,
-        PixelBuffer<TPixel> pixelBuffer,
-        IMemoryOwner<byte> scanline,
-        IMemoryOwner<byte> lastScanline,
-        PngMeta pngMeta,
-        PngHeader header)
+    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) DecodePixelData<TPixel>(in DeflateStream compressedStream, in PixelBuffer<TPixel> pixelBuffer, IMemoryOwner<byte> scanline, IMemoryOwner<byte> lastScanline, in PngMeta pngMeta, in PngHeader header)
         where TPixel : unmanaged, IPixel
     {
         int currentRow = 0;
@@ -465,7 +459,7 @@ public class PngDecoder : IImageDecoder
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void ProcessInterlacedDefilteredScanline<TPixel>(ReadOnlySpan<byte> scanline, Span<TPixel> destination,
-        PngMeta pngMeta, PngHeader header, int pixelOffset = 0, int increment = 1) where TPixel : unmanaged, IPixel
+        in PngMeta pngMeta, in PngHeader header, int pixelOffset = 0, int increment = 1) where TPixel : unmanaged, IPixel
     {
         Span<TPixel> rowSpan = destination;
         ReadOnlySpan<byte> trimmed = scanline[1..];
@@ -498,12 +492,7 @@ public class PngDecoder : IImageDecoder
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void ProcessDefilteredScanline<TPixel>(
-        int currentRow,
-        ReadOnlySpan<byte> scanline,
-        PixelBuffer<TPixel> pixelBuffer,
-        PngMeta pngMeta,
-        PngHeader header)
+    private static void ProcessDefilteredScanline<TPixel>(int currentRow, ReadOnlySpan<byte> scanline, in PixelBuffer<TPixel> pixelBuffer, in PngMeta pngMeta, in PngHeader header)
         where TPixel : unmanaged, IPixel
     {
         Span<TPixel> destination = pixelBuffer.GetRow(currentRow);
@@ -547,7 +536,7 @@ public class PngDecoder : IImageDecoder
             return false;
         }
 
-        buffer = NativeMemoryPool<byte>.Shared.Rent(bytesPerScanline * 8 / bits);
+        buffer = OptimizedMemoryPool<byte>.Shared.Rent(bytesPerScanline * 8 / bits);
         ref byte sourceRef = ref MemoryMarshal.GetReference(source);
         ref byte resultRef = ref MemoryMarshal.GetReference(buffer.Memory.Span);
         int mask = 0xFF >> (8 - bits);
@@ -567,7 +556,8 @@ public class PngDecoder : IImageDecoder
         return true;
     }
 
-    private void ValidateChunk(in Stream stream, in PngChunk chunk, Span<byte> buffer)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void ValidateChunk(in Stream stream, in PngChunk chunk, Span<byte> buffer)
     {
         uint inputCrc = ReadChunkCrc(stream, buffer);
         if (chunk.IsCritical(PngCrcChunkHandling.IgnoreNonCritical))
@@ -592,11 +582,11 @@ public class PngDecoder : IImageDecoder
     {
         if (length == 0)
         {
-            return NativeMemoryPool<byte>.Shared.Rent(0);
+            return OptimizedMemoryPool<byte>.Shared.Rent(0);
         }
 
         length = (int)Math.Min(length, stream.Length - stream.Position);
-        IMemoryOwner<byte> buffer =NativeMemoryPool<byte>.Shared.Rent(length);
+        IMemoryOwner<byte> buffer = OptimizedMemoryPool<byte>.Shared.Rent(length);
         stream.Read(buffer.Memory.Span.Slice(0, length));
         return buffer;
     }
@@ -613,7 +603,7 @@ public class PngDecoder : IImageDecoder
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static (PngHeader, PngMeta) ReadHeaderChunk(PngMeta pngMeta, ReadOnlySpan<byte> data)
+    private static (PngHeader, PngMeta) ReadHeaderChunk(in PngMeta pngMeta, ReadOnlySpan<byte> data)
     {
         var header = PngHeader.Parse(data);
         header.Validate();
@@ -656,7 +646,7 @@ public class PngDecoder : IImageDecoder
         return crc;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void ColorPaletteToColorTable(PngMeta pngMeta)
     {
         Span<byte> colorPalette = pngMeta.ColorPalette.AsSpan();

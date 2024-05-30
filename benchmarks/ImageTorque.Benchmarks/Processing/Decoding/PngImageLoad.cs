@@ -1,4 +1,6 @@
 using BenchmarkDotNet.Attributes;
+using ImageMagick;
+using SkiaSharp;
 
 namespace ImageTorque.Benchmarks;
 
@@ -6,23 +8,17 @@ namespace ImageTorque.Benchmarks;
 [SimpleJob]
 [MinIterationCount(100)]
 [MaxIterationCount(200)]
-public class PngLoadImage
+public class PngImageLoad
 {
-    private FileStream _imageTorqueStream = null!;
-    private FileStream _imageSharpStream = null!;
     private Image _imageTorqueImage = null!;
     private SixLabors.ImageSharp.Image _imageSharpImage = null!;
+    private SKBitmap _skiaBitmap = null!;
+    private MagickImage _magickImage = null!;
 
-    [IterationSetup(Target = nameof(ImageTorque))]
-    public void ImageTorqueIterationSetup()
-    {
-        _imageTorqueStream = new FileStream("./lena24.png", FileMode.Open);
-    }
-
-    [Benchmark]
+    [Benchmark(Baseline = true)]
     public void ImageTorque()
     {
-        _imageTorqueImage = Image.Load(_imageTorqueStream);
+        _imageTorqueImage = Image.Load("./lena24.png");
     }
 
     [IterationCleanup(Target = nameof(ImageTorque))]
@@ -31,23 +27,40 @@ public class PngLoadImage
         _imageTorqueImage?.Dispose();
     }
 
-    [IterationSetup(Target = nameof(ImageSharp))]
-    public void ImageSharpIterationSetup()
-    {
-        _imageSharpStream = new FileStream("./lena24.png", FileMode.Open);
-    }
-
     [Benchmark]
     public void ImageSharp()
     {
-        _imageSharpImage = SixLabors.ImageSharp.Image.Load(_imageSharpStream);
+        _imageSharpImage = SixLabors.ImageSharp.Image.Load("./lena24.png");
     }
 
     [IterationCleanup(Target = nameof(ImageSharp))]
     public void ImageSharpIterationCleanup()
     {
         _imageSharpImage?.Dispose();
-        _imageSharpStream?.Dispose();
+    }
+
+    [Benchmark]
+    public void SkiaSharp()
+    {
+        _skiaBitmap = SKBitmap.Decode("./lena24.png");
+    }
+
+    [IterationCleanup(Target = nameof(SkiaSharp))]
+    public void SkiaSharpCleanup()
+    {
+        _skiaBitmap?.Dispose();
+    }
+
+    [Benchmark]
+    public void ImageMagick()
+    {
+        _magickImage = new MagickImage("./lena24.png");
+    }
+
+    [IterationCleanup(Target = nameof(ImageMagick))]
+    public void ImageMagickCleanup()
+    {
+        _magickImage?.Dispose();
     }
 }
 

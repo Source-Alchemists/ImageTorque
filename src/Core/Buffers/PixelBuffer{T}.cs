@@ -48,9 +48,9 @@ public record PixelBuffer<T> : IPixelBuffer<T>
     public int Height { get; }
 
     /// <summary>
-    /// Gets the number of channels.
+    /// Gets the number of frames.
     /// </summary>
-    public int NumberOfChannels { get; protected set; } = 1;
+    public int NumberOfFrames { get; protected set; } = 1;
 
     /// <summary>
     /// Gets the size.
@@ -101,12 +101,12 @@ public record PixelBuffer<T> : IPixelBuffer<T>
         PixelFormat = PixelBufferMarshal.GetPixelFormat(PixelBufferType, PixelType);
         if (PixelBufferType == PixelBufferType.Planar && (PixelType == PixelType.LF || PixelType == PixelType.L8 || PixelType == PixelType.L16))
         {
-            NumberOfChannels *= 3;
+            NumberOfFrames *= 3;
         }
 
-        Size = width * height * NumberOfChannels;
+        Size = width * height * NumberOfFrames;
 
-        _memoryOwner = NativeMemoryPool<T>.Shared.Rent(Width * Height * NumberOfChannels);
+        _memoryOwner = OptimizedMemoryPool<T>.Shared.Rent(Width * Height * NumberOfFrames);
         _memory = _memoryOwner.Memory;
     }
 
@@ -130,13 +130,13 @@ public record PixelBuffer<T> : IPixelBuffer<T>
     {
         Width = other.Width;
         Height = other.Height;
-        NumberOfChannels = other.NumberOfChannels;
+        NumberOfFrames = other.NumberOfFrames;
         Size = other.Size;
         IsColor = other.IsColor;
         PixelType = other.PixelType;
         PixelFormat = other.PixelFormat;
 
-        _memoryOwner = NativeMemoryPool<T>.Shared.Rent(Width * Height * NumberOfChannels);
+        _memoryOwner = OptimizedMemoryPool<T>.Shared.Rent(Width * Height * NumberOfFrames);
         _memory = _memoryOwner.Memory;
         other.Pixels.CopyTo(_memory.Span);
     }

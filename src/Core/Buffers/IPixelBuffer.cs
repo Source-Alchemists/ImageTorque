@@ -25,7 +25,7 @@ public interface IPixelBuffer : IDisposable
     /// <summary>
     /// Gets the number of channels.
     /// </summary>
-    int NumberOfChannels { get; }
+    int NumberOfFrames { get; }
 
     /// <summary>
     /// Gets the size.

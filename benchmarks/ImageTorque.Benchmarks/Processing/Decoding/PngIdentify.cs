@@ -32,7 +32,7 @@ public class PngIdentify
         _imageSharpStream.Position = 0;
     }
 
-    [Benchmark]
+    [Benchmark(Baseline = true)]
     public void ImageTorque()
     {
         _ = _imageTorquePngFormat.Decoder.Identify(_imageTorqueStream);

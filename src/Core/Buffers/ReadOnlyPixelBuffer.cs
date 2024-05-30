@@ -36,7 +36,7 @@ public abstract record ReadOnlyPixelBuffer<TPixel> : IReadOnlyPixelBuffer<TPixel
     /// <summary>
     /// Gets the number of channels.
     /// </summary>
-    public int NumberOfChannels { get => PixelBuffer.NumberOfChannels; }
+    public int NumberOfChannels { get => PixelBuffer.NumberOfFrames; }
 
     /// <summary>
     /// Gets the size.

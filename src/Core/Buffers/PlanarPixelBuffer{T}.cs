@@ -37,7 +37,7 @@ public sealed record PlanarPixelBuffer<T> : PixelBuffer<T>
     /// <inheritdoc/>
     public override Span<T> GetChannel(int channelIndex)
     {
-        if (channelIndex < 0 || channelIndex >= NumberOfChannels)
+        if (channelIndex < 0 || channelIndex >= NumberOfFrames)
         {
             throw new ArgumentOutOfRangeException(nameof(channelIndex));
         }
@@ -54,7 +54,7 @@ public sealed record PlanarPixelBuffer<T> : PixelBuffer<T>
     /// <returns>The row of pixels.</returns>
     public Span<T> GetRow(int channelIndex, int rowIndex)
     {
-        if (channelIndex < 0 || channelIndex >= NumberOfChannels)
+        if (channelIndex < 0 || channelIndex >= NumberOfFrames)
         {
             throw new ArgumentOutOfRangeException(nameof(channelIndex));
         }
