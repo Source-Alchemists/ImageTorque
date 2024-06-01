@@ -2,7 +2,7 @@ using System.Buffers;
 
 namespace ImageTorque.Memory;
 
-internal sealed unsafe class UnmanagedMemoryOwner<T>(OptimizedMemoryPool<T> pool, UnmanagedMemoryBlock<T> memoryBlock, int elementLength) : MemoryManager<T> where T : unmanaged
+internal sealed class UnmanagedMemoryOwner<T>(OptimizedMemoryPool<T> pool, UnmanagedMemoryBlock<T> memoryBlock, int elementLength) : MemoryManager<T> where T : unmanaged
 {
     private readonly OptimizedMemoryPool<T> _pool = pool;
     private readonly int _elementLength = elementLength;
@@ -17,7 +17,7 @@ internal sealed unsafe class UnmanagedMemoryOwner<T>(OptimizedMemoryPool<T> pool
     }
 
     /// <inheritdoc/>
-    public override MemoryHandle Pin(int elementIndex = 0)
+    public override unsafe MemoryHandle Pin(int elementIndex = 0)
     {
         return new MemoryHandle(MemoryBlock.AsPointer() + elementIndex, pinnable: this);
     }

@@ -18,7 +18,7 @@ public class ImageExtensionsCropTests
         using Image result = image.Crop(new Rectangle { X = x, Y = y, Width = width, Height = height });
 
         // Assert
-        string hash = CreateHash(result.AsPacked<Rgb24>().Pixels[..40000].AsByte());
+        string hash = TestHelper.CreateHash(result.AsPacked<Rgb24>().Pixels[..40000].AsByte());
         Assert.Equal(expectedResult, hash);
     }
 
@@ -34,18 +34,7 @@ public class ImageExtensionsCropTests
         using Image result = image.Crop(new Rectangle { X = x, Y = y, Width = width, Height = height });
 
         // Assert
-        string hash = CreateHash(result.AsPacked<L8>().Pixels[..40000].AsByte());
+        string hash = TestHelper.CreateHash(result.AsPacked<L8>().Pixels[..40000].AsByte());
         Assert.Equal(expectedResult, hash);
-    }
-
-    private static string CreateHash(ReadOnlySpan<byte> imageData)
-    {
-        byte[] hashBytes = SHA256.HashData(imageData);
-        var sb = new StringBuilder();
-        for (int i = 0; i < hashBytes.Length; i++)
-        {
-            sb.Append(hashBytes[i].ToString("x2"));
-        }
-        return sb.ToString();
     }
 }

@@ -19,7 +19,7 @@ public class ImageExtensionsResizeTests
         using Image resizedImage = image.Resize(20, 20, mode);
 
         // Assert
-        string hash = CreateHash(resizedImage.AsPacked<Rgb24>().Pixels[..400].AsByte());
+        string hash = TestHelper.CreateHash(resizedImage.AsPacked<Rgb24>().Pixels[..400].AsByte());
         Assert.Equal(expectedResult, hash);
     }
 
@@ -36,18 +36,7 @@ public class ImageExtensionsResizeTests
         using Image resizedImage = image.Resize(20, 20, mode);
 
         // Assert
-        string hash = CreateHash(resizedImage.AsPacked<L8>().Pixels[..400].AsByte());
+        string hash = TestHelper.CreateHash(resizedImage.AsPacked<L8>().Pixels[..400].AsByte());
         Assert.Equal(expectedResult, hash);
-    }
-
-    private static string CreateHash(ReadOnlySpan<byte> imageData)
-    {
-        byte[] hashBytes = SHA256.HashData(imageData);
-        var sb = new StringBuilder();
-        for (int i = 0; i < hashBytes.Length; i++)
-        {
-            sb.Append(hashBytes[i].ToString("x2"));
-        }
-        return sb.ToString();
     }
 }

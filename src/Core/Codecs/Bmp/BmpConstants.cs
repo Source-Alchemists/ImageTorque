@@ -2,9 +2,9 @@ namespace ImageTorque.Codecs.Bmp;
 
 internal static class BmpConstants
 {
-    public const int Rgb16RMask = 0x00007C00;
-    public const int Rgb16GMask = 0x000003E0;
-    public const int Rgb16BMask = 0x0000001F;
+    public const int Rgb16RMask = 0x7C00;
+    public const int Rgb16GMask = 0x3E0;
+    public const int Rgb16BMask = 0x1F;
 
     internal static class HeaderFields
     {

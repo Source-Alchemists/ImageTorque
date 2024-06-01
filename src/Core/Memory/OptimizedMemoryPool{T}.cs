@@ -6,7 +6,7 @@ namespace ImageTorque.Memory;
 /// Allocates pooled memory.
 /// </summary>
 /// <typeparam name="T">Must be a unmanaged type.</typeparam>
-public sealed unsafe class OptimizedMemoryPool<T> : MemoryPool<T> where T : unmanaged
+public sealed class OptimizedMemoryPool<T> : MemoryPool<T> where T : unmanaged
 {
     private bool _isDisposed = false;
     private readonly int _memoryBlockSize;
@@ -26,7 +26,7 @@ public sealed unsafe class OptimizedMemoryPool<T> : MemoryPool<T> where T : unma
     }
 
     /// <inheritdoc />
-    public override IMemoryOwner<T> Rent(int minBufferSize = -1)
+    public override unsafe IMemoryOwner<T> Rent(int minBufferSize = -1)
     {
         if (minBufferSize == 0)
         {

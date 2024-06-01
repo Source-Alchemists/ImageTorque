@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 using ImageTorque.Buffers;
 using ImageTorque.Memory;
@@ -8,12 +9,16 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Codecs.Bmp;
 
-public sealed unsafe class BmpDecoder : IImageDecoder
+public sealed class BmpDecoder : IImageDecoder
 {
     public IPixelBuffer Decode(Stream stream) => Decode(stream, Configuration.Default);
 
     public IPixelBuffer Decode(Stream stream, Configuration configuration)
     {
+        if(stream.CanSeek)
+        {
+            stream.Position = 0;
+        }
         BmpFileHeader fileHeader = ReadFileHeader(stream);
         BmpInfoHeader infoHeader = ReadInfoHeader(stream);
         byte[] colorPalette = [];
@@ -84,7 +89,7 @@ public sealed unsafe class BmpDecoder : IImageDecoder
         switch (infoHeader.Compression)
         {
             case BmpInfoHeader.CompressionType.RGB:
-                return DecodeRgb(stream, infoHeader, inverted, colorPalette, bytesPerColorMapEntry);
+                return DecodeUncompressed(stream, infoHeader, inverted, colorPalette, bytesPerColorMapEntry);
             case BmpInfoHeader.CompressionType.RLE8:
             case BmpInfoHeader.CompressionType.RLE4:
             case BmpInfoHeader.CompressionType.BitFields:
@@ -94,16 +99,25 @@ public sealed unsafe class BmpDecoder : IImageDecoder
         }
     }
 
-    private static IPixelBuffer DecodeRgb(Stream stream, in BmpInfoHeader infoHeader, bool inverted, in byte[] colorPalette, int bytesPerColorMapEntry)
+    private static IPixelBuffer DecodeUncompressed(Stream stream, in BmpInfoHeader infoHeader, bool inverted, in byte[] colorPalette, int bytesPerColorMapEntry)
     {
         if (infoHeader.BitsPerPixel <= 8)
         {
-            return DecodeFromRgbPalette(stream, infoHeader, inverted, colorPalette, bytesPerColorMapEntry);
+            return DecodeL8(stream, infoHeader, inverted, colorPalette, bytesPerColorMapEntry);
         }
-        return null!;
+        else if (infoHeader.BitsPerPixel == 16)
+        {
+            return DecodeL16(stream, infoHeader, inverted, BmpConstants.Rgb16RMask, BmpConstants.Rgb16GMask, BmpConstants.Rgb16BMask);
+        }
+        else if (infoHeader.BitsPerPixel == 24)
+        {
+            return DecodeRgb24(stream, infoHeader, inverted);
+        }
+
+        throw new NotSupportedException($"Bitmap with bits per pixel '{infoHeader.BitsPerPixel}' not supprted!");
     }
 
-    private static PixelBuffer<L8> DecodeFromRgbPalette(Stream stream, in BmpInfoHeader infoHeader, bool inverted, in byte[] colorPalette, int bytesPerColorMapEntry)
+    private static PixelBuffer<L8> DecodeL8(Stream stream, in BmpInfoHeader infoHeader, bool inverted, in byte[] colorPalette, int bytesPerColorMapEntry)
     {
         var pixelBuffer = new PixelBuffer<L8>(infoHeader.Width, infoHeader.Height);
         int pixelPerByte = 8 / infoHeader.BitsPerPixel;
@@ -121,12 +135,12 @@ public sealed unsafe class BmpDecoder : IImageDecoder
 
         for (int y = 0; y < infoHeader.Height; y++)
         {
-            int newY = Invert(y, infoHeader.Height, inverted);
             if (stream.Read(rowSpan) == 0)
             {
                 throw new InvalidDataException("Bitmap row size invalid!");
             }
 
+            int newY = Invert(y, infoHeader.Height, inverted);
             int offset = 0;
             Span<L8> pixelRow = pixelBuffer.GetRow(newY);
 
@@ -141,6 +155,77 @@ public sealed unsafe class BmpDecoder : IImageDecoder
                 }
 
                 offset++;
+            }
+        }
+
+        return pixelBuffer;
+    }
+
+    private static PixelBuffer<L16> DecodeL16(Stream stream, in BmpInfoHeader infoHeader, bool inverted, int redMask, int greenMask, int blueMask)
+    {
+        var pixelBuffer = new PixelBuffer<L16>(infoHeader.Width, infoHeader.Height);
+        int padding = CalculatePadding(infoHeader.Width, 2);
+        int stride = (infoHeader.Width * 2) + padding;
+        int rightShiftRedMask = CalculateRightShift((uint)redMask);
+        int rightShiftGreenMask = CalculateRightShift((uint)greenMask);
+        int rightShiftBlueMask = CalculateRightShift((uint)blueMask);
+        int redMaskBits = CountBits((uint)redMask);
+        int greenMaskBits = CountBits((uint)greenMask);
+        int blueMaskBits = CountBits((uint)blueMask);
+
+        using IMemoryOwner<byte> row = OptimizedMemoryPool<byte>.Shared.Rent(stride);
+        Span<byte> rowSpan = row.Memory.Span;
+
+        for (int y = 0; y < infoHeader.Height; y++)
+        {
+            if (stream.Read(rowSpan) == 0)
+            {
+                throw new InvalidDataException("Bitmap row size invalid!");
+            }
+
+            int newY = Invert(y, infoHeader.Height, inverted);
+            int offset = 0;
+            Span<L16> pixelRow = pixelBuffer.GetRow(newY);
+
+            for (int x = 0; x < infoHeader.Width; x++)
+            {
+                short temp = BinaryPrimitives.ReadInt16LittleEndian(rowSpan[offset..]);
+                int r = (redMaskBits == 5) ? GetByteFrom5BitValue((temp & redMask) >> rightShiftRedMask) : GetByteFrom6BitValue((temp & redMask) >> rightShiftRedMask);
+                int g = (greenMaskBits == 5) ? GetByteFrom5BitValue((temp & greenMask) >> rightShiftGreenMask) : GetByteFrom6BitValue((temp & greenMask) >> rightShiftGreenMask);
+                int b = (blueMaskBits == 5) ? GetByteFrom5BitValue((temp & blueMask) >> rightShiftBlueMask) : GetByteFrom6BitValue((temp & blueMask) >> rightShiftBlueMask);
+                pixelRow[x] = new L16(ColorNumerics.Get8BitBT709Luminance((byte)r, (byte)g, (byte)b));
+                offset += 2;
+            }
+        }
+
+        return pixelBuffer;
+    }
+
+    private static PixelBuffer<Rgb24> DecodeRgb24(Stream stream, in BmpInfoHeader infoHeader, bool inverted)
+    {
+        var pixelBuffer = new PixelBuffer<Rgb24>(infoHeader.Width, infoHeader.Height);
+        int bytesPerPixel = infoHeader.BitsPerPixel / 8;
+        int padding = CalculatePadding(infoHeader.Width, bytesPerPixel);
+        int rowLength = (infoHeader.Width * bytesPerPixel) + padding;
+
+        using IMemoryOwner<byte> row = OptimizedMemoryPool<byte>.Shared.Rent(rowLength);
+        Span<byte> rowSpan = row.Memory.Span;
+
+        for (int y = 0; y < infoHeader.Height; y++)
+        {
+            if (stream.Read(rowSpan) == 0)
+            {
+                throw new InvalidDataException("Bitmap row size invalid!");
+            }
+
+            int newY = Invert(y, infoHeader.Height, inverted);
+            Span<Rgb24> pixelRow = pixelBuffer.GetRow(newY);
+            Span<Rgb24> sourceRow = MemoryMarshal.Cast<byte, Rgb24>(rowSpan);
+
+            for (int x = 0; x < infoHeader.Width; x++)
+            {
+                Rgb24 source = sourceRow[x];
+                pixelRow[x] = new Rgb24(source.B, source.G, source.R); // bitmap is stored as BGR so we have to switch the colors
             }
         }
 
@@ -178,4 +263,56 @@ public sealed unsafe class BmpDecoder : IImageDecoder
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int Invert(int y, int height, bool inverted) => (!inverted) ? height - y - 1 : y;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int CalculatePadding(int width, int components)
+    {
+        int padding = width * components % 4;
+        if (padding != 0)
+        {
+            padding = 4 - padding;
+        }
+
+        return padding;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static byte GetByteFrom5BitValue(int value) => (byte)((value << 3) | (value >> 2));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static byte GetByteFrom6BitValue(int value) => (byte)((value << 2) | (value >> 4));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int CalculateRightShift(uint value)
+    {
+        int count = 0;
+        while (value > 0)
+        {
+            if ((1 & value) == 0)
+            {
+                count++;
+            }
+            else
+            {
+                break;
+            }
+
+            value >>= 1;
+        }
+
+        return count;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int CountBits(uint value)
+    {
+        int count = 0;
+        while (value != 0)
+        {
+            count++;
+            value &= value - 1;
+        }
+
+        return count;
+    }
 }
