@@ -11,11 +11,11 @@ public class PngDecoderTests
     public void Test_Identify()
     {
         // Arrange
-        var codec = new PngCodec();
+        var decoder = new PngDecoder();
         using var stream = new FileStream("./lena24.png", FileMode.Open);
 
         // Act
-        ImageInfo imageInfo = codec.Decoder.Identify(stream);
+        ImageInfo imageInfo = decoder.Identify(stream);
 
         // Assert
         Assert.Equal(512, imageInfo.Width);

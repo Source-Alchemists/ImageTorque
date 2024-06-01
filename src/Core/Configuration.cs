@@ -1,4 +1,5 @@
 using ImageTorque.Codecs;
+using ImageTorque.Codecs.Bmp;
 using ImageTorque.Codecs.Png;
 using Microsoft.IO;
 
@@ -24,7 +25,8 @@ public sealed record Configuration
     {
 
         var formats = new List<ICodec> {
-            new PngCodec()
+            new PngCodec(),
+            new BmpCodec()
         };
 
         var configuration = new Configuration()

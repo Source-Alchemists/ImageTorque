@@ -9,7 +9,7 @@ public class PngIdentify
 {
     private FileStream _imageTorqueStream = null!;
     private FileStream _imageSharpStream = null!;
-    private PngCodec _imageTorquePngFormat = new PngCodec();
+    private PngDecoder _decoder = new PngDecoder();
 
     [GlobalSetup]
     public void Setup()
@@ -35,7 +35,7 @@ public class PngIdentify
     [Benchmark(Baseline = true)]
     public void ImageTorque()
     {
-        _ = _imageTorquePngFormat.Decoder.Identify(_imageTorqueStream);
+        _ = _decoder.Identify(_imageTorqueStream);
     }
 
     [Benchmark]

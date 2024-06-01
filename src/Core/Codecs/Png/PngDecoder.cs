@@ -47,10 +47,9 @@ public class PngDecoder : IImageDecoder
         }
     }
 
-    private IPixelBuffer<TPixel> Decode<TPixel>(Stream stream, PngInfos pngMeta, Configuration configuration) where TPixel : unmanaged, IPixel
+    private IPixelBuffer<TPixel> Decode<TPixel>(Stream stream, PngInfos pngIno, Configuration configuration) where TPixel : unmanaged, IPixel
     {
-        Stream processStream = stream;
-        processStream.Skip(PngConstants.HeaderSize);
+        stream.Skip(PngConstants.HeaderSize);
         PngHeader header = new();
         PixelBuffer<TPixel>? pixelBuffer = null;
         Span<byte> buffer = stackalloc byte[20];
@@ -60,7 +59,7 @@ public class PngDecoder : IImageDecoder
 
         try
         {
-            while (TryReadChunk(processStream, buffer, configuration, out PngChunk chunk))
+            while (TryReadChunk(stream, buffer, configuration, out PngChunk chunk))
             {
                 try
                 {
@@ -72,19 +71,19 @@ public class PngDecoder : IImageDecoder
                                 throw new InvalidDataException("Invalid header!");
                             }
 
-                            (header, pngMeta) = PngChunkUtils.ReadHeaderChunk(pngMeta, chunk.Data.Memory.Span);
+                            (header, pngIno) = PngChunkUtils.ReadHeaderChunk(pngIno, chunk.Data.Memory.Span);
                             break;
                         case PngChunkType.Palette:
-                            pngMeta.ColorPalette = chunk.Data.Memory.Span.ToArray();
+                            pngIno.ColorPalette = chunk.Data.Memory.Span.ToArray();
                             break;
                         case PngChunkType.ImageData:
                             if (pixelBuffer is null)
                             {
-                                (scanline, lastScanline) = InitializePixelBuffer(pngMeta, header, out pixelBuffer);
+                                (scanline, lastScanline) = InitializePixelBuffer(pngIno, header, out pixelBuffer);
                             }
 
                             ReadScanlines(stream, pixelBuffer, scanline, lastScanline,
-                                            pngMeta, header,
+                                            pngIno, header,
                                             chunk,
                                             () =>
                                             {
@@ -283,7 +282,7 @@ public class PngDecoder : IImageDecoder
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) InitializePixelBuffer<TPixel>(PngInfos pngMeta, PngHeader header, out PixelBuffer<TPixel> pixelBuffer) where TPixel : unmanaged, IPixel
+    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) InitializePixelBuffer<TPixel>(PngInfos pngMeta, in PngHeader header, out PixelBuffer<TPixel> pixelBuffer) where TPixel : unmanaged, IPixel
     {
         pixelBuffer = new PixelBuffer<TPixel>(header.Width, header.Height);
 
@@ -296,15 +295,13 @@ public class PngDecoder : IImageDecoder
         }
 
         IMemoryOwner<byte> scanline = OptimizedMemoryPool<byte>.Shared.Rent(pngMeta.BytesPerScanline);
-        scanline.Memory.Span.Clear();
         IMemoryOwner<byte> lastScanline = OptimizedMemoryPool<byte>.Shared.Rent(pngMeta.BytesPerScanline);
-        lastScanline.Memory.Span.Clear();
         ColorPaletteToColorTable(pngMeta);
         return (scanline, lastScanline);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) ReadScanlines<TPixel>(in Stream stream, PixelBuffer<TPixel> pixelBuffer, in IMemoryOwner<byte> scanline, in IMemoryOwner<byte> lastScanline, PngInfos pngMeta, PngHeader header, PngChunk chunk, Func<int> getData)
+    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) ReadScanlines<TPixel>(in Stream stream, PixelBuffer<TPixel> pixelBuffer, in IMemoryOwner<byte> scanline, in IMemoryOwner<byte> lastScanline, PngInfos info, in PngHeader header, PngChunk chunk, Func<int> getData)
         where TPixel : unmanaged, IPixel
     {
         using ZlibInflateStream inflateStream = new(stream, getData);
@@ -313,14 +310,14 @@ public class PngDecoder : IImageDecoder
 
         if (header.InterlaceMethod is PngInterlaceMode.Adam7)
         {
-            return DecodeInterlacedPixelData(dataStream, pixelBuffer, scanline, lastScanline, pngMeta, header);
+            return DecodeInterlacedPixelData(dataStream, pixelBuffer, scanline, lastScanline, info, header);
         }
 
-        return DecodePixelData(dataStream, pixelBuffer, scanline, lastScanline, pngMeta, header);
+        return DecodePixelData(dataStream, pixelBuffer, scanline, lastScanline, info, header);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) DecodeInterlacedPixelData<TPixel>(in DeflateStream compressedStream, PixelBuffer<TPixel> pixelBuffer, IMemoryOwner<byte> scanline, IMemoryOwner<byte> lastScanline, PngInfos pngMeta, PngHeader header) where TPixel : unmanaged, IPixel
+    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) DecodeInterlacedPixelData<TPixel>(in DeflateStream compressedStream, PixelBuffer<TPixel> pixelBuffer, IMemoryOwner<byte> scanline, IMemoryOwner<byte> lastScanline, PngInfos info, in PngHeader header) where TPixel : unmanaged, IPixel
     {
         int currentRow = Adam7.FirstRow[0];
         int currentRowBytesRead = 0;
@@ -338,7 +335,7 @@ public class PngDecoder : IImageDecoder
                 continue;
             }
 
-            int bytesPerInterlaceScanline = CalculateScanlineLength(pngMeta, header) + 1;
+            int bytesPerInterlaceScanline = CalculateScanlineLength(info, header) + 1;
 
             while (currentRow < endRow)
             {
@@ -363,23 +360,23 @@ public class PngDecoder : IImageDecoder
                     case FilterType.None:
                         break;
                     case FilterType.Sub:
-                        FilterSub.Decode(scanSpan, pngMeta.BytesPerPixel);
+                        FilterSub.Decode(scanSpan, info.BytesPerPixel);
                         break;
                     case FilterType.Up:
                         FilterUp.Decode(scanSpan, prevSpan);
                         break;
                     case FilterType.Average:
-                        FilterAverage.Decode(scanSpan, prevSpan, pngMeta.BytesPerPixel);
+                        FilterAverage.Decode(scanSpan, prevSpan, info.BytesPerPixel);
                         break;
                     case FilterType.Paeth:
-                        FilterPaeth.Decode(scanSpan, prevSpan, pngMeta.BytesPerPixel);
+                        FilterPaeth.Decode(scanSpan, prevSpan, info.BytesPerPixel);
                         break;
                     default:
                         throw new NotSupportedException($"Filter '{(FilterType)scanSpan[0]} is not supported!");
                 }
 
                 Span<TPixel> rowSpan = pixelBuffer.GetRow(currentRow);
-                ProcessInterlacedDefilteredScanline(scanline.Memory.Span, rowSpan, pngMeta, header, pixelOffset: Adam7.FirstColumn[pass], increment: Adam7.ColumnIncrement[pass]);
+                ProcessInterlacedDefilteredScanline(scanline.Memory.Span, rowSpan, info, header, pixelOffset: Adam7.FirstColumn[pass], increment: Adam7.ColumnIncrement[pass]);
 
                 (scanline, lastScanline) = (lastScanline, scanline);
 
@@ -402,7 +399,7 @@ public class PngDecoder : IImageDecoder
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) DecodePixelData<TPixel>(in DeflateStream compressedStream, in PixelBuffer<TPixel> pixelBuffer, IMemoryOwner<byte> scanline, IMemoryOwner<byte> lastScanline, in PngInfos pngMeta, in PngHeader header)
+    private static (IMemoryOwner<byte>, IMemoryOwner<byte>) DecodePixelData<TPixel>(in DeflateStream compressedStream, in PixelBuffer<TPixel> pixelBuffer, IMemoryOwner<byte> scanline, IMemoryOwner<byte> lastScanline, in PngInfos info, in PngHeader header)
         where TPixel : unmanaged, IPixel
     {
         int currentRow = 0;
@@ -411,7 +408,7 @@ public class PngDecoder : IImageDecoder
 
         while (currentRow < height)
         {
-            int bytesPerFrameScanline = CalculateScanlineLength(pngMeta, header) + 1;
+            int bytesPerFrameScanline = CalculateScanlineLength(info, header) + 1;
             Span<byte> scanSpan = scanline.Memory.Span[..bytesPerFrameScanline];
             Span<byte> prevSpan = lastScanline.Memory.Span[..bytesPerFrameScanline];
 
@@ -433,22 +430,22 @@ public class PngDecoder : IImageDecoder
                 case FilterType.None:
                     break;
                 case FilterType.Sub:
-                    FilterSub.Decode(scanSpan, pngMeta.BytesPerPixel);
+                    FilterSub.Decode(scanSpan, info.BytesPerPixel);
                     break;
                 case FilterType.Up:
                     FilterUp.Decode(scanSpan, prevSpan);
                     break;
                 case FilterType.Average:
-                    FilterAverage.Decode(scanSpan, prevSpan, pngMeta.BytesPerPixel);
+                    FilterAverage.Decode(scanSpan, prevSpan, info.BytesPerPixel);
                     break;
                 case FilterType.Paeth:
-                    FilterPaeth.Decode(scanSpan, prevSpan, pngMeta.BytesPerPixel);
+                    FilterPaeth.Decode(scanSpan, prevSpan, info.BytesPerPixel);
                     break;
                 default:
                     throw new NotSupportedException($"Unknown filter '{(FilterType)scanSpan[0]}'!");
             }
 
-            ProcessDefilteredScanline(currentRow, scanSpan, pixelBuffer, pngMeta, header);
+            ProcessDefilteredScanline(currentRow, scanSpan, pixelBuffer, info, header);
             (scanline, lastScanline) = (lastScanline, scanline);
             currentRow++;
         }
@@ -458,16 +455,16 @@ public class PngDecoder : IImageDecoder
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void ProcessInterlacedDefilteredScanline<TPixel>(ReadOnlySpan<byte> scanline, Span<TPixel> destination,
-        in PngInfos pngMeta, in PngHeader header, int pixelOffset = 0, int increment = 1) where TPixel : unmanaged, IPixel
+        in PngInfos info, in PngHeader header, int pixelOffset = 0, int increment = 1) where TPixel : unmanaged, IPixel
     {
         Span<TPixel> rowSpan = destination;
         ReadOnlySpan<byte> trimmed = scanline[1..];
         IMemoryOwner<byte>? buffer = null;
         try
         {
-            ReadOnlySpan<byte> scanlineSpan = TryScaleTo8Bit(trimmed, pngMeta.BytesPerScanline, header.BitDepth, out buffer) ? buffer!.Memory.Span : trimmed;
+            ReadOnlySpan<byte> scanlineSpan = TryScaleTo8Bit(trimmed, info.BytesPerScanline, header.BitDepth, out buffer) ? buffer!.Memory.Span : trimmed;
 
-            switch (pngMeta.ColorType)
+            switch (info.ColorType)
             {
                 case PngColorType.Grayscale:
                 case PngColorType.GrayscaleWithAlpha:
@@ -475,12 +472,12 @@ public class PngDecoder : IImageDecoder
                     break;
 
                 case PngColorType.Palette:
-                    ScanlineProcessor.ProcessInterlacedPaletteScanline(header, scanlineSpan, rowSpan, (uint)pixelOffset, (uint)increment, pngMeta.ColorTable);
+                    ScanlineProcessor.ProcessInterlacedPaletteScanline(header, scanlineSpan, rowSpan, (uint)pixelOffset, (uint)increment, info.ColorTable);
                     break;
 
                 case PngColorType.Rgb:
                 case PngColorType.RgbWithAlpha:
-                    ScanlineProcessor.ProcessInterlacedRgbScanline(header, scanlineSpan, rowSpan, (uint)pixelOffset, (uint)increment, pngMeta.BytesPerPixel, pngMeta.BytesPerSample);
+                    ScanlineProcessor.ProcessInterlacedRgbScanline(header, scanlineSpan, rowSpan, (uint)pixelOffset, (uint)increment, info.BytesPerPixel, info.BytesPerSample);
                     break;
             }
         }
@@ -491,7 +488,7 @@ public class PngDecoder : IImageDecoder
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void ProcessDefilteredScanline<TPixel>(int currentRow, ReadOnlySpan<byte> scanline, in PixelBuffer<TPixel> pixelBuffer, in PngInfos pngMeta, in PngHeader header)
+    private static void ProcessDefilteredScanline<TPixel>(int currentRow, ReadOnlySpan<byte> scanline, in PixelBuffer<TPixel> pixelBuffer, in PngInfos info, in PngHeader header)
         where TPixel : unmanaged, IPixel
     {
         Span<TPixel> destination = pixelBuffer.GetRow(currentRow);
@@ -500,9 +497,9 @@ public class PngDecoder : IImageDecoder
         IMemoryOwner<byte>? buffer = null;
         try
         {
-            ReadOnlySpan<byte> scanlineSpan = TryScaleTo8Bit(trimmed, pngMeta.BytesPerScanline - 1, header.BitDepth, out buffer) ? buffer.Memory.Span : trimmed;
+            ReadOnlySpan<byte> scanlineSpan = TryScaleTo8Bit(trimmed, info.BytesPerScanline - 1, header.BitDepth, out buffer) ? buffer.Memory.Span : trimmed;
 
-            switch (pngMeta.ColorType)
+            switch (info.ColorType)
             {
                 case PngColorType.Grayscale:
                 case PngColorType.GrayscaleWithAlpha:
@@ -510,12 +507,12 @@ public class PngDecoder : IImageDecoder
 
                     break;
                 case PngColorType.Palette:
-                    ScanlineProcessor.ProcessPaletteScanline(header, scanlineSpan, rowSpan, pngMeta.ColorTable);
+                    ScanlineProcessor.ProcessPaletteScanline(header, scanlineSpan, rowSpan, info.ColorTable);
 
                     break;
                 case PngColorType.Rgb:
                 case PngColorType.RgbWithAlpha:
-                    ScanlineProcessor.ProcessRgbScanline(header, scanlineSpan, rowSpan, pngMeta.BytesPerPixel, pngMeta.BytesPerSample);
+                    ScanlineProcessor.ProcessRgbScanline(header, scanlineSpan, rowSpan, info.BytesPerPixel, info.BytesPerSample);
 
                     break;
             }
@@ -556,9 +553,9 @@ public class PngDecoder : IImageDecoder
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void ColorPaletteToColorTable(PngInfos pngMeta)
+    private static void ColorPaletteToColorTable(PngInfos info)
     {
-        Span<byte> colorPalette = pngMeta.ColorPalette.AsSpan();
+        Span<byte> colorPalette = info.ColorPalette.AsSpan();
         if (colorPalette.Length == 0)
         {
             return;
@@ -573,6 +570,6 @@ public class PngDecoder : IImageDecoder
             colorTable[i] = new(sourcePixel.R, sourcePixel.G, sourcePixel.B);
         }
 
-        pngMeta.ColorTable = colorTable;
+        info.ColorTable = colorTable;
     }
 }
