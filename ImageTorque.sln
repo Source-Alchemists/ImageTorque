@@ -7,13 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1083463C-2D3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque", "src\Core\ImageTorque.csproj", "{A9224DC4-125B-4538-84AA-07D5B82C2924}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F1912608-B540-4423-8DFD-B1FB3BF7EF9D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F1912608-B540-4423-8DFD-B1FB3BF7EF9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.Tests", "test\Core\ImageTorque.Tests.csproj", "{5D4127BC-C06A-4C11-9BA9-07BD98E38E50}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.Tests", "tests\Core\ImageTorque.Tests.csproj", "{5D4127BC-C06A-4C11-9BA9-07BD98E38E50}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.AI", "src\Ai\ImageTorque.AI.csproj", "{ABC57938-C456-4CA2-8B33-4AA37EF539E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.AI.Tests", "test\Ai\ImageTorque.AI.Tests.csproj", "{C05CDDBF-CFE4-4EEE-9148-A9CADA5F3757}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.AI.Tests", "tests\Ai\ImageTorque.AI.Tests.csproj", "{C05CDDBF-CFE4-4EEE-9148-A9CADA5F3757}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{398304C7-E1CE-4A0F-A4C4-DD8C8D12F1CE}"
 EndProject
