@@ -25,6 +25,21 @@ public class PngDecoderTests
     }
 
     [Fact]
+    public void Test_Decode_L8()
+    {
+        // Arrange
+        var decoder = new PngDecoder();
+        using var stream = new FileStream("./lena8.png", FileMode.Open);
+
+        // Act
+        var pixelBuffer = decoder.Decode(stream) as PixelBuffer<L8>;
+
+        // Assert
+        string hash = TestHelper.CreateHash(MemoryMarshal.Cast<L8, byte>(pixelBuffer!.Pixels));
+        Assert.Equal("4ba5d347f3d6b97e75aa1aa543042552f5ac8489468c2a6b046f03d5e648eaab", hash);
+    }
+
+    [Fact]
     public void Test_Decode_Rgb24()
     {
         // Arrange
