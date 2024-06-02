@@ -7,9 +7,9 @@ namespace ImageTorque.Benchmarks;
 [ShortRunJob]
 public class PngIdentify
 {
+    private readonly PngDecoder _decoder = new PngDecoder();
     private FileStream _imageTorqueStream = null!;
     private FileStream _imageSharpStream = null!;
-    private PngDecoder _decoder = new PngDecoder();
 
     [GlobalSetup]
     public void Setup()
