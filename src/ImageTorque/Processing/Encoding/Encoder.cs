@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
 
@@ -8,95 +7,26 @@ internal class Encoder : IProcessor<EncoderParameters, bool>
 {
     public bool Execute(EncoderParameters parameters)
     {
+        Codecs.ICodec? codec = (parameters.Configuration?.Codecs.FirstOrDefault(codec => codec.IsSupportedEncoderFormat(parameters.EncoderType))) ?? throw new NotSupportedException($"The codec for the encoder type {parameters.EncoderType} is not supported.");
 
-        Type inputType = parameters.Input!.GetType();
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L8>))
+        switch(parameters.Input)
         {
-            return EncodeMono8(parameters);
-        }
-
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<L16>))
-        {
-            return EncodeMono16(parameters);
-        }
-
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Rgb24>))
-        {
-            return EncodeRgb24(parameters);
-        }
-
-        if (inputType == typeof(ReadOnlyPackedPixelBuffer<Rgb48>))
-        {
-            return EncodeRgb48(parameters);
-        }
-
-        return false;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool Save(SixLabors.ImageSharp.Image image, Stream stream, EncoderType encoderType, int quality)
-    {
-        switch (encoderType)
-        {
-            case EncoderType.Png:
-                SixLabors.ImageSharp.ImageExtensions.SaveAsPng(image, stream,
-                                                    new SixLabors.ImageSharp.Formats.Png.PngEncoder()
-                                                    {
-                                                        CompressionLevel = SixLabors.ImageSharp.Formats.Png.PngCompressionLevel.BestSpeed
-                                                    });
+            case ReadOnlyPackedPixelBuffer<Rgb24> packedPixelBuffer:
+                codec.Encoder.Encode(parameters.Stream!, packedPixelBuffer, parameters.EncoderType, parameters.Quality);
                 break;
-            case EncoderType.Bmp:
-                SixLabors.ImageSharp.ImageExtensions.SaveAsBmp(image, stream);
+            case ReadOnlyPackedPixelBuffer<Rgb48> packedPixelBuffer:
+            codec.Encoder.Encode(parameters.Stream!, packedPixelBuffer, parameters.EncoderType, parameters.Quality);
                 break;
-            case EncoderType.Jpeg:
-                SixLabors.ImageSharp.ImageExtensions.SaveAsJpeg(image, stream,
-                                                    new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder()
-                                                    {
-                                                        Quality = quality
-                                                    });
+            case ReadOnlyPackedPixelBuffer<L8> packedPixelBuffer:
+                codec.Encoder.Encode(parameters.Stream!, packedPixelBuffer, parameters.EncoderType, parameters.Quality);
                 break;
+            case ReadOnlyPackedPixelBuffer<L16> packedPixelBuffer:
+                codec.Encoder.Encode(parameters.Stream!, packedPixelBuffer, parameters.EncoderType, parameters.Quality);
+                break;
+            default:
+                throw new NotSupportedException("Only packed pixel buffers are supported.");
         }
 
-        return true;
-    }
-
-    private static bool EncodeMono8(EncoderParameters parameters)
-    {
-        var pixelBuffer = parameters.Input as ReadOnlyPackedPixelBuffer<L8>;
-
-        using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8> image = pixelBuffer!.ToImageSharp();
-        Stream? stream = parameters.Stream;
-        Save(image, stream!, parameters.EncoderType, parameters.Quality);
-        return true;
-    }
-
-    private static bool EncodeMono16(EncoderParameters parameters)
-    {
-        var pixelBuffer = parameters.Input as ReadOnlyPackedPixelBuffer<L16>;
-
-        using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L16> image = pixelBuffer!.ToImageSharp();
-        Stream? stream = parameters.Stream;
-        Save(image, stream!, parameters.EncoderType, parameters.Quality);
-        return true;
-    }
-
-    private static bool EncodeRgb24(EncoderParameters parameters)
-    {
-        var pixelBuffer = parameters.Input as ReadOnlyPackedPixelBuffer<Rgb24>;
-
-        using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgb24> image = pixelBuffer!.ToImageSharp();
-        Stream? stream = parameters.Stream;
-        Save(image, stream!, parameters.EncoderType, parameters.Quality);
-        return true;
-    }
-
-    private static bool EncodeRgb48(EncoderParameters parameters)
-    {
-        var pixelBuffer = parameters.Input as ReadOnlyPackedPixelBuffer<Rgb48>;
-
-        using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgb48> image = pixelBuffer!.ToImageSharp();
-        Stream? stream = parameters.Stream;
-        Save(image, stream!, parameters.EncoderType, parameters.Quality);
         return true;
     }
 }

@@ -12,11 +12,12 @@ public class PngDecoderTests
     public void Test_Identify()
     {
         // Arrange
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
         var decoder = new PngDecoder();
         using var stream = new FileStream("./lena24.png", FileMode.Open);
 
         // Act
-        ImageInfo imageInfo = decoder.Identify(stream);
+        ImageInfo imageInfo = decoder.Identify(stream, configuration);
 
         // Assert
         Assert.Equal(512, imageInfo.Width);
@@ -28,11 +29,12 @@ public class PngDecoderTests
     public void Test_Decode_L8()
     {
         // Arrange
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
         var decoder = new PngDecoder();
         using var stream = new FileStream("./lena8.png", FileMode.Open);
 
         // Act
-        var pixelBuffer = decoder.Decode(stream) as PixelBuffer<L8>;
+        var pixelBuffer = decoder.Decode(stream, configuration) as PixelBuffer<L8>;
 
         // Assert
         string hash = TestHelper.CreateHash(MemoryMarshal.Cast<L8, byte>(pixelBuffer!.Pixels));
@@ -43,11 +45,12 @@ public class PngDecoderTests
     public void Test_Decode_Rgb24()
     {
         // Arrange
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
         var decoder = new PngDecoder();
         using var stream = new FileStream("./lena24.png", FileMode.Open);
 
         // Act
-        var pixelBuffer = decoder.Decode(stream) as PixelBuffer<Rgb24>;
+        var pixelBuffer = decoder.Decode(stream, configuration) as PixelBuffer<Rgb24>;
 
         // Assert
         string hash = TestHelper.CreateHash(MemoryMarshal.Cast<Rgb24, byte>(pixelBuffer!.Pixels));

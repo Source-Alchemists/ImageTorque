@@ -1,7 +1,7 @@
 using ImageTorque;
 using ImageTorque.Buffers;
+using ImageTorque.Codecs;
 using ImageTorque.Pixels;
-using ImageTorque.Processing;
 
 namespace AyBorg.SDK.ImageProcessing.Tests;
 
@@ -92,14 +92,15 @@ public class ImageTests
     public void TestLoadAndSaveMono8()
     {
         // Arrange
-        string targetName = $"{nameof(ImageTests)}_{nameof(TestLoadAndSaveMono8)}.png";
-        using IImage loadedImage = Image.Load("./lena8.bmp", ConfigurationFactory.Build([
+        Configuration configuration = ConfigurationFactory.Build([
                 new ImageTorque.Codecs.ImageSharp.PngCodec(),
                 new ImageTorque.Codecs.ImageSharp.BmpCodec()
-            ]));
+            ]);
+        string targetName = $"{nameof(ImageTests)}_{nameof(TestLoadAndSaveMono8)}.png";
+        using IImage loadedImage = Image.Load("./lena8.bmp", configuration);
 
         // Act
-        loadedImage.Save(targetName, EncoderType.Png);
+        loadedImage.Save(targetName, EncoderType.Png, configuration);
 
         // Assert
         Assert.True(File.Exists(targetName));
@@ -109,10 +110,15 @@ public class ImageTests
     [Fact]
     public void TestLoadAndSaveRgb24()
     {
+        // Arrange
+        Configuration configuration = ConfigurationFactory.Build([new ImageTorque.Codecs.ImageSharp.PngCodec()]);
         string targetName = $"{nameof(ImageTests)}_{nameof(TestLoadAndSaveRgb24)}.png";
-        using IImage loadedImage = Image.Load("./lena24.png", ConfigurationFactory.Build([new ImageTorque.Codecs.ImageSharp.PngCodec()]));
-        loadedImage.Save(targetName, EncoderType.Png);
 
+        // Act
+        using IImage loadedImage = Image.Load("./lena24.png", configuration);
+        loadedImage.Save(targetName, EncoderType.Png, configuration);
+
+        // Assert
         Assert.True(File.Exists(targetName));
         File.Delete(targetName);
     }

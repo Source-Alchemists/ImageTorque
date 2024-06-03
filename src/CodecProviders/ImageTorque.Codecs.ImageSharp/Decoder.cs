@@ -1,7 +1,10 @@
 using System.Runtime.InteropServices;
+
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
+
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 
 namespace ImageTorque.Codecs.ImageSharp;
 
@@ -37,11 +40,14 @@ internal sealed class Decoder : IImageDecoder
             stream.Position = 0;
         }
 
+        SixLabors.ImageSharp.Configuration sixConfig = SixLabors.ImageSharp.Configuration.Default.Clone();
+        sixConfig.PreferContiguousImageBuffers = configuration.PreferContiguousImageBuffers;
+
         IPixelBuffer pixelBuffer = null!;
         switch (info.PixelType.BitsPerPixel)
         {
             case 8:
-                using (var imageL8 = Image.Load<SixLabors.ImageSharp.PixelFormats.L8>(stream))
+                using (var imageL8 = Image.Load<SixLabors.ImageSharp.PixelFormats.L8>(new DecoderOptions { Configuration = sixConfig }, stream))
                 {
                     if (imageL8.DangerousTryGetSinglePixelMemory(out Memory<SixLabors.ImageSharp.PixelFormats.L8> pixelsL8))
                     {
@@ -56,7 +62,7 @@ internal sealed class Decoder : IImageDecoder
                 break;
             case 24:
             case 32:
-                using (var imageRgb24 = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(stream))
+                using (var imageRgb24 = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(new DecoderOptions { Configuration = sixConfig }, stream))
                 {
                     if (imageRgb24.DangerousTryGetSinglePixelMemory(out Memory<SixLabors.ImageSharp.PixelFormats.Rgb24> pixelsRgb24))
                     {

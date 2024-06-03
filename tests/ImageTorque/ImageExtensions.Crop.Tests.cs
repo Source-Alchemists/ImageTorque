@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
 using ImageTorque.Pixels;
 
 namespace ImageTorque.Tests;
@@ -12,7 +10,8 @@ public class ImageExtensionsCropTests
     public void Test_Crop_RealRgbImage(string expectedResult, int x, int y, int width, int height)
     {
         // Arrange
-        using var image = Image.Load("./lena24.png");
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
+        using var image = Image.Load("./lena24.png", configuration);
 
         // Act
         using Image result = image.Crop(new Rectangle { X = x, Y = y, Width = width, Height = height });
@@ -28,7 +27,8 @@ public class ImageExtensionsCropTests
     public void Test_Crop_RealGrayscaleImage(string expectedResult, int x, int y, int width, int height)
     {
         // Arrange
-        using var image = Image.Load("./lena8.bmp");
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.BmpCodec()]);
+        using var image = Image.Load("./lena8.bmp", configuration);
 
         // Act
         using Image result = image.Crop(new Rectangle { X = x, Y = y, Width = width, Height = height });

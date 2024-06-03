@@ -11,7 +11,7 @@ public sealed class BmpCodec : ICodec
     public int HeaderSize => 14;
 
     /// <inheritdoc/>
-    public bool IsSupportedFileFormat(ReadOnlySpan<byte> header)
+    public bool IsSupportedDecoderFormat(ReadOnlySpan<byte> header)
     {
         if (header.Length < HeaderSize)
         {
@@ -26,6 +26,12 @@ public sealed class BmpCodec : ICodec
             or 0x4943
             or 0x5054;
     }
+
+    /// <inheritdoc/>
+    public bool IsSupportedEncoderFormat(EncoderType encoderType) => encoderType == EncoderType.Bmp;
+
+    /// <inheritdoc/>
+    public IImageEncoder Encoder { get; } = new Encoder();
 
     /// <inheritdoc/>
     public IImageDecoder Decoder { get; } = new Decoder();

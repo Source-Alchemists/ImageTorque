@@ -1,4 +1,5 @@
 using ImageTorque.Buffers;
+using ImageTorque.Codecs;
 using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing.Tests;
@@ -33,6 +34,7 @@ public class EncoderTests : IDisposable
     public void EncodeMono8(EncoderType encodeType)
     {
         // Arrange
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
         var encoder = new Encoder();
 
         // Act
@@ -41,7 +43,8 @@ public class EncoderTests : IDisposable
         {
             Input = _packedPixelBufferMono8.AsReadOnly(),
             Stream = stream,
-            EncoderType = encodeType
+            EncoderType = encodeType,
+            Configuration = configuration
         });
 
         // Assert
@@ -54,6 +57,7 @@ public class EncoderTests : IDisposable
     public void EncodeMono16(EncoderType encodeType)
     {
         // Arrange
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
         var encoder = new Encoder();
 
         // Act
@@ -62,7 +66,8 @@ public class EncoderTests : IDisposable
         {
             Input = _packedPixelBufferMono16.AsReadOnly(),
             Stream = stream,
-            EncoderType = encodeType
+            EncoderType = encodeType,
+            Configuration = configuration
         });
 
         // Assert
@@ -75,6 +80,7 @@ public class EncoderTests : IDisposable
     public void EncodeRgb24(EncoderType encodeType)
     {
         // Arrange
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
         var encoder = new Encoder();
 
         // Act
@@ -83,7 +89,8 @@ public class EncoderTests : IDisposable
         {
             Input = _packedPixelBufferRgb24.AsReadOnly(),
             Stream = stream,
-            EncoderType = encodeType
+            EncoderType = encodeType,
+            Configuration = configuration
         });
 
         // Assert
@@ -96,6 +103,7 @@ public class EncoderTests : IDisposable
     public void EncodeRgb48(EncoderType encodeType)
     {
         // Arrange
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
         var encoder = new Encoder();
 
         // Act
@@ -104,7 +112,8 @@ public class EncoderTests : IDisposable
         {
             Input = _packedPixelBufferRgb48.AsReadOnly(),
             Stream = stream,
-            EncoderType = encodeType
+            EncoderType = encodeType,
+            Configuration = configuration
         });
 
         // Assert

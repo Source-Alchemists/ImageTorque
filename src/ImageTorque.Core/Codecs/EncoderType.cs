@@ -1,4 +1,4 @@
-namespace ImageTorque.Processing;
+namespace ImageTorque.Codecs;
 
 /// <summary>
 /// The encoder type.

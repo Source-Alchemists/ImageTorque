@@ -51,7 +51,7 @@ internal class Decoder : IProcessor<DecoderParameters, IPixelBuffer>
         ICodec? codec = null;
         foreach (ICodec confCodec in configuration.Codecs)
         {
-            if (confCodec.HeaderSize <= targetHeadersBuffer.Length && confCodec.IsSupportedFileFormat(targetHeadersBuffer))
+            if (confCodec.HeaderSize <= targetHeadersBuffer.Length && confCodec.IsSupportedDecoderFormat(targetHeadersBuffer))
             {
                 codec = confCodec;
                 break;

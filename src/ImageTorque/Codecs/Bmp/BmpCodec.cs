@@ -5,11 +5,17 @@ namespace ImageTorque.Codecs.Bmp;
 
 public sealed class BmpCodec : ICodec
 {
+    /// <inheritdoc/>
     public int HeaderSize { get; } = BmpFileHeader.Size;
 
+    /// <inheritdoc/>
     public IImageDecoder Decoder { get; } = new BmpDecoder();
 
-    public bool IsSupportedFileFormat(ReadOnlySpan<byte> header)
+    /// <inheritdoc/>
+    public IImageEncoder Encoder => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public bool IsSupportedDecoderFormat(ReadOnlySpan<byte> header)
     {
         if (header.Length < HeaderSize)
         {
@@ -24,4 +30,7 @@ public sealed class BmpCodec : ICodec
             or BmpConstants.HeaderFields.Icon
             or BmpConstants.HeaderFields.Pointer;
     }
+
+    /// <inheritdoc/>
+    public bool IsSupportedEncoderFormat(EncoderType encoderType) => false;
 }

@@ -11,10 +11,16 @@ public sealed class JpegCodec : ICodec
     public int HeaderSize { get; } = 11;
 
     /// <inheritdoc/>
-    public IImageDecoder Decoder { get; } = new Decoder();
+    public bool IsSupportedDecoderFormat(ReadOnlySpan<byte> header) => header.Length >= HeaderSize && (IsJpeg(header) || IsJfif(header) || IsExif(header));
 
     /// <inheritdoc/>
-    public bool IsSupportedFileFormat(ReadOnlySpan<byte> header) => header.Length >= HeaderSize && (IsJpeg(header) || IsJfif(header) || IsExif(header));
+    public bool IsSupportedEncoderFormat(EncoderType encoderType) => encoderType == EncoderType.Jpeg;
+
+    /// <inheritdoc/>
+    public IImageEncoder Encoder { get; } = new Encoder();
+
+    /// <inheritdoc/>
+    public IImageDecoder Decoder { get; } = new Decoder();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsJpeg(ReadOnlySpan<byte> header) =>

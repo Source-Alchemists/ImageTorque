@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
 using ImageTorque.Pixels;
 
 namespace ImageTorque.Tests;
@@ -13,7 +11,8 @@ public class ImageExtensionsResizeTests
     public void Test_Resize_RealRgbImage(string expectedResult, ResizeMode mode)
     {
         // Arrange
-        using var image = Image.Load("./lena24.png");
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
+        using var image = Image.Load("./lena24.png", configuration);
 
         // Act
         using Image resizedImage = image.Resize(20, 20, mode);
@@ -30,7 +29,8 @@ public class ImageExtensionsResizeTests
     public void Test_Resize_RealGrayscaleImage(string expectedResult, ResizeMode mode)
     {
         // Arrange
-        using var image = Image.Load("./lena8.bmp");
+        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.BmpCodec()]);
+        using var image = Image.Load("./lena8.bmp", configuration);
 
         // Act
         using Image resizedImage = image.Resize(20, 20, mode);
