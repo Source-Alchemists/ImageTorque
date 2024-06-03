@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Ai\ImageTorque.AI.csproj" />
+    <ProjectReference Include="..\..\src\ImageTorque.AI\ImageTorque.AI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
