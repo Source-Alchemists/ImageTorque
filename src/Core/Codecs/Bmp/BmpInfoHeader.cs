@@ -1,13 +1,11 @@
 using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ImageTorque.Codecs.Bmp;
 
 /// <summary>
 /// <see href="https://en.wikipedia.org/wiki/BMP_file_format"/>
 /// </summary>
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
 internal record struct BmpInfoHeader
 {
     internal enum HeaderVersionType

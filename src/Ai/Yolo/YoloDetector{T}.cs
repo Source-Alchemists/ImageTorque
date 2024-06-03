@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using ImageTorque.Pixels;
 using Microsoft.ML.OnnxRuntime;
@@ -8,7 +9,7 @@ namespace ImageTorque.AI.Yolo;
 /// <summary>
 /// Represents a YOLO detector.
 /// </summary>
-public class YoloDetector<TModel> : IDisposable where TModel : YoloModel
+public class YoloDetector<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] TModel> : IDisposable where TModel : YoloModel
 {
     private readonly TModel _model;
     private readonly InferenceSession _inferenceSession = null!;
