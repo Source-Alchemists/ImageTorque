@@ -14,16 +14,14 @@ internal class Decoder : IProcessor<DecoderParameters, IPixelBuffer>
             throw new NotSupportedException("Cannot read from the stream.");
         }
 
-        Configuration configuration = Configuration.Default;
-
         if (stream.CanSeek)
         {
             stream.Position = 0;
         }
 
         using BufferedStream bs = new(stream);
-        ICodec format = DetectCodec(bs, configuration);
-        return format.Decoder.Decode(bs, configuration);
+        ICodec format = DetectCodec(bs, parameters.Configuration!);
+        return format.Decoder.Decode(bs, parameters.Configuration!);
     }
 
     private static ICodec DetectCodec(Stream stream, Configuration configuration)

@@ -103,11 +103,19 @@ public partial record Image : IImage
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <returns>The image.</returns>
-    public static Image Load(Stream stream)
+    public static Image Load(Stream stream) => Load(stream, Configuration.Default);
+
+    /// <summary>
+    /// Loads the image from the specified stream.
+    /// </summary>
+    /// <param name="stream">The stream.</param>
+    /// <param name="configuration">The configuration.</param>
+    public static Image Load(Stream stream, Configuration configuration)
     {
         IPixelBuffer pixelBuffer = s_decoder.Execute(new DecoderParameters
         {
             Input = stream,
+            Configuration = configuration,
             OutputType = typeof(IPixelBuffer)
         });
 
@@ -119,10 +127,17 @@ public partial record Image : IImage
     /// </summary>
     /// <param name="path">The path.</param>
     /// <returns>The image.</returns>
-    public static Image Load(string path)
+    public static Image Load(string path) => Load(path, Configuration.Default);
+
+    /// <summary>
+    /// Loads the image from the specified file.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <param name="configuration">The configuration.</param>
+    public static Image Load(string path, Configuration configuration)
     {
         using FileStream stream = File.OpenRead(path);
-        return Load(stream);
+        return Load(stream, configuration);
     }
 
     /// <summary>

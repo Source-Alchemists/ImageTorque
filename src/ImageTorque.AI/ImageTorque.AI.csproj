@@ -6,8 +6,8 @@
     <AssemblyTitle>ImageTorque.AI</AssemblyTitle>
     <RootNamespace>ImageTorque.AI</RootNamespace>
     <PackageId>ImageTorque.AI</PackageId>
-    <PackageTags>Image AI Yolo DotNet</PackageTags>
-    <Description>Open .NET image processing library</Description>
+    <PackageTags>Image AI Yolo DotNet ImageTorque</PackageTags>
+    <Description>AI extension library for ImageTorque</Description>
   </PropertyGroup>
 
   <ItemGroup>

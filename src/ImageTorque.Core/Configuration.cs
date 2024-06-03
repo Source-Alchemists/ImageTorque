@@ -1,13 +1,11 @@
 using ImageTorque.Codecs;
-using ImageTorque.Codecs.Bmp;
-using ImageTorque.Codecs.Png;
 using Microsoft.IO;
 
 namespace ImageTorque;
 
 public sealed record Configuration
 {
-    public static Configuration Default { get; set; } = CreateDefaultInstance();
+    public static Configuration Default { get; set; } = null!;
 
     public RecyclableMemoryStreamManager StreamManager { get; } = new RecyclableMemoryStreamManager();
 
@@ -20,21 +18,4 @@ public sealed record Configuration
     public IReadOnlyCollection<ICodec> Codecs { get; init; } = [];
 
     public bool UseCrcValidation { get; init; } = false; // We don't use CRC validation by default, because we running in a machine vision context
-
-    internal static Configuration CreateDefaultInstance()
-    {
-
-        var formats = new List<ICodec> {
-            new PngCodec(),
-            new BmpCodec()
-        };
-
-        var configuration = new Configuration()
-        {
-            MaxHeaderSize = formats.Max(f => f.HeaderSize),
-            Codecs = formats
-        };
-
-        return configuration;
-    }
 }

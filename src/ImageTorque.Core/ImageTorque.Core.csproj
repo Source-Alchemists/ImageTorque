@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Version>0.0.1</Version>
+    <AssemblyName>ImageTorque.Core</AssemblyName>
+    <AssemblyTitle>ImageTorque.Core</AssemblyTitle>
+    <RootNamespace>ImageTorque.Core</RootNamespace>
+    <PackageId>ImageTorque.Core</PackageId>
+    <PackageTags>ImageTorque Extension</PackageTags>
+    <Description>Base extension library for ImageTorque</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>

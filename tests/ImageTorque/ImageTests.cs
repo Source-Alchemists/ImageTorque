@@ -91,10 +91,17 @@ public class ImageTests
     [Fact]
     public void TestLoadAndSaveMono8()
     {
+        // Arrange
         string targetName = $"{nameof(ImageTests)}_{nameof(TestLoadAndSaveMono8)}.png";
-        using IImage loadedImage = Image.Load("./lena8.bmp");
+        using IImage loadedImage = Image.Load("./lena8.bmp", ConfigurationFactory.Build([
+                new ImageTorque.Codecs.ImageSharp.PngCodec(),
+                new ImageTorque.Codecs.ImageSharp.BmpCodec()
+            ]));
+
+        // Act
         loadedImage.Save(targetName, EncoderType.Png);
 
+        // Assert
         Assert.True(File.Exists(targetName));
         File.Delete(targetName);
     }
@@ -103,7 +110,7 @@ public class ImageTests
     public void TestLoadAndSaveRgb24()
     {
         string targetName = $"{nameof(ImageTests)}_{nameof(TestLoadAndSaveRgb24)}.png";
-        using IImage loadedImage = Image.Load("./lena24.png");
+        using IImage loadedImage = Image.Load("./lena24.png", ConfigurationFactory.Build([new ImageTorque.Codecs.ImageSharp.PngCodec()]));
         loadedImage.Save(targetName, EncoderType.Png);
 
         Assert.True(File.Exists(targetName));
