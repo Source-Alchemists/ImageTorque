@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
   </ItemGroup>
 
   <ItemGroup>
