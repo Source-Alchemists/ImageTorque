@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Core\ImageTorque.csproj" />
+    <ProjectReference Include="..\..\src\ImageTorque\ImageTorque.csproj" />
   </ItemGroup>
 
   <ItemGroup>
