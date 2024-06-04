@@ -38,7 +38,7 @@ public static partial class ImageExtensions
         IReadOnlyPixelBuffer pixelBuffer = image.PixelFormat switch
         {
             PixelFormat.Mono8 => image.AsPacked<L8>(),
-            PixelFormat.Mono16 => image.AsPacked<L8>(),
+            PixelFormat.Mono16 => image.AsPacked<L16>(),
             PixelFormat.Rgb24Packed => image.AsPacked<Rgb24>(),
             PixelFormat.Rgb48Packed => image.AsPacked<Rgb48>(),
             PixelFormat.Rgb888Planar => image.AsPacked<Rgb24>(),

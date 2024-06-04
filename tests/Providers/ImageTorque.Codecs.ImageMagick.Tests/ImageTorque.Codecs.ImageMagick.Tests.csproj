@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Providers\ImageTorque.Codecs.ImageMagick\ImageTorque.Codecs.ImageMagick.csproj" />
+    <ProjectReference Include="..\..\..\src\Providers\ImageTorque.Codecs.ImageSharp\ImageTorque.Codecs.ImageSharp.csproj" />
+    <ProjectReference Include="..\..\..\src\ImageTorque\ImageTorque.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <Content Include="..\..\..\resources\*.*">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+  </ItemGroup>
+</Project>
