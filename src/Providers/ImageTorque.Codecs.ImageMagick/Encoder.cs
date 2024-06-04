@@ -16,8 +16,10 @@ internal sealed class Encoder : IImageEncoder
             "png" => MagickFormat.Png,
             "bmp" => MagickFormat.Bmp,
             "jpg" => MagickFormat.Jpg,
+            "jpeg" => MagickFormat.Jpg,
+            "tif" => MagickFormat.Tiff,
             "tiff" => MagickFormat.Tiff,
-            _ => throw new NotSupportedException("Unsupported encoder type.")
+            _ => throw new NotSupportedException($"Unsupported encoder type '{encoderType}'.")
         };
 
         if (pixelBuffer is ReadOnlyPackedPixelBuffer<L8> l8)
