@@ -21,9 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.Benchmark", "be
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.Core", "src\ImageTorque.Core\ImageTorque.Core.csproj", "{2F3DA44E-27C3-46FD-9D2D-B364C3728639}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodecProviders", "CodecProviders", "{21809672-0E59-4B50-A1FA-8FB8C89DEB07}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{21809672-0E59-4B50-A1FA-8FB8C89DEB07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.Codecs.ImageSharp", "src\CodecProviders\ImageTorque.Codecs.ImageSharp\ImageTorque.Codecs.ImageSharp.csproj", "{F888FA9D-E8EE-47CA-96E4-D051A6452DFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTorque.Codecs.ImageSharp", "src\Providers\ImageTorque.Codecs.ImageSharp\ImageTorque.Codecs.ImageSharp.csproj", "{F888FA9D-E8EE-47CA-96E4-D051A6452DFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

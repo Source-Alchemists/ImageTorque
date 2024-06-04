@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ImageTorque.AI\ImageTorque.AI.csproj" />
-    <ProjectReference Include="..\..\src\CodecProviders\ImageTorque.Codecs.ImageSharp\ImageTorque.Codecs.ImageSharp.csproj" />
+    <ProjectReference Include="..\..\src\Providers\ImageTorque.Codecs.ImageSharp\ImageTorque.Codecs.ImageSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

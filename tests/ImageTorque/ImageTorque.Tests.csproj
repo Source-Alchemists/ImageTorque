@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\..\src\ImageTorque\ImageTorque.csproj" />
-    <ProjectReference Include="..\..\src\CodecProviders\ImageTorque.Codecs.ImageSharp\ImageTorque.Codecs.ImageSharp.csproj" />
+    <ProjectReference Include="..\..\src\Providers\ImageTorque.Codecs.ImageSharp\ImageTorque.Codecs.ImageSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
