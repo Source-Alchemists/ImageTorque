@@ -34,7 +34,6 @@ internal sealed class Encoder : IImageEncoder
                                                     });
                 break;
             case "bmp":
-            case "dib":
                 SixLabors.ImageSharp.ImageExtensions.SaveAsBmp(image, stream);
                 break;
             case "jpg":

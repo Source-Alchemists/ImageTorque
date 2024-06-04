@@ -14,6 +14,9 @@ internal sealed class Encoder : IImageEncoder
         MagickFormat format = encoderType switch
         {
             "png" => MagickFormat.Png,
+            "bmp" => MagickFormat.Bmp,
+            "jpg" => MagickFormat.Jpg,
+            "tiff" => MagickFormat.Tiff,
             _ => throw new NotSupportedException("Unsupported encoder type.")
         };
 

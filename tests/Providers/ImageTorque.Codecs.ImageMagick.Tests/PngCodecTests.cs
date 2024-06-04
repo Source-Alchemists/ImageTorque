@@ -6,7 +6,7 @@ namespace ImageTorque.Codecs.ImageMagick.Tests;
 public class PngCodecTests
 {
     [Fact]
-    public void Test_DecodeAndEncode_Png_L8()
+    public void Test_DecodeAndEncode_L8()
     {
         // Arrange
         var codec = new PngCodec();
@@ -35,7 +35,7 @@ public class PngCodecTests
     }
 
     [Fact]
-    public void Test_DecodeAndEncode_Png_L16()
+    public void Test_DecodeAndEncode_L16()
     {
         // Arrange
         var codec = new PngCodec();
@@ -64,7 +64,7 @@ public class PngCodecTests
     }
 
     [Fact]
-    public void Test_DecodeAndEncode_Png_Rgb24()
+    public void Test_DecodeAndEncode_Rgb24()
     {
         // Arrange
         var codec = new PngCodec();
@@ -93,7 +93,7 @@ public class PngCodecTests
     }
 
     [Fact]
-    public void Test_Decode_Png_Rgb48()
+    public void Test_Decode_Rgb48()
     {
         // Arrange
         var codec = new PngCodec();

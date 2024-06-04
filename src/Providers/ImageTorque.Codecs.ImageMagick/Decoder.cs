@@ -30,7 +30,7 @@ internal sealed class Decoder : IImageDecoder
         }
 
         using var image = new MagickImage(stream);
-        if (image.ChannelCount == 1 || image.ChannelCount == 2)
+        if (image.ColorType == ColorType.Grayscale || image.ColorType == ColorType.Palette || image.ColorType == ColorType.GrayscaleAlpha)
         {
             if (image.Depth == 8)
             {
