@@ -12,7 +12,7 @@ Built for [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0), Imag
 
 | Package Name  | Release (Nuget) | Documentation |
 |---------------|-----------------|---------------|
-| `ImageTorque` | [![NuGet](https://img.shields.io/nuget/v/ImageTorque.svg)](https://www.nuget.org/packages/ImageTorque/) | [README](src/Core/README.md) |
+| `ImageTorque` | [![NuGet](https://img.shields.io/nuget/v/ImageTorque.svg)](https://www.nuget.org/packages/ImageTorque/) | [README](src/ImageTorque/README.md) |
 | `ImageTorque.AI` | [![NuGet](https://img.shields.io/nuget/v/ImageTorque.AI.svg)](https://www.nuget.org/packages/ImageTorque.AI/) | |
 
 ## Want to contribute?
