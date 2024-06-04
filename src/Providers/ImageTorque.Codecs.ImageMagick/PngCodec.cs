@@ -16,7 +16,7 @@ public sealed class PngCodec : ICodec
     public bool IsSupportedEncoderFormat(EncoderType encoderType) => encoderType == EncoderType.Png;
 
     /// <inheritdoc/>
-    public IImageEncoder Encoder => throw new NotSupportedException();
+    public IImageEncoder Encoder { get; } = new Encoder();
 
     /// <inheritdoc/>
     public IImageDecoder Decoder { get; } = new Decoder();

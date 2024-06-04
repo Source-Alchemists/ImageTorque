@@ -160,6 +160,14 @@ public static class PixelExtensions
     public static ReadOnlySpan<ushort> AsUInt16(this ReadOnlySpan<L16> pixels) => MemoryMarshal.Cast<L16, ushort>(pixels);
 
     /// <summary>
+    /// Converts a span of <see cref="Rgb48"/> pixels to a read-only span of <see cref="ushort"/> values.
+    /// </summary>
+    /// <param name="pixels">The span of <see cref="Rgb48"/> pixels to convert.</param>
+    /// <returns>A read-only span of <see cref="ushort"/> values.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlySpan<ushort> AsUInt16(this ReadOnlySpan<Rgb48> pixels) => MemoryMarshal.Cast<Rgb48, ushort>(pixels);
+
+    /// <summary>
     /// Converts a <see cref="Span{Rgb}"/> to a <see cref="Span{Vector3}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -13,8 +13,10 @@ namespace ImageTorque.Codecs.Png;
 
 public class PngDecoder : IImageDecoder
 {
+    /// <inheritdoc/>
     public IPixelBuffer Decode(Stream stream) => Decode(stream, Configuration.Default);
 
+    /// <inheritdoc/>
     public IPixelBuffer Decode(Stream stream, Configuration configuration)
     {
         _ = Identify(stream, configuration, out PngInfos pngMeta);

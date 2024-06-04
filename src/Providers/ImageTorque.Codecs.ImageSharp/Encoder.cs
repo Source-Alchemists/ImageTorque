@@ -9,17 +9,12 @@ internal sealed class Encoder : IImageEncoder
 {
     public void Encode<TPixel>(Stream stream, ReadOnlyPackedPixelBuffer<TPixel> pixelBuffer, EncoderType encoderType, int quality = 80) where TPixel : unmanaged, IPixel
     {
-        if (pixelBuffer is not ReadOnlyPackedPixelBuffer<TPixel> packedPixelBuffer)
+        using SixLabors.ImageSharp.Image image = pixelBuffer switch
         {
-            throw new NotSupportedException("Only packed pixel buffers are supported.");
-        }
-
-        using SixLabors.ImageSharp.Image image = packedPixelBuffer switch
-        {
-            ReadOnlyPackedPixelBuffer<Rgb24> rgb24 => rgb24.ToImageSharp(),
-            ReadOnlyPackedPixelBuffer<Rgb48> rgb48 => rgb48.ToImageSharp(),
             ReadOnlyPackedPixelBuffer<L8> l8 => l8.ToImageSharp(),
             ReadOnlyPackedPixelBuffer<L16> l16 => l16.ToImageSharp(),
+            ReadOnlyPackedPixelBuffer<Rgb24> rgb24 => rgb24.ToImageSharp(),
+            ReadOnlyPackedPixelBuffer<Rgb48> rgb48 => rgb48.ToImageSharp(),
             _ => throw new NotSupportedException("Unsupported pixel format.")
         };
 

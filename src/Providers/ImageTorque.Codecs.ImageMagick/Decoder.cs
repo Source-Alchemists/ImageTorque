@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
+
 using ImageMagick;
+
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
 
