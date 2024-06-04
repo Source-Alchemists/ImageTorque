@@ -14,7 +14,7 @@ public sealed class JpegCodec : ICodec
     public bool IsSupportedDecoderFormat(ReadOnlySpan<byte> header) => header.Length >= HeaderSize && (IsJpeg(header) || IsJfif(header) || IsExif(header));
 
     /// <inheritdoc/>
-    public bool IsSupportedEncoderFormat(EncoderType encoderType) => encoderType == EncoderType.Jpeg;
+    public bool IsSupportedEncoderFormat(string encoderType) => encoderType.Equals("jpg", StringComparison.InvariantCultureIgnoreCase) || encoderType.Equals("jpeg", StringComparison.InvariantCultureIgnoreCase);
 
     /// <inheritdoc/>
     public IImageEncoder Encoder { get; } = new Encoder();

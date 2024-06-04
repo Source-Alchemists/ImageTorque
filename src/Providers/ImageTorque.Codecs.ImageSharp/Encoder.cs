@@ -7,7 +7,7 @@ namespace ImageTorque.Codecs.ImageSharp;
 
 internal sealed class Encoder : IImageEncoder
 {
-    public void Encode<TPixel>(Stream stream, ReadOnlyPackedPixelBuffer<TPixel> pixelBuffer, EncoderType encoderType, int quality = 80) where TPixel : unmanaged, IPixel
+    public void Encode<TPixel>(Stream stream, ReadOnlyPackedPixelBuffer<TPixel> pixelBuffer, string encoderType, int quality = 80) where TPixel : unmanaged, IPixel
     {
         using SixLabors.ImageSharp.Image image = pixelBuffer switch
         {
@@ -22,21 +22,23 @@ internal sealed class Encoder : IImageEncoder
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool Save(SixLabors.ImageSharp.Image image, Stream stream, EncoderType encoderType, int quality)
+    private static bool Save(SixLabors.ImageSharp.Image image, Stream stream, string encoderType, int quality)
     {
         switch (encoderType)
         {
-            case EncoderType.Png:
+            case "png":
                 SixLabors.ImageSharp.ImageExtensions.SaveAsPng(image, stream,
                                                     new SixLabors.ImageSharp.Formats.Png.PngEncoder()
                                                     {
                                                         CompressionLevel = SixLabors.ImageSharp.Formats.Png.PngCompressionLevel.BestSpeed
                                                     });
                 break;
-            case EncoderType.Bmp:
+            case "bmp":
+            case "dib":
                 SixLabors.ImageSharp.ImageExtensions.SaveAsBmp(image, stream);
                 break;
-            case EncoderType.Jpeg:
+            case "jpg":
+            case "jpeg":
                 SixLabors.ImageSharp.ImageExtensions.SaveAsJpeg(image, stream,
                                                     new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder()
                                                     {

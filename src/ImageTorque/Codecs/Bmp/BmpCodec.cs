@@ -3,6 +3,9 @@ using System.Buffers.Binary;
 
 namespace ImageTorque.Codecs.Bmp;
 
+/// <summary>
+/// Represents a codec for the BMP image format.
+/// </summary>
 public sealed class BmpCodec : ICodec
 {
     /// <inheritdoc/>
@@ -32,5 +35,5 @@ public sealed class BmpCodec : ICodec
     }
 
     /// <inheritdoc/>
-    public bool IsSupportedEncoderFormat(EncoderType encoderType) => false;
+    public bool IsSupportedEncoderFormat(string encoderType) => encoderType.Equals("bmp", StringComparison.InvariantCultureIgnoreCase) || encoderType.Equals("dib", StringComparison.InvariantCultureIgnoreCase);
 }

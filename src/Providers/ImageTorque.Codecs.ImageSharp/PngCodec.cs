@@ -17,7 +17,7 @@ public sealed class PngCodec : ICodec
     public bool IsSupportedDecoderFormat(ReadOnlySpan<byte> header) => header.Length >= HeaderSize && BinaryPrimitives.ReadUInt64BigEndian(header) == HeaderValue;
 
     /// <inheritdoc/>
-    public bool IsSupportedEncoderFormat(EncoderType encoderType) => encoderType == EncoderType.Png;
+    public bool IsSupportedEncoderFormat(string encoderType) => encoderType.Equals("png", StringComparison.InvariantCultureIgnoreCase);
 
     /// <inheritdoc/>
     public IImageEncoder Encoder { get; } = new Encoder();

@@ -1,5 +1,4 @@
 using ImageTorque.Buffers;
-using ImageTorque.Codecs;
 using ImageTorque.Pixels;
 using ImageTorque.Processing;
 
@@ -22,7 +21,7 @@ public static partial class ImageExtensions
     /// <param name="stream">The stream.</param>
     /// <param name="encodeType">Type of the encode.</param>
     /// <param name="quality">The quality.</param>
-    public static void Save(this IImage image, Stream stream, EncoderType encodeType, int quality = 80) => Save(image, stream, encodeType, Configuration.Default, quality);
+    public static void Save(this IImage image, Stream stream, string encodeType, int quality = 80) => Save(image, stream, encodeType, Configuration.Default, quality);
 
     /// <summary>
     /// Saves the image to the specified stream using the specified encoder type, configuration, and quality.
@@ -33,7 +32,7 @@ public static partial class ImageExtensions
     /// <param name="configuration">The configuration for the encoder.</param>
     /// <param name="quality">The quality of the saved image (default is 80).</param>
     /// <exception cref="NotSupportedException">Thrown when the pixel format of the image is not supported.</exception>
-    public static void Save(this IImage image, Stream stream, EncoderType encodeType, Configuration configuration, int quality = 80)
+    public static void Save(this IImage image, Stream stream, string encodeType, Configuration configuration, int quality = 80)
     {
         IReadOnlyPixelBuffer pixelBuffer = image.PixelFormat switch
         {
@@ -62,9 +61,8 @@ public static partial class ImageExtensions
     /// </summary>
     /// <param name="image">The image.</param>
     /// <param name="path">The path.</param>
-    /// <param name="encodeType">The encode type.</param>
     /// <param name="quality">The quality.</param>
-    public static void Save(this IImage image, string path, EncoderType encodeType, int quality = 80) => Save(image, path, encodeType, Configuration.Default, quality);
+    public static void Save(this IImage image, string path, int quality = 80) => Save(image, path, Configuration.Default, quality);
 
 
     /// <summary>
@@ -72,13 +70,13 @@ public static partial class ImageExtensions
     /// </summary>
     /// <param name="image">The image to save.</param>
     /// <param name="path">The file path to save the image to.</param>
-    /// <param name="encodeType">The encoder type to use for saving the image.</param>
     /// <param name="configuration">The configuration to use for saving the image.</param>
     /// <param name="quality">The quality of the saved image (default is 80).</param>
-    public static void Save(this IImage image, string path, EncoderType encodeType, Configuration configuration, int quality = 80)
+    public static void Save(this IImage image, string path, Configuration configuration, int quality = 80)
     {
+        string extension = Path.GetExtension(path)[1..];
         using FileStream fileStream = File.OpenWrite(path);
-        Save(image, fileStream, encodeType, configuration, quality);
+        Save(image, fileStream, extension, configuration, quality);
     }
 
     /// <summary>

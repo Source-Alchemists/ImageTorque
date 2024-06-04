@@ -14,10 +14,10 @@ public interface IImageEncoder
     /// <typeparam name="TPixel">The type of the pixel in the pixel buffer.</typeparam>
     /// <param name="stream">The stream to write the encoded data to.</param>
     /// <param name="pixelBuffer">The pixel buffer to encode.</param>
-    /// <param name="encoderType">The type of the encoder to use.</param>
+    /// <param name="encoderType">The type of the encoder to use, like png, bmp, jpeg, etc.</param>
     /// <param name="quality">The quality of the encoded image (optional, default is 80).</param>
     /// <remarks>
     /// The pixel buffer must implement the <see cref="IPixel"/> interface.
     /// </remarks>
-    public void Encode<TPixel>(Stream stream, ReadOnlyPackedPixelBuffer<TPixel> pixelBuffer, EncoderType encoderType, int quality = 80) where TPixel : unmanaged, IPixel;
+    public void Encode<TPixel>(Stream stream, ReadOnlyPackedPixelBuffer<TPixel> pixelBuffer, string encoderType, int quality = 80) where TPixel : unmanaged, IPixel;
 }

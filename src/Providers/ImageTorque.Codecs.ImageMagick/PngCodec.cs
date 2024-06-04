@@ -2,6 +2,9 @@
 
 namespace ImageTorque.Codecs.ImageMagick;
 
+/// <summary>
+/// Represents a PNG codec for encoding and decoding images.
+/// </summary>
 public sealed class PngCodec : ICodec
 {
     private const ulong HeaderValue = 0x89504E470D0A1A0AUL;
@@ -13,7 +16,7 @@ public sealed class PngCodec : ICodec
     public bool IsSupportedDecoderFormat(ReadOnlySpan<byte> header) => header.Length >= HeaderSize && BinaryPrimitives.ReadUInt64BigEndian(header) == HeaderValue;
 
     /// <inheritdoc/>
-    public bool IsSupportedEncoderFormat(EncoderType encoderType) => encoderType == EncoderType.Png;
+    public bool IsSupportedEncoderFormat(string encoderType) => encoderType.Equals("png", StringComparison.InvariantCultureIgnoreCase);
 
     /// <inheritdoc/>
     public IImageEncoder Encoder { get; } = new Encoder();

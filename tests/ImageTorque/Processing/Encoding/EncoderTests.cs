@@ -1,5 +1,4 @@
 using ImageTorque.Buffers;
-using ImageTorque.Codecs;
 using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing.Tests;
@@ -29,9 +28,9 @@ public class EncoderTests : IDisposable
     }
 
     [Theory]
-    [InlineData(EncoderType.Png)]
-    [InlineData(EncoderType.Bmp)]
-    public void EncodeMono8(EncoderType encodeType)
+    [InlineData("png")]
+    [InlineData("bmp")]
+    public void EncodeMono8(string encodeType)
     {
         // Arrange
         Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
@@ -52,9 +51,9 @@ public class EncoderTests : IDisposable
     }
 
     [Theory]
-    [InlineData(EncoderType.Png)]
-    [InlineData(EncoderType.Bmp)]
-    public void EncodeMono16(EncoderType encodeType)
+    [InlineData("png")]
+    [InlineData("bmp")]
+    public void EncodeMono16(string encodeType)
     {
         // Arrange
         Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
@@ -75,9 +74,9 @@ public class EncoderTests : IDisposable
     }
 
     [Theory]
-    [InlineData(EncoderType.Png)]
-    [InlineData(EncoderType.Bmp)]
-    public void EncodeRgb24(EncoderType encodeType)
+    [InlineData("png")]
+    [InlineData("bmp")]
+    public void EncodeRgb24(string encodeType)
     {
         // Arrange
         Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
@@ -98,9 +97,9 @@ public class EncoderTests : IDisposable
     }
 
     [Theory]
-    [InlineData(EncoderType.Png)]
-    [InlineData(EncoderType.Bmp)]
-    public void EncodeRgb48(EncoderType encodeType)
+    [InlineData("png")]
+    [InlineData("bmp")]
+    public void EncodeRgb48(string encodeType)
     {
         // Arrange
         Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);

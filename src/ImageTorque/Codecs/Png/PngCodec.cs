@@ -2,6 +2,9 @@ using System.Buffers.Binary;
 
 namespace ImageTorque.Codecs.Png;
 
+/// <summary>
+/// Represents a PNG codec that implements the <see cref="ICodec"/> interface.
+/// </summary>
 public sealed class PngCodec : ICodec
 {
     /// <inheritdoc/>
@@ -17,5 +20,5 @@ public sealed class PngCodec : ICodec
     public bool IsSupportedDecoderFormat(ReadOnlySpan<byte> header) => header.Length >= HeaderSize && BinaryPrimitives.ReadUInt64BigEndian(header) == PngConstants.HeaderValue;
 
     /// <inheritdoc/>
-    public bool IsSupportedEncoderFormat(EncoderType encoderType) => false;
+    public bool IsSupportedEncoderFormat(string encoderType) => encoderType.Equals("png", StringComparison.InvariantCultureIgnoreCase);
 }

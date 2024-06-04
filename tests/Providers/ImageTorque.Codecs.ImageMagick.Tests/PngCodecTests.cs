@@ -27,7 +27,7 @@ public class PngCodecTests
         // Act
         using FileStream outStream = File.Create("./test8.png");
         var image = new Image(pixelBuffer!);
-        encoder.Encode(outStream, image.AsPacked<L8>(), EncoderType.Png);
+        encoder.Encode(outStream, image.AsPacked<L8>(), "png");
 
         // Assert
         Assert.True(File.Exists("./test8.png"));
@@ -56,7 +56,7 @@ public class PngCodecTests
         // Act
         using FileStream outStream = File.Create("./test16.png");
         var image = new Image(pixelBuffer!);
-        encoder.Encode(outStream, image.AsPacked<L16>(), EncoderType.Png);
+        encoder.Encode(outStream, image.AsPacked<L16>(), "png");
 
         // Assert
         Assert.True(File.Exists("./test16.png"));
@@ -85,7 +85,7 @@ public class PngCodecTests
         // Act
         using FileStream outStream = File.Create("./test24.png");
         var image = new Image(pixelBuffer!);
-        encoder.Encode(outStream, image.AsPacked<Rgb24>(), EncoderType.Png);
+        encoder.Encode(outStream, image.AsPacked<Rgb24>(), "png");
 
         // Assert
         Assert.True(File.Exists("./test24.png"));
@@ -114,7 +114,7 @@ public class PngCodecTests
         // Act
         using FileStream outStream = File.Create("./test48.png");
         var image = new Image(pixelBuffer!);
-        encoder.Encode(outStream, image.AsPacked<Rgb48>(), EncoderType.Png);
+        encoder.Encode(outStream, image.AsPacked<Rgb48>(), "png");
 
         // Assert
         Assert.True(File.Exists("./test48.png"));

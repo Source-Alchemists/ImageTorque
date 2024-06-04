@@ -9,11 +9,11 @@ namespace ImageTorque.Codecs.ImageMagick;
 
 internal sealed class Encoder : IImageEncoder
 {
-    public void Encode<TPixel>(Stream stream, ReadOnlyPackedPixelBuffer<TPixel> pixelBuffer, EncoderType encoderType, int quality = 80) where TPixel : unmanaged, IPixel
+    public void Encode<TPixel>(Stream stream, ReadOnlyPackedPixelBuffer<TPixel> pixelBuffer, string encoderType, int quality = 80) where TPixel : unmanaged, IPixel
     {
         MagickFormat format = encoderType switch
         {
-            EncoderType.Png => MagickFormat.Png,
+            "png" => MagickFormat.Png,
             _ => throw new NotSupportedException("Unsupported encoder type.")
         };
 

@@ -1,5 +1,4 @@
 using ImageTorque.Buffers;
-using ImageTorque.Codecs;
 
 namespace ImageTorque.Processing;
 
@@ -11,7 +10,7 @@ internal record EncoderParameters : ProcessorParameters
 
     public Stream? Stream { get; init; }
 
-    public EncoderType EncoderType { get; init; } = EncoderType.Png;
+    public string EncoderType { get; init; } = "png";
 
     public int Quality { get; init; } = 80;
 }

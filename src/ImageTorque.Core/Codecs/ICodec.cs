@@ -30,7 +30,7 @@ public interface ICodec {
     /// <summary>
     /// Determines whether the specified encoder format is supported by the codec.
     /// </summary>
-    /// <param name="encoderType">The encoder format to check.</param>
+    /// <param name="encoderType">The encoder format to check, like png, bmp, jpeg, etc.</param>
     /// <returns><c>true</c> if the encoder format is supported; otherwise, <c>false</c>.</returns>
-    bool IsSupportedEncoderFormat(EncoderType encoderType);
+    bool IsSupportedEncoderFormat(string encoderType);
 }

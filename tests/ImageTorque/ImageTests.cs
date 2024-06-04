@@ -1,9 +1,7 @@
-using ImageTorque;
 using ImageTorque.Buffers;
-using ImageTorque.Codecs;
 using ImageTorque.Pixels;
 
-namespace AyBorg.SDK.ImageProcessing.Tests;
+namespace ImageTorque.Tests;
 
 public class ImageTests
 {
@@ -100,7 +98,7 @@ public class ImageTests
         using IImage loadedImage = Image.Load("./lena8.bmp", configuration);
 
         // Act
-        loadedImage.Save(targetName, EncoderType.Png, configuration);
+        loadedImage.Save(targetName, configuration);
 
         // Assert
         Assert.True(File.Exists(targetName));
@@ -116,7 +114,7 @@ public class ImageTests
 
         // Act
         using IImage loadedImage = Image.Load("./lena24.png", configuration);
-        loadedImage.Save(targetName, EncoderType.Png, configuration);
+        loadedImage.Save(targetName, configuration);
 
         // Assert
         Assert.True(File.Exists(targetName));
