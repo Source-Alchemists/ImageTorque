@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+
 using ImageTorque.Pixels;
 
 namespace ImageTorque.Codecs.ImageMagick.Tests;
