@@ -5,9 +5,13 @@ namespace ImageTorque.Codecs.Png;
 /// <summary>
 /// Represents the header information of a PNG image.
 /// </summary>
-internal readonly struct PngHeader(
-    int width, int height, byte bitDepth, PngColorType colorType,
-    byte compressionMethod, byte filterMethod, PngInterlaceMode interlaceMethod)
+/// <param name="width">The width of the image in pixels.</param>
+/// <param name="height">The height of the image in pixels.</param>
+/// <param name="bitDepth">The bit depth of the image.</param>
+/// <param name="colorType">The color type of the image.</param>
+/// <param name="compressionMethod">The compression method used in the image.</param>
+/// <param name="filterMethod">The filter method used in the image.</param>
+internal readonly struct PngHeader(int width, int height, byte bitDepth, PngColorType colorType, byte compressionMethod, byte filterMethod)
 {
     /// <summary>
     /// The size of the PNG header in bytes.
@@ -45,11 +49,6 @@ internal readonly struct PngHeader(
     public byte FilterMethod { get; } = filterMethod;
 
     /// <summary>
-    /// Gets the interlace method used in the image.
-    /// </summary>
-    public PngInterlaceMode InterlaceMethod { get; } = interlaceMethod;
-
-    /// <summary>
     /// Validates the PNG header.
     /// </summary>
     /// <exception cref="NotSupportedException">Thrown when the header contains unsupported values.</exception>
@@ -69,11 +68,6 @@ internal readonly struct PngHeader(
         {
             throw new NotSupportedException($"Invalid filter method '{FilterMethod}'.");
         }
-
-        if (InterlaceMethod is not PngInterlaceMode.None and not PngInterlaceMode.Adam7)
-        {
-            throw new NotSupportedException($"Invalid interlace method '{InterlaceMethod}'.");
-        }
     }
 
     /// <summary>
@@ -88,6 +82,5 @@ internal readonly struct PngHeader(
             bitDepth: data[8],
             colorType: (PngColorType)data[9],
             compressionMethod: data[10],
-            filterMethod: data[11],
-            interlaceMethod: (PngInterlaceMode)data[12]);
+            filterMethod: data[11]);
 }

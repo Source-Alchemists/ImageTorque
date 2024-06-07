@@ -1,18 +1,31 @@
 using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
 using ImageTorque.Pixels;
 
 namespace ImageTorque.Codecs.Png;
 
+/// <summary>
+/// Provides methods for processing scanlines in a PNG image.
+/// </summary>
 internal static class ScanlineProcessor
 {
-    public static void ProcessGrayscaleScanline<TPixel>(PngHeader header, ReadOnlySpan<byte> scanlineSpan, Span<TPixel> rowSpan) where TPixel : unmanaged, IPixel =>
-        ProcessInterlacedGrayscaleScanline(header, scanlineSpan, rowSpan, 0, 1);
-
-    public static void ProcessInterlacedGrayscaleScanline<TPixel>(PngHeader header, ReadOnlySpan<byte> scanlineSpan, Span<TPixel> rowSpan, uint pixelOffset, uint increment) where TPixel : unmanaged, IPixel
+    /// <summary>
+    /// Processes a grayscale scanline and assigns the corresponding pixel values to the specified row.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of the pixel.</typeparam>
+    /// <param name="header">The PNG header.</param>
+    /// <param name="scanlineSpan">The span containing the grayscale scanline data.</param>
+    /// <param name="rowSpan">The span representing the row where the pixel values will be assigned.</param>
+    /// <remarks>
+    /// This method assumes that the grayscale scanline data is in the range of 0 to 255.
+    /// If the bit depth of the PNG header is 16, the scanline data is interpreted as 16-bit luminance values.
+    /// Otherwise, the scanline data is interpreted as 8-bit luminance values.
+    /// The pixel values are assigned to the row span using the specified pixel type.
+    /// </remarks>
+    public static void ProcessGrayscale<TPixel>(PngHeader header, ReadOnlySpan<byte> scanlineSpan, Span<TPixel> rowSpan) where TPixel : unmanaged, IPixel
     {
-        uint offset = pixelOffset;
         ref byte scanlineSpanRef = ref MemoryMarshal.GetReference(scanlineSpan);
         ref TPixel rowSpanRef = ref MemoryMarshal.GetReference(rowSpan);
         int scaleFactor = 255 / (NumericMath.GetColorCountForBitDepth(header.BitDepth) - 1);
@@ -20,7 +33,7 @@ internal static class ScanlineProcessor
         if (header.BitDepth == 16)
         {
             int o = 0;
-            for (nuint x = offset; x < (uint)header.Width; x += increment, o += 2)
+            for (nuint x = 0; x < (uint)header.Width; x++, o += 2)
             {
                 ushort luminance = BinaryPrimitives.ReadUInt16BigEndian(scanlineSpan.Slice(o, 2));
                 Unsafe.Add(ref rowSpanRef, x) = (TPixel)(IPixel)Unsafe.As<ushort, L16>(ref luminance);
@@ -28,7 +41,7 @@ internal static class ScanlineProcessor
         }
         else
         {
-            for (nuint x = offset, o = 0; x < (uint)header.Width; x += increment, o++)
+            for (nuint x = 0, o = 0; x < (uint)header.Width; x++, o++)
             {
                 byte luminance = (byte)(Unsafe.Add(ref scanlineSpanRef, o) * scaleFactor);
                 Unsafe.Add(ref rowSpanRef, x) = (TPixel)(IPixel)Unsafe.As<byte, L8>(ref luminance);
@@ -36,17 +49,16 @@ internal static class ScanlineProcessor
         }
     }
 
-    public static void ProcessPaletteScanline<TPixel>(PngHeader header, ReadOnlySpan<byte> scanlineSpan, Span<TPixel> rowSpan, ReadOnlyMemory<Rgb24>? palette)
-        where TPixel : unmanaged, IPixel =>
-        ProcessInterlacedPaletteScanline(header, scanlineSpan, rowSpan, 0, 1, palette);
-
-    public static void ProcessInterlacedPaletteScanline<TPixel>(PngHeader header,
-        ReadOnlySpan<byte> scanlineSpan,
-        Span<TPixel> rowSpan,
-        uint pixelOffset,
-        uint increment,
-        ReadOnlyMemory<Rgb24>? palette)
-        where TPixel : unmanaged, IPixel
+    /// <summary>
+    /// Processes a scanline of a PNG image with a color palette and maps it to a row of pixels.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of the pixel.</typeparam>
+    /// <param name="header">The PNG header.</param>
+    /// <param name="scanlineSpan">The span containing the scanline data.</param>
+    /// <param name="rowSpan">The span representing the row of pixels.</param>
+    /// <param name="palette">The color palette.</param>
+    /// <exception cref="InvalidDataException">Thrown when the color palette is missing.</exception>
+    public static void ProcessPalette<TPixel>(PngHeader header, ReadOnlySpan<byte> scanlineSpan, Span<TPixel> rowSpan, ReadOnlyMemory<Rgb24>? palette) where TPixel : unmanaged, IPixel
     {
         if (palette is null)
         {
@@ -56,31 +68,37 @@ internal static class ScanlineProcessor
         ref byte scanlineSpanRef = ref MemoryMarshal.GetReference(scanlineSpan);
         ref TPixel rowSpanRef = ref MemoryMarshal.GetReference(rowSpan);
         ref Rgb24 paletteBase = ref MemoryMarshal.GetReference(palette.Value.Span);
-        uint offset = pixelOffset;
         int maxIndex = palette.Value.Length - 1;
 
-        for (nuint x = offset, o = 0; x < (uint)header.Width; x += increment, o++)
+        for (nuint x = 0, o = 0; x < (uint)header.Width; x++, o++)
         {
             uint index = Unsafe.Add(ref scanlineSpanRef, o);
             Unsafe.Add(ref rowSpanRef, x) = (TPixel)(IPixel)Unsafe.Add(ref paletteBase, (int)Math.Min(index, maxIndex));
         }
     }
 
-    public static void ProcessRgbScanline<TPixel>(PngHeader header, ReadOnlySpan<byte> scanlineSpan, Span<TPixel> rowSpan,int bytesPerPixel, int bytesPerSample)
-       where TPixel : unmanaged, IPixel =>
-       ProcessInterlacedRgbScanline(header, scanlineSpan, rowSpan, 0, 1, bytesPerPixel, bytesPerSample);
-
-    public static void ProcessInterlacedRgbScanline<TPixel>(PngHeader header, ReadOnlySpan<byte> scanlineSpan, Span<TPixel> rowSpan, uint pixelOffset, uint increment, int bytesPerPixel, int bytesPerSample)
-        where TPixel : unmanaged, IPixel
+    /// <summary>
+    /// Processes the RGB scanline data and populates the row span with the corresponding pixel values.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of the pixel.</typeparam>
+    /// <param name="header">The PNG header.</param>
+    /// <param name="scanlineSpan">The span containing the scanline data.</param>
+    /// <param name="rowSpan">The span to populate with the pixel values.</param>
+    /// <param name="bytesPerPixel">The number of bytes per pixel.</param>
+    /// <param name="bytesPerSample">The number of bytes per sample.</param>
+    /// <remarks>
+    /// This method processes the RGB scanline data and converts it into pixel values of type <typeparamref name="TPixel"/>.
+    /// If the bit depth is 16, the method reads the RGB values from the scanline span and assigns them to the corresponding pixels in the row span.
+    /// If the bit depth is not 16, the method interprets the scanline span as a span of <see cref="Rgb24"/> values and assigns them to the corresponding pixels in the row span.
+    /// </remarks>
+    public static void ProcessRgb<TPixel>(PngHeader header, ReadOnlySpan<byte> scanlineSpan, Span<TPixel> rowSpan, int bytesPerPixel, int bytesPerSample) where TPixel : unmanaged, IPixel
     {
-        uint offset = pixelOffset;
-        ref byte scanlineSpanRef = ref MemoryMarshal.GetReference(scanlineSpan);
         ref TPixel rowSpanRef = ref MemoryMarshal.GetReference(rowSpan);
 
         if (header.BitDepth == 16)
         {
             int o = 0;
-            for (nuint x = offset; x < (uint)header.Width; x += increment, o += bytesPerPixel)
+            for (nuint x = 0; x < (uint)header.Width; x++, o += bytesPerPixel)
             {
                 ushort r = BinaryPrimitives.ReadUInt16BigEndian(scanlineSpan.Slice(o, bytesPerSample));
                 ushort g = BinaryPrimitives.ReadUInt16BigEndian(scanlineSpan.Slice(o + bytesPerSample, bytesPerSample));
@@ -88,7 +106,7 @@ internal static class ScanlineProcessor
                 Unsafe.Add(ref rowSpanRef, x) = (TPixel)(IPixel)new Rgb48(r, g, b);
             }
         }
-        else if (pixelOffset == 0 && increment == 1)
+        else
         {
             ReadOnlySpan<Rgb24> source = MemoryMarshal.Cast<byte, Rgb24>(scanlineSpan[..(header.Width * bytesPerPixel)]).Slice(0, header.Width);
             ref Rgb24 sourceBase = ref MemoryMarshal.GetReference(source);
@@ -97,17 +115,6 @@ internal static class ScanlineProcessor
             for (nuint i = 0; i < (uint)source.Length; i++)
             {
                 Unsafe.Add(ref destinationBase, i) = (TPixel)(IPixel)Unsafe.Add(ref sourceBase, i);
-            }
-        }
-        else
-        {
-            int o = 0;
-            for (nuint x = offset; x < (uint)header.Width; x += increment, o += bytesPerPixel)
-            {
-                byte r = Unsafe.Add(ref scanlineSpanRef, (uint)o);
-                byte g = Unsafe.Add(ref scanlineSpanRef, (uint)(o + bytesPerSample));
-                byte b = Unsafe.Add(ref scanlineSpanRef, (uint)(o + (2 * bytesPerSample)));
-                Unsafe.Add(ref rowSpanRef, x) = (TPixel)(IPixel)new Rgb24(r, g, b);
             }
         }
     }

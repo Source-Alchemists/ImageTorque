@@ -1,4 +1,3 @@
-
 using System.Buffers.Binary;
 
 namespace ImageTorque.Codecs.Bmp;

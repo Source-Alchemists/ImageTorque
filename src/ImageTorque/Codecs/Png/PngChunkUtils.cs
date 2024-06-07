@@ -7,8 +7,18 @@ using ImageTorque.Memory;
 
 namespace ImageTorque.Codecs.Png;
 
+/// <summary>
+/// Provides utility methods for working with PNG chunks.
+/// </summary>
 internal static class PngChunkUtils
 {
+    /// <summary>
+    /// Validates the integrity of a PNG chunk by calculating and comparing the CRC32 checksum.
+    /// </summary>
+    /// <param name="stream">The input stream containing the PNG data.</param>
+    /// <param name="chunk">The PNG chunk to validate.</param>
+    /// <param name="buffer">A span of bytes used for buffering.</param>
+    /// <exception cref="InvalidDataException">Thrown when the chunk's CRC32 checksum does not match the calculated checksum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ValidateChunk(in Stream stream, in PngChunk chunk, Span<byte> buffer)
     {
@@ -27,6 +37,12 @@ internal static class PngChunkUtils
         }
     }
 
+    /// <summary>
+    /// Reads the data of a PNG chunk from the specified stream.
+    /// </summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="length">The length of the chunk data.</param>
+    /// <returns>An <see cref="IMemoryOwner{T}"/> containing the chunk data.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IMemoryOwner<byte> ReadChunkData(in Stream stream, int length)
     {
@@ -41,6 +57,12 @@ internal static class PngChunkUtils
         return buffer;
     }
 
+    /// <summary>
+    /// Reads the type of a PNG chunk from the specified stream.
+    /// </summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="buffer">A span of bytes used for buffering.</param>
+    /// <returns>The type of the PNG chunk.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static PngChunkType ReadChunkType(in Stream stream, Span<byte> buffer)
     {
@@ -52,6 +74,12 @@ internal static class PngChunkUtils
         throw new InvalidDataException("Invalid chunk type!");
     }
 
+    /// <summary>
+    /// Reads the header chunk of a PNG image.
+    /// </summary>
+    /// <param name="pngMeta">The PNG metadata.</param>
+    /// <param name="data">The data containing the PNG header.</param>
+    /// <returns>A tuple containing the PNG header and metadata.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static (PngHeader, PngInfos) ReadHeaderChunk(in PngInfos pngMeta, ReadOnlySpan<byte> data)
     {
@@ -61,13 +89,19 @@ internal static class PngChunkUtils
         PngInfos meta = pngMeta with
         {
             BitDepth = header.BitDepth,
-            ColorType = header.ColorType,
-            InterlaceMethod = header.InterlaceMethod
+            ColorType = header.ColorType
         };
 
         return (header, meta);
     }
 
+    /// <summary>
+    /// Reads the length of a PNG chunk from the specified stream.
+    /// </summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="buffer">A span of bytes used for buffering.</param>
+    /// <param name="result">The length of the PNG chunk.</param>
+    /// <returns><c>true</c> if the length was successfully read; otherwise, <c>false</c>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryReadChunkLength(in Stream stream, Span<byte> buffer, out int result)
     {
@@ -81,9 +115,12 @@ internal static class PngChunkUtils
         return false;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void SkipChunkDataAndCrc(Stream stream, in PngChunk chunk) => stream.Skip(chunk.Length + 4);
-
+    /// <summary>
+    /// Reads the CRC32 checksum of a PNG chunk from the specified stream.
+    /// </summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="buffer">A span of bytes used for buffering.</param>
+    /// <returns>The CRC32 checksum of the PNG chunk.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint ReadChunkCrc(Stream stream, Span<byte> buffer)
     {
