@@ -9,10 +9,15 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Codecs.Bmp;
 
+/// <summary>
+/// Represents a decoder for BMP (Bitmap) images.
+/// </summary>
 public sealed class BmpDecoder : IImageDecoder
 {
+    /// <inheritdoc/>
     public IPixelBuffer Decode(Stream stream) => Decode(stream, Configuration.Default);
 
+    /// <inheritdoc/>
     public IPixelBuffer Decode(Stream stream, Configuration configuration)
     {
         if(stream.CanSeek)

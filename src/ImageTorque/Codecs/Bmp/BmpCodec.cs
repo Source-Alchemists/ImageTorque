@@ -35,5 +35,5 @@ public sealed class BmpCodec : ICodec
     }
 
     /// <inheritdoc/>
-    public bool IsSupportedEncoderFormat(string encoderType) => encoderType.Equals("bmp", StringComparison.InvariantCultureIgnoreCase);
+    public bool IsSupportedEncoderFormat(string encoderType) => false;
 }

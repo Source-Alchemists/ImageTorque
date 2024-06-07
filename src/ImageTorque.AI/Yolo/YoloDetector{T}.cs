@@ -87,7 +87,18 @@ public class YoloDetector<[DynamicallyAccessedMembers(DynamicallyAccessedMemberT
     /// <returns>The clamped value.</returns>
     public static float Clamp(float value, float min, float max)
     {
-        return (value < min) ? min : (value > max) ? max : value;
+        if (value < min)
+        {
+            return min;
+        }
+        else if (value > max)
+        {
+            return max;
+        }
+        else
+        {
+            return value;
+        }
     }
 
     /// <summary>

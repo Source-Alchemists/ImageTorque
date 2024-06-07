@@ -2,6 +2,9 @@ using System.Runtime.CompilerServices;
 
 namespace ImageTorque;
 
+/// <summary>
+/// Provides methods for converting pixel values.
+/// </summary>
 public static class PixelValueConverter
 {
     /// <summary>

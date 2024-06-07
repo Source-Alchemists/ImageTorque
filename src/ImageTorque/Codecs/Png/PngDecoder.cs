@@ -11,6 +11,9 @@ using ImageTorque.Pixels;
 
 namespace ImageTorque.Codecs.Png;
 
+/// <summary>
+/// Represents a PNG image decoder that implements the <see cref="IImageDecoder"/> interface.
+/// </summary>
 public class PngDecoder : IImageDecoder
 {
     /// <inheritdoc/>
@@ -148,8 +151,20 @@ public class PngDecoder : IImageDecoder
         }
     }
 
+
+    /// <summary>
+    /// Represents information about an image.
+    /// </summary>
+    /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
+    /// <returns>The <see cref="ImageInfo"/> containing the image information.</returns>
     public ImageInfo Identify(Stream stream) => Identify(stream, Configuration.Default);
 
+    /// <summary>
+    /// Represents information about an image.
+    /// </summary>
+    /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
+    /// <param name="configuration">The <see cref="Configuration"/> to use for decoding.</param>
+    /// <returns>The <see cref="ImageInfo"/> containing the image information.</returns>
     public ImageInfo Identify(Stream stream, Configuration configuration) => Identify(stream, configuration, out _);
 
     private ImageInfo Identify(Stream stream, Configuration configuration, out PngInfos pngMeta)

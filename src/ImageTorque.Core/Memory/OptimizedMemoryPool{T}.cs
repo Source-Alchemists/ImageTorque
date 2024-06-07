@@ -19,6 +19,11 @@ public sealed class OptimizedMemoryPool<T> : MemoryPool<T> where T : unmanaged
     /// <inheritdoc />
     public override int MaxBufferSize => int.MaxValue;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OptimizedMemoryPool{T}"/> class.
+    /// </summary>
+    /// <param name="memoryBlockSize">The size of the memory block to allocate.</param>
+    /// <param name="cacheCapacity">The number of memory blocks to cache.</param>
     public OptimizedMemoryPool(int memoryBlockSize = 4096, int cacheCapacity = 5)
     {
         _cache = new UnmanagedMemoryBlock<T>[cacheCapacity];

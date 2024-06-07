@@ -38,7 +38,7 @@ internal static class FilterAverage
         resultBaseRef = (byte)FilterType.Average;
 
         nuint x = 0;
-        for (; x < bytesPerPixel;)
+        while (x < bytesPerPixel)
         {
             byte scan = Unsafe.Add(ref scanBaseRef, x);
             byte above = Unsafe.Add(ref prevBaseRef, x);

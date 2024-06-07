@@ -68,7 +68,7 @@ internal sealed class Decoder : IImageDecoder
     private static IPixelBuffer DecodeL8(MagickImage image)
     {
         var targetBuffer = new PixelBuffer<L8>(image.Width, image.Height);
-        IPixelCollection<ushort> sourcePixels = image.GetPixels();
+        IPixelCollection<ushort> sourcePixels = image.GetPixelsUnsafe();
         Parallel.For(0, image.Height, y =>
         {
             Span<L8> row = targetBuffer.GetRow(y);
@@ -86,7 +86,7 @@ internal sealed class Decoder : IImageDecoder
     private static IPixelBuffer DecodeL16(MagickImage image)
     {
         var targetBuffer = new PixelBuffer<L16>(image.Width, image.Height);
-        IPixelCollection<ushort> sourcePixels = image.GetPixels();
+        IPixelCollection<ushort> sourcePixels = image.GetPixelsUnsafe();
         Parallel.For(0, image.Height, y =>
         {
             Span<L16> row = targetBuffer.GetRow(y);
@@ -104,7 +104,7 @@ internal sealed class Decoder : IImageDecoder
     private static IPixelBuffer DecodeRgb24(MagickImage image)
     {
         var targetBuffer = new PixelBuffer<Rgb24>(image.Width, image.Height);
-        IPixelCollection<ushort> sourcePixels = image.GetPixels();
+        IPixelCollection<ushort> sourcePixels = image.GetPixelsUnsafe();
         Parallel.For(0, image.Height, y =>
         {
             Span<Rgb24> row = targetBuffer.GetRow(y);
@@ -122,7 +122,7 @@ internal sealed class Decoder : IImageDecoder
     private static IPixelBuffer DecodeRgb48(MagickImage image)
     {
         var targetBuffer = new PixelBuffer<Rgb48>(image.Width, image.Height);
-        IPixelCollection<ushort> sourcePixels = image.GetPixels();
+        IPixelCollection<ushort> sourcePixels = image.GetPixelsUnsafe();
         Parallel.For(0, image.Height, y =>
         {
             Span<Rgb48> row = targetBuffer.GetRow(y);
