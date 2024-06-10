@@ -720,7 +720,7 @@ internal partial class Resizer
             float c01 = byteSrc[srcIndexY1];
             float c11 = byteSrc[srcIndexXY1];
 
-            float value = (float)Blerp(c00, c10, c01, c11, gx - gxi0, gy - gyi0);
+            float value = Blerp(c00, c10, c01, c11, gx - gxi0, gy - gyi0);
             int dstIndex = (destY * destinationWidth) + destX;
             byteDest[dstIndex] = value;
         }

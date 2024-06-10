@@ -44,10 +44,10 @@ internal partial class Binarizer
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void BinarizeMono16(ReadOnlySpan<L16> sourceRow, Span<L8> targetRow, ReadOnlyPackedPixelBuffer<L16> sourceBuffer, float threshold, BinaryThresholdMode mode)
+    private static void BinarizeMono16(ReadOnlySpan<L16> sourceRow, Span<L16> targetRow, ReadOnlyPackedPixelBuffer<L16> sourceBuffer, float threshold, BinaryThresholdMode mode)
     {
         int width = sourceBuffer.Width;
-        float realThreshold = threshold * L8.White;
+        float realThreshold = threshold * L16.White;
         switch (mode)
         {
             case BinaryThresholdMode.Lumincance:
@@ -55,7 +55,7 @@ internal partial class Binarizer
             case BinaryThresholdMode.MaxChroma:
                 for (int x = 0; x < width; x++)
                 {
-                    targetRow[x] = sourceRow[x] >= realThreshold ? L8.White : L8.Black;
+                    targetRow[x] = sourceRow[x] >= realThreshold ? L16.White : L16.Black;
                 }
                 break;
         }
@@ -73,7 +73,7 @@ internal partial class Binarizer
                 {
                     Rgb pixel = sourceRow[x];
                     ushort luminance = ColorNumerics.Get16BitBT709Luminance(pixel.Red, pixel.Green, pixel.Blue);
-                    targetRow[x] = luminance >= realThreshold ? L8.White : L8.Black;
+                    targetRow[x] = luminance >= realThreshold ? LS.White : LS.Black;
                 }
                 break;
             case BinaryThresholdMode.Saturation:
@@ -81,7 +81,7 @@ internal partial class Binarizer
                 {
                     float saturation = ColorNumerics.GetSaturation(sourceRow[x]);
                     ref LS color = ref targetRow[x];
-                    color = saturation >= threshold ? L8.White : L8.Black;
+                    color = saturation >= threshold ? LS.White : LS.Black;
                 }
                 break;
             case BinaryThresholdMode.MaxChroma:
@@ -90,7 +90,7 @@ internal partial class Binarizer
                 {
                     float maxChroma = ColorNumerics.GetMaxChroma(sourceRow[x]);
                     ref LS color = ref targetRow[x];
-                    color = maxChroma >= ct ? L8.White : L8.Black;
+                    color = maxChroma >= ct ? LS.White : LS.Black;
                 }
                 break;
         }
@@ -132,10 +132,10 @@ internal partial class Binarizer
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void BinarizeRgb48(ReadOnlySpan<Rgb48> sourceRow, Span<L8> targetRow, ReadOnlyPackedPixelBuffer<Rgb48> sourceBuffer, float threshold, BinaryThresholdMode mode)
+    private static void BinarizeRgb48(ReadOnlySpan<Rgb48> sourceRow, Span<L16> targetRow, ReadOnlyPackedPixelBuffer<Rgb48> sourceBuffer, float threshold, BinaryThresholdMode mode)
     {
         int width = sourceBuffer.Width;
-        float realThreshold = threshold * L8.White;
+        float realThreshold = threshold * L16.White;
         switch (mode)
         {
             case BinaryThresholdMode.Lumincance:
@@ -143,15 +143,15 @@ internal partial class Binarizer
                 {
                     Rgb48 pixel = sourceRow[x];
                     ushort luminance = ColorNumerics.Get16BitBT709Luminance(pixel.Red, pixel.Green, pixel.Blue);
-                    targetRow[x] = luminance >= realThreshold ? L8.White : L8.Black;
+                    targetRow[x] = luminance >= realThreshold ? L16.White : L16.Black;
                 }
                 break;
             case BinaryThresholdMode.Saturation:
                 for (int x = 0; x < width; x++)
                 {
                     float saturation = ColorNumerics.GetSaturation(sourceRow[x]);
-                    ref L8 color = ref targetRow[x];
-                    color = saturation >= threshold ? L8.White : L8.Black;
+                    ref L16 color = ref targetRow[x];
+                    color = saturation >= threshold ? L16.White : L16.Black;
                 }
                 break;
             case BinaryThresholdMode.MaxChroma:
@@ -159,8 +159,8 @@ internal partial class Binarizer
                 for (int x = 0; x < width; x++)
                 {
                     float maxChroma = ColorNumerics.GetMaxChroma(sourceRow[x]);
-                    ref L8 color = ref targetRow[x];
-                    color = maxChroma >= ct ? L8.White : L8.Black;
+                    ref L16 color = ref targetRow[x];
+                    color = maxChroma >= ct ? L16.White : L16.Black;
                 }
                 break;
         }
