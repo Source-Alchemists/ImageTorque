@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
 

@@ -31,11 +31,10 @@ public class CropTests
         // Assert
         Assert.IsType<PixelBuffer<LS>>(result);
         Assert.InRange(((PixelBuffer<LS>)result).Pixels[0].Value, 0f, 1f);
-        Assert.Equal([
-                        0.33f, 0.34f, 0.35f, 0.36f,
-                        0.43f, 0.44f, 0.45f, 0.46f,
-                        0.53f, 0.54f, 0.55f, 0.56f,
-                        0.63f, 0.64f, 0.65f, 0.66f], ((PixelBuffer<LS>)result).Pixels.ToArray());
+        Assert.Equal([0.33f, 0.34f, 0.35f, 0.36f,
+                      0.43f, 0.44f, 0.45f, 0.46f,
+                      0.53f, 0.54f, 0.55f, 0.56f,
+                      0.63f, 0.64f, 0.65f, 0.66f], ((PixelBuffer<LS>)result).Pixels.ToArray());
     }
 
     [Fact]
@@ -64,11 +63,10 @@ public class CropTests
         // Assert
         Assert.IsType<PixelBuffer<L8>>(result);
         Assert.InRange(((PixelBuffer<L8>)result).Pixels[0].Value, 0, byte.MaxValue);
-        Assert.Equal([
-                        33, 34, 35, 36,
-                        43, 44, 45, 46,
-                        53, 54, 55, 56,
-                        63, 64, 65, 66], ((PixelBuffer<L8>)result).Pixels.ToArray());
+        Assert.Equal([33, 34, 35, 36,
+                      43, 44, 45, 46,
+                      53, 54, 55, 56,
+                      63, 64, 65, 66], ((PixelBuffer<L8>)result).Pixels.ToArray());
     }
 
     [Fact]

@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
 
@@ -471,21 +472,21 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
             case ResizeMode.Bilinear:
                 Parallel.For(0, targetPixelBuffer.Height, parameters.ParallelOptions, row =>
                 {
-                    ResizeNearestNeighborByte(sourceBuffer.GetChannel(0).AsByte(),
+                    ResizeBilinearByte(sourceBuffer.GetChannel(0).AsByte(),
                                                             targetPixelBuffer.GetChannel(0).AsByte(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
                                                             targetPixelBuffer.Width,
                                                             targetPixelBuffer.Height,
                                                             row);
-                    ResizeNearestNeighborByte(sourceBuffer.GetChannel(1).AsByte(),
+                    ResizeBilinearByte(sourceBuffer.GetChannel(1).AsByte(),
                                                             targetPixelBuffer.GetChannel(1).AsByte(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
                                                             targetPixelBuffer.Width,
                                                             targetPixelBuffer.Height,
                                                             row);
-                    ResizeNearestNeighborByte(sourceBuffer.GetChannel(2).AsByte(),
+                    ResizeBilinearByte(sourceBuffer.GetChannel(2).AsByte(),
                                                             targetPixelBuffer.GetChannel(2).AsByte(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
@@ -497,21 +498,21 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
             case ResizeMode.Bicubic:
                 Parallel.For(0, targetPixelBuffer.Height, parameters.ParallelOptions, row =>
                 {
-                    ResizeNearestNeighborByte(sourceBuffer.GetChannel(0).AsByte(),
+                    ResizeBicubicByte(sourceBuffer.GetChannel(0).AsByte(),
                                                             targetPixelBuffer.GetChannel(0).AsByte(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
                                                             targetPixelBuffer.Width,
                                                             targetPixelBuffer.Height,
                                                             row);
-                    ResizeNearestNeighborByte(sourceBuffer.GetChannel(1).AsByte(),
+                    ResizeBicubicByte(sourceBuffer.GetChannel(1).AsByte(),
                                                             targetPixelBuffer.GetChannel(1).AsByte(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
                                                             targetPixelBuffer.Width,
                                                             targetPixelBuffer.Height,
                                                             row);
-                    ResizeNearestNeighborByte(sourceBuffer.GetChannel(2).AsByte(),
+                    ResizeBicubicByte(sourceBuffer.GetChannel(2).AsByte(),
                                                             targetPixelBuffer.GetChannel(2).AsByte(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
@@ -561,21 +562,21 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
             case ResizeMode.Bilinear:
                 Parallel.For(0, targetPixelBuffer.Height, parameters.ParallelOptions, row =>
                 {
-                    ResizeNearestNeighborUInt16(sourceBuffer.GetChannel(0).AsUInt16(),
+                    ResizeBilinearUInt16(sourceBuffer.GetChannel(0).AsUInt16(),
                                                             targetPixelBuffer.GetChannel(0).AsUInt16(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
                                                             targetPixelBuffer.Width,
                                                             targetPixelBuffer.Height,
                                                             row);
-                    ResizeNearestNeighborUInt16(sourceBuffer.GetChannel(1).AsUInt16(),
+                    ResizeBilinearUInt16(sourceBuffer.GetChannel(1).AsUInt16(),
                                                             targetPixelBuffer.GetChannel(1).AsUInt16(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
                                                             targetPixelBuffer.Width,
                                                             targetPixelBuffer.Height,
                                                             row);
-                    ResizeNearestNeighborUInt16(sourceBuffer.GetChannel(2).AsUInt16(),
+                    ResizeBilinearUInt16(sourceBuffer.GetChannel(2).AsUInt16(),
                                                             targetPixelBuffer.GetChannel(2).AsUInt16(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
@@ -587,21 +588,21 @@ internal sealed partial class Resizer : IProcessor<ResizerParameters, IPixelBuff
             case ResizeMode.Bicubic:
                 Parallel.For(0, targetPixelBuffer.Height, parameters.ParallelOptions, row =>
                 {
-                    ResizeNearestNeighborUInt16(sourceBuffer.GetChannel(0).AsUInt16(),
+                    ResizeBicubicUInt16(sourceBuffer.GetChannel(0).AsUInt16(),
                                                             targetPixelBuffer.GetChannel(0).AsUInt16(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
                                                             targetPixelBuffer.Width,
                                                             targetPixelBuffer.Height,
                                                             row);
-                    ResizeNearestNeighborUInt16(sourceBuffer.GetChannel(1).AsUInt16(),
+                    ResizeBicubicUInt16(sourceBuffer.GetChannel(1).AsUInt16(),
                                                             targetPixelBuffer.GetChannel(1).AsUInt16(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
                                                             targetPixelBuffer.Width,
                                                             targetPixelBuffer.Height,
                                                             row);
-                    ResizeNearestNeighborUInt16(sourceBuffer.GetChannel(2).AsUInt16(),
+                    ResizeBicubicUInt16(sourceBuffer.GetChannel(2).AsUInt16(),
                                                             targetPixelBuffer.GetChannel(2).AsUInt16(),
                                                             sourceBuffer.Width,
                                                             sourceBuffer.Height,
