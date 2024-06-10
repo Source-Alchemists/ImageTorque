@@ -2,7 +2,8 @@ using ImageTorque.Buffers;
 using ImageTorque.Pixels;
 
 namespace ImageTorque.Processing.Tests;
-public class PixelBufferTests
+
+public class BinarizerTests
 {
     [Theory]
     [InlineData(BinaryThresholdMode.Lumincance, 0f, 0f, 1f, 1f)]
