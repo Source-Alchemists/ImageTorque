@@ -10,12 +10,12 @@ public record struct L16 : IL1Pixel<ushort>
     /// <summary>
     /// Gets the white value.
     /// </summary>
-    public const ushort White = 65535;
+    public const ushort White = ushort.MaxValue;
 
     /// <summary>
     /// Gets the black value.
     /// </summary>
-    public const ushort Black = 0;
+    public const ushort Black = ushort.MinValue;
 
     /// <summary>
     /// Gets or sets the value.

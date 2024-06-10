@@ -39,7 +39,7 @@ public class GrayscaleFilterTests
 
         // Assert
         Assert.IsType<PixelBuffer<L8>>(result);
-        Assert.InRange(((PixelBuffer<L8>)result).Pixels[0].Value, 0, 255);
+        Assert.InRange(((PixelBuffer<L8>)result).Pixels[0].Value, 0, byte.MaxValue);
         Assert.Equal([75, 176, 36, 128], ((PixelBuffer<L8>)result).Pixels.ToArray());
     }
 
@@ -58,7 +58,7 @@ public class GrayscaleFilterTests
 
         // Assert
         Assert.IsType<PixelBuffer<L16>>(result);
-        Assert.InRange(((PixelBuffer<L16>)result).Pixels[0].Value, 0, 65535);
+        Assert.InRange(((PixelBuffer<L16>)result).Pixels[0].Value, 0, ushort.MaxValue);
         Assert.Equal([19529, 45337, 9430, 32768], ((PixelBuffer<L16>)result).Pixels.ToArray());
     }
 
@@ -104,7 +104,7 @@ public class GrayscaleFilterTests
 
         // Assert
         Assert.IsType<PixelBuffer<L8>>(result);
-        Assert.InRange(((PixelBuffer<L8>)result).Pixels[0].Value, 0, 255);
+        Assert.InRange(((PixelBuffer<L8>)result).Pixels[0].Value, 0, byte.MaxValue);
         Assert.Equal([75, 176, 36, 128], ((PixelBuffer<L8>)result).Pixels.ToArray());
     }
 
@@ -127,7 +127,7 @@ public class GrayscaleFilterTests
 
         // Assert
         Assert.IsType<PixelBuffer<L16>>(result);
-        Assert.InRange(((PixelBuffer<L16>)result).Pixels[0].Value, 0, 65535);
+        Assert.InRange(((PixelBuffer<L16>)result).Pixels[0].Value, 0, ushort.MaxValue);
         Assert.Equal([19529, 45337, 9430, 32768], ((PixelBuffer<L16>)result).Pixels.ToArray());
     }
 }

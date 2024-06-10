@@ -10,12 +10,12 @@ public record struct L8 : IL1Pixel<byte>
     /// <summary>
     /// Gets the white value.
     /// </summary>
-    public const byte White = 255;
+    public const byte White = byte.MaxValue;
 
     /// <summary>
     /// Gets the black value.
     /// </summary>
-    public const byte Black = 0;
+    public const byte Black = byte.MinValue;
 
     /// <summary>
     /// Gets or sets the value.
