@@ -26,13 +26,15 @@ public class TiffCodecTests
         Assert.Equal(512, pixelBuffer.Height);
 
         // Act
-        using FileStream outStream = File.Create("./test8.tif");
+        using var outStream = new MemoryStream();
         var image = new Image(pixelBuffer!);
         encoder.Encode(outStream, image.AsPacked<L8>(), "tif");
 
         // Assert
-        Assert.True(File.Exists("./test8.tif"));
-        File.Delete("./test8.tif");
+        Assert.True(outStream.Length > 0);
+        outStream.Position = 0;
+        string outHash = TestHelper.CreateHash(outStream.ToArray());
+        Assert.Equal("b8cd9dd7ea8f1eea4bf843a733c3d4fda05d49a345a9aeca1e4a63b19f3d29c0", outHash);
     }
 
     [Fact]
@@ -55,12 +57,14 @@ public class TiffCodecTests
         Assert.Equal(512, pixelBuffer.Height);
 
         // Act
-        using FileStream outStream = File.Create("./test24.tif");
+        using var outStream = new MemoryStream();
         var image = new Image(pixelBuffer!);
         encoder.Encode(outStream, image.AsPacked<Rgb24>(), "tif");
 
         // Assert
-        Assert.True(File.Exists("./test24.tif"));
-        File.Delete("./test24.tif");
+        Assert.True(outStream.Length > 0);
+        outStream.Position = 0;
+        string outHash = TestHelper.CreateHash(outStream.ToArray());
+        Assert.Equal("030043fc3ee9921af99d7040f185aea6bc46247808b54dc24d261d96c206d587", outHash);
     }
 }

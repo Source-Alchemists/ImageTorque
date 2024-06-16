@@ -26,13 +26,15 @@ public class PngCodecTests
         Assert.Equal(512, pixelBuffer.Height);
 
         // Act
-        using FileStream outStream = File.Create("./test8.png");
+        using var outStream = new MemoryStream();
         var image = new Image(pixelBuffer!);
         encoder.Encode(outStream, image.AsPacked<L8>(), "png");
 
         // Assert
-        Assert.True(File.Exists("./test8.png"));
-        File.Delete("./test8.png");
+        Assert.True(outStream.Length > 0);
+        outStream.Position = 0;
+        string outHash = TestHelper.CreateHash(outStream.ToArray());
+        Assert.Equal("34cd28ec33c5de078c2c0a58d0085744fa55dcb9e8d88414be4fa1b9386855d8", outHash);
     }
 
     [Fact]
@@ -55,13 +57,15 @@ public class PngCodecTests
         Assert.Equal(512, pixelBuffer.Height);
 
         // Act
-        using FileStream outStream = File.Create("./test16.png");
+        using var outStream = new MemoryStream();
         var image = new Image(pixelBuffer!);
         encoder.Encode(outStream, image.AsPacked<L16>(), "png");
 
         // Assert
-        Assert.True(File.Exists("./test16.png"));
-        File.Delete("./test16.png");
+        Assert.True(outStream.Length > 0);
+        outStream.Position = 0;
+        string outHash = TestHelper.CreateHash(outStream.ToArray());
+        Assert.Equal("f29a6d3f21b066f10dbda62a5da59694a05911192b66ce8171213063025bef1c", outHash);
     }
 
     [Fact]
@@ -84,13 +88,15 @@ public class PngCodecTests
         Assert.Equal(512, pixelBuffer.Height);
 
         // Act
-        using FileStream outStream = File.Create("./test24.png");
+        using var outStream = new MemoryStream();
         var image = new Image(pixelBuffer!);
         encoder.Encode(outStream, image.AsPacked<Rgb24>(), "png");
 
         // Assert
-        Assert.True(File.Exists("./test24.png"));
-        File.Delete("./test24.png");
+        Assert.True(outStream.Length > 0);
+        outStream.Position = 0;
+        string outHash = TestHelper.CreateHash(outStream.ToArray());
+        Assert.Equal("e1638703cb9199724d34194abc17cd46087093f610baa8e228ddb300227083f3", outHash);
     }
 
     [Fact]
@@ -113,12 +119,14 @@ public class PngCodecTests
         Assert.Equal(512, pixelBuffer.Height);
 
         // Act
-        using FileStream outStream = File.Create("./test48.png");
+        using var outStream = new MemoryStream();
         var image = new Image(pixelBuffer!);
         encoder.Encode(outStream, image.AsPacked<Rgb48>(), "png");
 
         // Assert
-        Assert.True(File.Exists("./test48.png"));
-        File.Delete("./test48.png");
+        Assert.True(outStream.Length > 0);
+        outStream.Position = 0;
+        string outHash = TestHelper.CreateHash(outStream.ToArray());
+        Assert.Equal("afdac99bb9bf203ec4cccdeaa58c019186eadfe45fdbe0b1e29e97d098b984aa", outHash);
     }
 }

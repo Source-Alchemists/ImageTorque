@@ -26,13 +26,15 @@ public class JpegCodecTests
         Assert.Equal(512, pixelBuffer.Height);
 
         // Act
-        using FileStream outStream = File.Create("./test8.jpg");
+        using var outStream = new MemoryStream();
         var image = new Image(pixelBuffer!);
         encoder.Encode(outStream, image.AsPacked<L8>(), "jpg");
 
         // Assert
-        Assert.True(File.Exists("./test8.jpg"));
-        File.Delete("./test8.jpg");
+        Assert.True(outStream.Length > 0);
+        outStream.Position = 0;
+        string outHash = TestHelper.CreateHash(outStream.ToArray());
+        Assert.Equal("c96b67587c8e65fbd085c273c5f2549a264fabbea68527e6b653796db9568b50", outHash);
     }
 
     [Fact]
@@ -55,12 +57,14 @@ public class JpegCodecTests
         Assert.Equal(512, pixelBuffer.Height);
 
         // Act
-        using FileStream outStream = File.Create("./test24.jpg");
+        using var outStream = new MemoryStream();
         var image = new Image(pixelBuffer!);
         encoder.Encode(outStream, image.AsPacked<Rgb24>(), "jpg");
 
         // Assert
-        Assert.True(File.Exists("./test24.jpg"));
-        File.Delete("./test24.jpg");
+        Assert.True(outStream.Length > 0);
+        outStream.Position = 0;
+        string outHash = TestHelper.CreateHash(outStream.ToArray());
+        Assert.Equal("38d92154dca08582847f5fed913009eadf5c93496a66720a0489ce3ecaa347ac", outHash);
     }
 }

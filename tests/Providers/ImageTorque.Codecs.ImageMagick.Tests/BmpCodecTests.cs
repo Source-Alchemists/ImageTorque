@@ -26,13 +26,15 @@ public class BmpCodecTests
         Assert.Equal(512, pixelBuffer.Height);
 
         // Act
-        using FileStream outStream = File.Create("./test8.bmp");
+        using var outStream = new MemoryStream();
         var image = new Image(pixelBuffer!);
         encoder.Encode(outStream, image.AsPacked<L8>(), "bmp");
 
         // Assert
-        Assert.True(File.Exists("./test8.bmp"));
-        File.Delete("./test8.bmp");
+        Assert.True(outStream.Length > 0);
+        outStream.Position = 0;
+        string outHash = TestHelper.CreateHash(outStream.ToArray());
+        Assert.Equal("c63f5825a40943cc7538624f95952aee93f9b7b59930c89d521e0d178b8d10ef", outHash);
     }
 
     [Fact]
@@ -55,12 +57,14 @@ public class BmpCodecTests
         Assert.Equal(512, pixelBuffer.Height);
 
         // Act
-        using FileStream outStream = File.Create("./test24.bmp");
+        using var outStream = new MemoryStream();
         var image = new Image(pixelBuffer!);
         encoder.Encode(outStream, image.AsPacked<Rgb24>(), "bmp");
 
         // Assert
-        Assert.True(File.Exists("./test24.bmp"));
-        File.Delete("./test24.bmp");
+        Assert.True(outStream.Length > 0);
+        outStream.Position = 0;
+        string outHash = TestHelper.CreateHash(outStream.ToArray());
+        Assert.Equal("015cd941382818563ab5fc7cc8dc58fc3394ee7f31bd6e0130f0b7e17aa6d2f9", outHash);
     }
 }
