@@ -18,7 +18,7 @@ The following codec providers are supported:
 
 | Codec Provider | Supported Formats    | License |
 |----------------|----------------------|---------|
-| `ImageTorque`  | BMP, PNG             | [Apache 2.0](../../LICENSE) |
+| `ImageTorque`  | BMP, PNG (load only) | [Apache 2.0](../../LICENSE) |
 | `Magick.NET`   | BMP, JPEG, PNG, TIFF | [Apache 2.0](https://github.com/dlemstra/Magick.NET/blob/main/License.txt) |
 | `ImageSharp`   | BMP, JPEG, PNG       | [Six Labors Split License](https://github.com/SixLabors/ImageSharp/blob/main/LICENSE) |
 

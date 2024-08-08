@@ -14,7 +14,7 @@ public sealed class BmpCodec : ICodec
     public IImageDecoder Decoder { get; } = new BmpDecoder();
 
     /// <inheritdoc/>
-    public IImageEncoder Encoder => throw new NotSupportedException();
+    public IImageEncoder Encoder { get; } = new BmpEncoder();
 
     /// <inheritdoc/>
     public bool IsSupportedDecoderFormat(ReadOnlySpan<byte> header)
@@ -34,5 +34,5 @@ public sealed class BmpCodec : ICodec
     }
 
     /// <inheritdoc/>
-    public bool IsSupportedEncoderFormat(string encoderType) => false;
+    public bool IsSupportedEncoderFormat(string encoderType) => encoderType.Equals("bmp", StringComparison.InvariantCultureIgnoreCase);
 }
