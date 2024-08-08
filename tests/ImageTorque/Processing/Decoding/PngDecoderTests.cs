@@ -19,8 +19,9 @@ using System.Runtime.InteropServices;
 using ImageTorque.Buffers;
 using ImageTorque.Codecs.Png;
 using ImageTorque.Pixels;
+using ImageTorque.Tests;
 
-namespace ImageTorque.Tests;
+namespace ImageTorque.Processing.Tests;
 
 public class PngDecoderTests
 {

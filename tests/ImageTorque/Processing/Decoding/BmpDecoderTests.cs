@@ -19,8 +19,9 @@ using System.Runtime.InteropServices;
 using ImageTorque.Buffers;
 using ImageTorque.Codecs.Bmp;
 using ImageTorque.Pixels;
+using ImageTorque.Tests;
 
-namespace ImageTorque.Tests;
+namespace ImageTorque.Processing.Tests;
 
 public class BmpDecoderTests
 {
