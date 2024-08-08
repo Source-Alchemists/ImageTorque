@@ -15,8 +15,8 @@ public class PngIdentify
     [GlobalSetup]
     public void Setup()
     {
-        _imageTorqueStream = new FileStream("./lena24.png", FileMode.Open);
-        _imageSharpStream = new FileStream("./lena24.png", FileMode.Open);
+        _imageTorqueStream = new FileStream("./lena24.png", FileMode.Open, FileAccess.Read);
+        _imageSharpStream = new FileStream("./lena24.png", FileMode.Open, FileAccess.Read);
     }
 
     [GlobalCleanup]
