@@ -11,23 +11,77 @@ ImageTorque is a cross-platform computer vision library.
 
 Built for [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0), ImageTorque can be run anywhere - from the edge device all the way up to cloud services.
 
-## Supported file formats
+## Codec providers
 
 ImageTorque uses codec providers to decode and encode images. <br/>
 The following codec providers are supported:
 
 | Codec Provider | Supported Formats    | License |
 |----------------|----------------------|---------|
+| `ImageTorque`  | BMP, PNG             | [Apache 2.0](../../LICENSE) |
 | `Magick.NET`   | BMP, JPEG, PNG, TIFF | [Apache 2.0](https://github.com/dlemstra/Magick.NET/blob/main/License.txt) |
 | `ImageSharp`   | BMP, JPEG, PNG       | [Six Labors Split License](https://github.com/SixLabors/ImageSharp/blob/main/LICENSE) |
 
+### How to use codes
+
+Example: How to use ImageTorque build in codecs as default configuration:
+
+```csharp
+using ImageTorque;
+using ImageTorque.Codecs.Png;
+using ImageTorque.Codecs.Bmp;
+
+// Add PNG and BMP codecs to the default configuration
+Configuration.Default = ConfigurationFactory.Build([
+        new PngCodec(),
+        new BmpCodec()
+    ]);
+
+// Load image
+var image = Image.Load("sample.png");
+```
+
+Example: How to use ImageTorque build in codecs with custom configuration:
+
+```csharp
+using ImageTorque;
+using ImageTorque.Codecs.Png;
+
+// Create a new configuration with PNG codec
+var configuration = ConfigurationFactory.Build([
+        new PngCodec()
+    ]);
+
+// Load image with the new configuration
+var image = Image.Load("sample.png", configuration);
+```
+
+Example: How to extend the default configuration with additional codecs like ImageMagick tiff codec:
+
+```csharp
+using ImageTorque;
+using ImageTorque.Codecs.Png;
+using ImageTorque.Codecs.Bmp;
+using ImageTorque.Codecs.ImageMagick;
+
+// Add Png, Bmp and Tiff codecs to the default configuration
+Configuration.Default = ConfigurationFactory.Build([
+        new PngCodec(),
+        new BmpCodec(),
+        new TiffCodec()
+    ]);
+
+// Load image
+var image = Image.Load("sample.tiff");
+```
+
 ## Supported pixel types
 
-| Pixel Type | Type | Description |
-|------------|------|-------------|
-| `LS`       | float | 32 bit luminance pixel |
-| `L8`       | byte | 8 bit luminance pixel |
+| Pixel Type | Type   | Description            |
+|------------|--------|------------------------|
+| `LS`       | float  | 32 bit luminance pixel |
+| `L8`       | byte   | 8 bit luminance pixel  |
 | `L16`      | ushort | 16 bit luminance pixel |
-| `RGB`      | float | 32 bit color pixel |
-| `RGB24`    | byte | 24 bit color pixel |
-| `RGB48`    | ushort | 48 bit color pixel |
+| `RGB`      | float  | 32 bit color pixel     |
+| `RGB24`    | byte   | 24 bit color pixel     |
+| `RGB48`    | ushort | 48 bit color pixel     |
