@@ -11,6 +11,7 @@ namespace ImageTorque.Benchmarks;
 public class BmpImageLoad
 {
     private const string BENCHMARK_IMAGE_PATH = "./lena24.bmp";
+    private readonly Configuration _configuration = ConfigurationFactory.Build([new Codecs.Bmp.BmpCodec()]);
     private Image _imageTorqueImage = null!;
     private SixLabors.ImageSharp.Image _imageSharpImage = null!;
     private SKBitmap _skiaBitmap = null!;
@@ -19,7 +20,7 @@ public class BmpImageLoad
     [Benchmark(Baseline = true)]
     public void ImageTorque()
     {
-        _imageTorqueImage = Image.Load(BENCHMARK_IMAGE_PATH);
+        _imageTorqueImage = Image.Load(BENCHMARK_IMAGE_PATH, _configuration);
     }
 
     [IterationCleanup(Target = nameof(ImageTorque))]

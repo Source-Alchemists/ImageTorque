@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using ImageMagick;
+using ImageTorque.Codecs.Png;
 using SkiaSharp;
 
 namespace ImageTorque.Benchmarks;
@@ -11,6 +12,7 @@ namespace ImageTorque.Benchmarks;
 public class PngImageLoad
 {
     private const string BENCHMARK_IMAGE_PATH = "./lena24.png";
+    private readonly Configuration _configuration = ConfigurationFactory.Build([new PngCodec()]);
     private Image _imageTorqueImage = null!;
     private SixLabors.ImageSharp.Image _imageSharpImage = null!;
     private SKBitmap _skiaBitmap = null!;
@@ -19,7 +21,7 @@ public class PngImageLoad
     [Benchmark(Baseline = true)]
     public void ImageTorque()
     {
-        _imageTorqueImage = Image.Load(BENCHMARK_IMAGE_PATH);
+        _imageTorqueImage = Image.Load(BENCHMARK_IMAGE_PATH, _configuration);
     }
 
     [IterationCleanup(Target = nameof(ImageTorque))]
