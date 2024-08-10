@@ -1,10 +1,138 @@
+/*
+ * Copyright 2024 Source Alchemists
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+using System.Runtime.InteropServices;
 using ImageTorque.Buffers;
+using ImageTorque.Codecs.Bmp;
 using ImageTorque.Pixels;
+using ImageTorque.Tests;
 
 namespace ImageTorque.Processing.Tests;
 
 public class CropTests
 {
+    [Theory]
+    [InlineData("./lena8.bmp", 300, 300, 200, 200, 0, "c573ee9d07310077be44e9d9bc2993123715e70e57d33bd29b2a32a30bc51ce6")]
+    [InlineData("./lena8.bmp", 150, 150, 200, 200, 90, "6d108681bbaf445f3235184f8819f6c441933ea7608ca3ec6b523dff4b7a0817")]
+    [InlineData("./lena8.bmp", 300, 300, 200, 200, 180, "9205cf1472addc6a78533da887edebf320eff29650baa683a4de08f152e2767a")]
+    [InlineData("./lena8.bmp", 150, 150, 200, 200, 270, "f5533d54175c958e3229104d5f816f17b01ebbc1ad251423c2674c49d707d5e3")]
+    [InlineData("./lena8.bmp", 150, 150, 200, 200, 55, "a8609b47b229da3692c71db7b61598c5bbce3b341a66f0a6ffe086dfe634e17b")]
+    public void Test_CropMono8(string imagePath, int x, int y, int width, int height, int rotationDegree, string expectedHash)
+    {
+        // Arrange
+        var crop = new Crop();
+        var decoder = new BmpDecoder();
+        Configuration configuration =  ConfigurationFactory.Build([new BmpCodec()]);
+        using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+        IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
+
+        // Act
+        PixelBuffer<L8> result = (PixelBuffer<L8>)crop.Execute(new CropParameters
+        {
+            Input = pixelBuffer.AsReadOnly(),
+            Rectangle = new(x, y, width, height, rotationDegree)
+        });
+
+        // Assert
+        string hash = TestHelper.CreateHash(MemoryMarshal.Cast<L8, byte>(result!.Pixels));
+        Assert.Equal(expectedHash, hash);
+    }
+
+    [Theory]
+    [InlineData("./lena16.png", 259, 259, 200, 200, 0, "ef73c81cdb3952a60e29d8fc2b74091fd4efed69251dd046fb04d9a8416a00f7")]
+    [InlineData("./lena16.png", 150, 150, 200, 200, 90, "97426baa1542c4ccaabafffaf2bf9f946042edfcefc8af4a1cbf99216b515816")]
+    [InlineData("./lena16.png", 259, 259, 200, 200, 180, "fd88bb24ac9db3f528be9e376aa9a269fad2144a4250430a2025aea0e0b36be3")]
+    [InlineData("./lena16.png", 150, 150, 200, 200, 270, "ed613b4030459c89d64e6dea7d259c3480eec3330784a6918ded7831d26e2a9a")]
+    [InlineData("./lena16.png", 150, 150, 200, 200, 55, "357bb7e192ff8d5cd8bea7f80aa28bfea280ae61012192942bc4037169be58af")]
+    public void Test_CropMono16(string imagePath, int x, int y, int width, int height, int rotationDegree, string expectedHash)
+    {
+        // Arrange
+        var crop = new Crop();
+        var decoder = new Codecs.Png.PngDecoder();
+        Configuration configuration =  ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
+        using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+        IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
+
+        // Act
+        PixelBuffer<L16> result = (PixelBuffer<L16>)crop.Execute(new CropParameters
+        {
+            Input = pixelBuffer.AsReadOnly(),
+            Rectangle = new(x, y, width, height, rotationDegree)
+        });
+
+        // Assert
+        string hash = TestHelper.CreateHash(MemoryMarshal.Cast<L16, byte>(result!.Pixels));
+        Assert.Equal(expectedHash, hash);
+    }
+
+    [Theory]
+    [InlineData("./lena24.bmp", 300, 300, 200, 200, 0, "203c2cce6c92a97d13ef9ea483846c83c8535f0ae105acfd2be303826d29c3e9")]
+    [InlineData("./lena24.bmp", 150, 150, 200, 200, 90, "d93cef7ac393bba872beb39d58da477d5da4999ea7e2a8aee9edea632550b627")]
+    [InlineData("./lena24.bmp", 300, 300, 200, 200, 180, "b4024749a6c1f50fadbf9cb18dd7b807cc5dce426e94f9502a50d3392759c142")]
+    [InlineData("./lena24.bmp", 150, 150, 200, 200, 270, "2e3aa235a8ac54f96f93efc2fe636ef18c0ff2d0b73c1efdb70fdec2f9d7dda0")]
+    [InlineData("./lena24.bmp", 150, 150, 200, 200, 55, "7e453124b25c674ea608c99ab3d8e167252d205951901ae9a93657d9672dcec9")]
+    public void Test_CropRgb24(string imagePath, int x, int y, int width, int height, int rotationDegree, string expectedHash)
+    {
+        // Arrange
+        var crop = new Crop();
+        var decoder = new BmpDecoder();
+        Configuration configuration =  ConfigurationFactory.Build([new BmpCodec()]);
+        using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+        IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
+
+        // Act
+        PixelBuffer<Rgb24> result = (PixelBuffer<Rgb24>)crop.Execute(new CropParameters
+        {
+            Input = pixelBuffer.AsReadOnly(),
+            Rectangle = new(x, y, width, height, rotationDegree)
+        });
+
+        // Assert
+        string hash = TestHelper.CreateHash(MemoryMarshal.Cast<Rgb24, byte>(result!.Pixels));
+        Assert.Equal(expectedHash, hash);
+    }
+
+    [Theory]
+    [InlineData("./lena48.png", 259, 259, 200, 200, 0, "13b952390db69ec74e7a177a24bc7c5e585dc9a9081de0dc020ee57138f3a731")]
+    [InlineData("./lena48.png", 150, 150, 200, 200, 90, "698cbd438197e320b1812c3644085289b402aa3e90f37043da4160c2e65153c6")]
+    [InlineData("./lena48.png", 259, 259, 200, 200, 180, "1d5d02b01b1cce553d3a32987c60eb4f7cd93e3cd2c58c13c6dcd8e61424db77")]
+    [InlineData("./lena48.png", 150, 150, 200, 200, 270, "ca377751f660cb6ea4c5ee6d99d81faa63d24759b6a46ee449b662772111047e")]
+    [InlineData("./lena48.png", 150, 150, 200, 200, 55, "22c4ef317bf376dbc577b9331a09077a61b5fba3f48a5370bf6be713839b42af")]
+    public void Test_CropRgb48(string imagePath, int x, int y, int width, int height, int rotationDegree, string expectedHash)
+    {
+        // Arrange
+        var crop = new Crop();
+        var decoder = new Codecs.Png.PngDecoder();
+        Configuration configuration =  ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
+        using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+        IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
+
+        // Act
+        PixelBuffer<Rgb48> result = (PixelBuffer<Rgb48>)crop.Execute(new CropParameters
+        {
+            Input = pixelBuffer.AsReadOnly(),
+            Rectangle = new(x, y, width, height, rotationDegree)
+        });
+
+        // Assert
+        string hash = TestHelper.CreateHash(MemoryMarshal.Cast<Rgb48, byte>(result!.Pixels));
+        Assert.Equal(expectedHash, hash);
+    }
+
     [Fact]
     public void Test_Crop_Mono()
     {
@@ -35,70 +163,6 @@ public class CropTests
                       0.43f, 0.44f, 0.45f, 0.46f,
                       0.53f, 0.54f, 0.55f, 0.56f,
                       0.63f, 0.64f, 0.65f, 0.66f], ((PixelBuffer<LS>)result).Pixels.ToArray());
-    }
-
-    [Fact]
-    public void Test_Crop_Mono8()
-    {
-        // Arrange
-        var crop = new Crop();
-        PixelBuffer<L8> pixelBuffer = new(8, 8, [
-                                                    11, 12, 13, 14, 15, 16, 17, 18,
-                                                    21, 22, 23, 24, 25, 26, 27, 28,
-                                                    31, 32, 33, 34, 35, 36, 37, 38,
-                                                    41, 42, 43, 44, 45, 46, 47, 48,
-                                                    51, 52, 53, 54, 55, 56, 57, 58,
-                                                    61, 62, 63, 64, 65, 66, 67, 68,
-                                                    71, 72, 73, 74, 75, 76, 77, 78,
-                                                    81, 82, 83, 84, 85, 86, 87, 88
-                                                ]);
-
-        // Act
-        IPixelBuffer result = crop.Execute(new CropParameters
-        {
-            Input = pixelBuffer.AsReadOnly(),
-            Rectangle = new(4, 4, 4, 4)
-        });
-
-        // Assert
-        Assert.IsType<PixelBuffer<L8>>(result);
-        Assert.InRange(((PixelBuffer<L8>)result).Pixels[0].Value, 0, byte.MaxValue);
-        Assert.Equal([33, 34, 35, 36,
-                      43, 44, 45, 46,
-                      53, 54, 55, 56,
-                      63, 64, 65, 66], ((PixelBuffer<L8>)result).Pixels.ToArray());
-    }
-
-    [Fact]
-    public void Test_Crop_Mono16()
-    {
-        // Arrange
-        var crop = new Crop();
-        PixelBuffer<L16> pixelBuffer = new(8, 8, [
-                                                    1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800,
-                                                    2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800,
-                                                    3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800,
-                                                    4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800,
-                                                    5100, 5200, 5300, 5400, 5500, 5600, 5700, 5800,
-                                                    6100, 6200, 6300, 6400, 6500, 6600, 6700, 6800,
-                                                    7100, 7200, 7300, 7400, 7500, 7600, 7700, 7800,
-                                                    8100, 8200, 8300, 8400, 8500, 8600, 8700, 8800
-                                                ]);
-
-        // Act
-        IPixelBuffer result = crop.Execute(new CropParameters
-        {
-            Input = pixelBuffer.AsReadOnly(),
-            Rectangle = new(4, 4, 4, 4)
-        });
-
-        // Assert
-        Assert.IsType<PixelBuffer<L16>>(result);
-        Assert.InRange(((PixelBuffer<L16>)result).Pixels[0].Value, 0, ushort.MaxValue);
-        Assert.Equal([3300, 3400, 3500, 3600,
-                      4300, 4400, 4500, 4600,
-                      5300, 5400, 5500, 5600,
-                      6300, 6400, 6500, 6600], ((PixelBuffer<L16>)result).Pixels.ToArray());
     }
 
     [Fact]
@@ -133,74 +197,6 @@ public class CropTests
             new Rgb(0.65f, 0.66f, 0.67f), new Rgb(0.68f, 0.69f, 0.70f), new Rgb(0.71f, 0.72f, 0.73f), new Rgb(0.74f, 0.75f, 0.76f),
             new Rgb(0.77f, 0.78f, 0.79f), new Rgb(0.80f, 0.81f, 0.82f), new Rgb(0.83f, 0.84f, 0.85f), new Rgb(0.86f, 0.87f, 0.88f)
         ], ((PixelBuffer<Rgb>)result).Pixels.ToArray());
-    }
-
-    [Fact]
-    public void Test_Crop_Rgb24()
-    {
-        // Arrange
-        var crop = new Crop();
-        PixelBuffer<Rgb24> pixelBuffer = new(8, 8, [
-                                                    new Rgb24(11, 12, 13), new Rgb24(14, 15, 16), new Rgb24(17, 18, 19), new Rgb24(20, 21, 22), new Rgb24(23, 24, 25), new Rgb24(26, 27, 28), new Rgb24(29, 30, 31), new Rgb24(32, 33, 34),
-                                                    new Rgb24(23, 24, 25), new Rgb24(26, 27, 28), new Rgb24(29, 30, 31), new Rgb24(32, 33, 34), new Rgb24(35, 36, 37), new Rgb24(38, 39, 40), new Rgb24(41, 42, 43), new Rgb24(44, 45, 46),
-                                                    new Rgb24(35, 36, 37), new Rgb24(38, 39, 40), new Rgb24(41, 42, 43), new Rgb24(44, 45, 46), new Rgb24(47, 48, 49), new Rgb24(50, 51, 52), new Rgb24(53, 54, 55), new Rgb24(56, 57, 58),
-                                                    new Rgb24(47, 48, 49), new Rgb24(50, 51, 52), new Rgb24(53, 54, 55), new Rgb24(56, 57, 58), new Rgb24(59, 60, 61), new Rgb24(62, 63, 64), new Rgb24(65, 66, 67), new Rgb24(68, 69, 70),
-                                                    new Rgb24(59, 60, 61), new Rgb24(62, 63, 64), new Rgb24(65, 66, 67), new Rgb24(68, 69, 70), new Rgb24(71, 72, 73), new Rgb24(74, 75, 76), new Rgb24(77, 78, 79), new Rgb24(80, 81, 82),
-                                                    new Rgb24(71, 72, 73), new Rgb24(74, 75, 76), new Rgb24(77, 78, 79), new Rgb24(80, 81, 82), new Rgb24(83, 84, 85), new Rgb24(86, 87, 88), new Rgb24(89, 90, 91), new Rgb24(92, 93, 94),
-                                                    new Rgb24(83, 84, 85), new Rgb24(86, 87, 88), new Rgb24(89, 90, 91), new Rgb24(92, 93, 94), new Rgb24(95, 96, 97), new Rgb24(98, 99, 100), new Rgb24(101, 102, 103), new Rgb24(104, 105, 106),
-                                                    new Rgb24(95, 96, 97), new Rgb24(98, 99, 100), new Rgb24(101, 102, 103), new Rgb24(104, 105, 106), new Rgb24(107, 108, 109), new Rgb24(110, 111, 112), new Rgb24(113, 114, 115), new Rgb24(116, 117, 118)
-                                                ]);
-
-        // Act
-        IPixelBuffer result = crop.Execute(new CropParameters
-        {
-            Input = pixelBuffer.AsReadOnly(),
-            Rectangle = new(4, 4, 4, 4)
-        });
-
-        // Assert
-        Assert.IsType<PixelBuffer<Rgb24>>(result);
-        Assert.InRange(((PixelBuffer<Rgb24>)result).Pixels[0].Red, byte.MinValue, byte.MaxValue);
-        Assert.Equal([
-            new Rgb24(41, 42, 43), new Rgb24(44, 45, 46), new Rgb24(47, 48, 49), new Rgb24(50, 51, 52),
-            new Rgb24(53, 54, 55), new Rgb24(56, 57, 58), new Rgb24(59, 60, 61), new Rgb24(62, 63, 64),
-            new Rgb24(65, 66, 67), new Rgb24(68, 69, 70), new Rgb24(71, 72, 73), new Rgb24(74, 75, 76),
-            new Rgb24(77, 78, 79), new Rgb24(80, 81, 82), new Rgb24(83, 84, 85), new Rgb24(86, 87, 88)
-        ], ((PixelBuffer<Rgb24>)result).Pixels.ToArray());
-    }
-
-    [Fact]
-    public void Test_Crop_Rgb48()
-    {
-        // Arrange
-        var crop = new Crop();
-        PixelBuffer<Rgb48> pixelBuffer = new(8, 8, [
-                                                    new Rgb48(1100, 1200, 1300), new Rgb48(1400, 1500, 1600), new Rgb48(1700, 1800, 1900), new Rgb48(2000, 2100, 2200), new Rgb48(2300, 2400, 2500), new Rgb48(2600, 2700, 2800), new Rgb48(2900, 3000, 3100), new Rgb48(3200, 3300, 3400),
-                                                    new Rgb48(2300, 2400, 2500), new Rgb48(2600, 2700, 2800), new Rgb48(2900, 3000, 3100), new Rgb48(3200, 3300, 3400), new Rgb48(3500, 3600, 3700), new Rgb48(3800, 3900, 4000), new Rgb48(4100, 4200, 4300), new Rgb48(4400, 4500, 4600),
-                                                    new Rgb48(3500, 3600, 3700), new Rgb48(3800, 3900, 4000), new Rgb48(4100, 4200, 4300), new Rgb48(4400, 4500, 4600), new Rgb48(4700, 4800, 4900), new Rgb48(5000, 5100, 5200), new Rgb48(5300, 5400, 5500), new Rgb48(5600, 5700, 5800),
-                                                    new Rgb48(4700, 4800, 4900), new Rgb48(5000, 5100, 5200), new Rgb48(5300, 5400, 5500), new Rgb48(5600, 5700, 5800), new Rgb48(5900, 6000, 6100), new Rgb48(6200, 6300, 6400), new Rgb48(6500, 6600, 6700), new Rgb48(6800, 6900, 7000),
-                                                    new Rgb48(5900, 6000, 6100), new Rgb48(6200, 6300, 6400), new Rgb48(6500, 6600, 6700), new Rgb48(6800, 6900, 7000), new Rgb48(7100, 7200, 7300), new Rgb48(7400, 7500, 7600), new Rgb48(7700, 7800, 7900), new Rgb48(8000, 8100, 8200),
-                                                    new Rgb48(7100, 7200, 7300), new Rgb48(7400, 7500, 7600), new Rgb48(7700, 7800, 7900), new Rgb48(8000, 8100, 8200), new Rgb48(8300, 8400, 8500), new Rgb48(8600, 8700, 8800), new Rgb48(8900, 9000, 9100), new Rgb48(9200, 9300, 9400),
-                                                    new Rgb48(8300, 8400, 8500), new Rgb48(8600, 8700, 8800), new Rgb48(8900, 9000, 9100), new Rgb48(9200, 9300, 9400), new Rgb48(9500, 9600, 9700), new Rgb48(9800, 9900, 10000), new Rgb48(10100, 10200, 10300), new Rgb48(10400, 10500, 10600),
-                                                    new Rgb48(9500, 9600, 9700), new Rgb48(9800, 9900, 10000), new Rgb48(10100, 10200, 10300), new Rgb48(10400, 10500, 10600), new Rgb48(10700, 10800, 10900), new Rgb48(11000, 11100, 11200), new Rgb48(11300, 11400, 11500), new Rgb48(11600, 11700, 11800)
-                                                ]);
-
-        // Act
-        IPixelBuffer result = crop.Execute(new CropParameters
-        {
-            Input = pixelBuffer.AsReadOnly(),
-            Rectangle = new(4, 4, 4, 4)
-        });
-
-        // Assert
-        Assert.IsType<PixelBuffer<Rgb48>>(result);
-        Assert.InRange(((PixelBuffer<Rgb48>)result).Pixels[0].Red, ushort.MinValue, ushort.MaxValue);
-        Assert.Equal([
-            new Rgb48(4100, 4200, 4300), new Rgb48(4400, 4500, 4600), new Rgb48(4700, 4800, 4900), new Rgb48(5000, 5100, 5200),
-            new Rgb48(5300, 5400, 5500), new Rgb48(5600, 5700, 5800), new Rgb48(5900, 6000, 6100), new Rgb48(6200, 6300, 6400),
-            new Rgb48(6500, 6600, 6700), new Rgb48(6800, 6900, 7000), new Rgb48(7100, 7200, 7300), new Rgb48(7400, 7500, 7600),
-            new Rgb48(7700, 7800, 7900), new Rgb48(8000, 8100, 8200), new Rgb48(8300, 8400, 8500), new Rgb48(8600, 8700, 8800)
-        ], ((PixelBuffer<Rgb48>)result).Pixels.ToArray());
     }
 
     [Fact]

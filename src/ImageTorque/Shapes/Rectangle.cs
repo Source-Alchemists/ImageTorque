@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Source Alchemists
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 using System.Runtime.CompilerServices;
 
 namespace ImageTorque;
@@ -7,6 +23,9 @@ namespace ImageTorque;
 /// </summary>
 public readonly record struct Rectangle
 {
+    private readonly float _degree = 0f;
+    private readonly float _radian = 0f;
+
     /// <summary>
     /// Gets the empty rectangle.
     /// </summary>
@@ -20,8 +39,8 @@ public readonly record struct Rectangle
     /// <summary>
     /// Initializes a new instance of the <see cref="Rectangle"/> struct.
     /// </summary>
-    /// <param name="x">The x.</param>
-    /// <param name="y">The y.</param>
+    /// <param name="x">The x offset.</param>
+    /// <param name="y">The y offset.</param>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
     public Rectangle(int x, int y, int width, int height)
@@ -35,8 +54,21 @@ public readonly record struct Rectangle
     /// <summary>
     /// Initializes a new instance of the <see cref="Rectangle"/> struct.
     /// </summary>
-    /// <param name="x">The x.</param>
-    /// <param name="y">The y.</param>
+    /// <param name="x">The x offset.</param>
+    /// <param name="y">The y offset.</param>
+    /// <param name="width">The width.</param>
+    /// <param name="height">The height.</param>
+    /// <param name="degree">The rotation degree.</param>
+    public Rectangle(int x, int y, int width, int height, float degree) : this(x, y, width, height)
+    {
+        Degree = degree;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Rectangle"/> struct.
+    /// </summary>
+    /// <param name="x">The x offset.</param>
+    /// <param name="y">The y offset.</param>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
     public Rectangle(float x, float y, float width, float height)
@@ -50,6 +82,19 @@ public readonly record struct Rectangle
     /// <summary>
     /// Initializes a new instance of the <see cref="Rectangle"/> struct.
     /// </summary>
+    /// <param name="x">The x offset.</param>
+    /// <param name="y">The y offset.</param>
+    /// <param name="width">The width.</param>
+    /// <param name="height">The height.</param>
+    /// <param name="degree">The rotation degree.</param>
+    public Rectangle(float x, float y, float width, float height, float degree) : this(x, y, width, height)
+    {
+        Degree = degree;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Rectangle"/> struct.
+    /// </summary>
     /// <param name="rectangle">The rectangle to copy.</param>
     public Rectangle(Rectangle rectangle)
     {
@@ -57,6 +102,7 @@ public readonly record struct Rectangle
         Y = rectangle.Y;
         Width = rectangle.Width;
         Height = rectangle.Height;
+        Degree = rectangle.Degree;
     }
 
     /// <summary>
@@ -78,6 +124,23 @@ public readonly record struct Rectangle
     /// Gets the height.
     /// </summary>
     public int Height { get; init; } = 0;
+
+    /// <summary>
+    /// Gets the rotation degree.
+    /// </summary>
+    public float Degree {
+        get => _degree;
+        init
+        {
+            _degree = value;
+            _radian = value * MathF.PI / 180f;
+        }
+    }
+
+    /// <summary>
+    /// Gets the rotation radian.
+    /// </summary>
+    public float Radian => _radian;
 
     /// <summary>
     /// Gets the left position.

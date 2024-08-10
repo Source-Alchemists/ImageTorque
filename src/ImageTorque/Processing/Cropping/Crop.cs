@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Source Alchemists
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 using System.Runtime.CompilerServices;
 
 using ImageTorque.Buffers;
@@ -83,15 +99,15 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static PixelBuffer<L8> CropMono8(CropParameters parameters)
     {
-        var sourceBuffer = (ReadOnlyPackedPixelBuffer<L8>)parameters.Input!;
-        var targetBuffer = new PixelBuffer<L8>(parameters.Rectangle.Width, parameters.Rectangle.Height);
         var rectangle = new CropRectangle(parameters.Rectangle);
+        var sourceBuffer = (ReadOnlyPackedPixelBuffer<L8>)parameters.Input!;
+        var targetBuffer = new PixelBuffer<L8>(rectangle.Width, rectangle.Height);
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
         {
-            Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
+            Parallel.For(0, targetBuffer.Height, parameters.ParallelOptions, rowIndex =>
             {
-                CropByte(sourceBuffer.Pixels.AsByte(), targetBuffer.Pixels.AsByte(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
+                CropByte(sourceBuffer.Pixels.AsByte(), targetBuffer.Pixels.AsByte(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
             });
         }
 
@@ -107,9 +123,9 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
         {
-            Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
+            Parallel.For(0, targetBuffer.Height, parameters.ParallelOptions, rowIndex =>
             {
-                CropUInt16(sourceBuffer.Pixels.AsUInt16(), targetBuffer.Pixels.AsUInt16(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
+                CropUInt16(sourceBuffer.Pixels.AsUInt16(), targetBuffer.Pixels.AsUInt16(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
             });
         }
 
@@ -125,13 +141,95 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
         {
-            Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
+            Parallel.For(0, targetBuffer.Height, parameters.ParallelOptions, rowIndex =>
             {
-                CropRgb(sourceBuffer.Pixels, targetBuffer.Pixels, sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
+                CropRgb(sourceBuffer.Pixels, targetBuffer.Pixels, sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
             });
         }
 
         return targetBuffer;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    private static void CropRgb(ReadOnlySpan<Rgb> src, Span<Rgb> dest, int imageWidth, int imageHeight, int yDest, CropRectangle rectangle)
+    {
+        float yc = yDest - rectangle.HalfHeight;
+        for (int xDest = 0; xDest < rectangle.Width; xDest++)
+        {
+            float xc = xDest - rectangle.HalfWidth;
+            float xr = xc * rectangle.Cos - yc * rectangle.Sin;
+            float yr = xc * rectangle.Sin + yc * rectangle.Cos;
+            float x = xr + rectangle.Top;
+            float y = yr + rectangle.Left;
+
+            int x1 = (int)x;
+            int y1 = (int)y;
+
+            int indexDest = (yDest * rectangle.Width) + xDest;
+            if (x1 >= 0 && y1 >= 0)
+            {
+                int x2 = x1 + 1;
+                int y2 = y1 + 1;
+
+                int y1ImageWidth = y1 * imageWidth;
+                int y2ImageWidth = y1ImageWidth + imageWidth;
+
+                // See https://en.wikipedia.org/wiki/Bilinear_interpolation
+                if (x2 < imageWidth && y2 < imageHeight)
+                {
+                    Rgb q11 = src[y1ImageWidth + x1];
+                    Rgb q21 = src[y1ImageWidth + x2];
+                    Rgb q12 = src[y2ImageWidth + x1];
+                    Rgb q22 = src[y2ImageWidth + x2];
+
+                    float fx1R = Interpolate(x, x1, x2, q11.Red, q21.Red);
+                    float fx1G = Interpolate(x, x1, x2, q11.Green, q21.Green);
+                    float fx1B = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
+                    float fx2R = Interpolate(x, x1, x2, q12.Red, q22.Red);
+                    float fx2G = Interpolate(x, x1, x2, q12.Green, q22.Green);
+                    float fx2B = Interpolate(x, x1, x2, q12.Blue, q22.Blue);
+                    float fxyR = Interpolate(y, y1, y2, fx1R, fx2R);
+                    float fxyG = Interpolate(y, y1, y2, fx1G, fx2G);
+                    float fxyB = Interpolate(y, y1, y2, fx1B, fx2B);
+
+                    dest[indexDest] = new Rgb(fxyR, fxyG, fxyB);
+                }
+                else if (x2 < imageWidth && y1 < imageHeight)
+                {
+                    Rgb q11 = src[y1ImageWidth + x1];
+                    Rgb q21 = src[y1ImageWidth + x2];
+
+                    float fxR = Interpolate(x, x1, x2, q11.Red, q21.Red);
+                    float fxG = Interpolate(x, x1, x2, q11.Green, q21.Green);
+                    float fxB = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
+
+                    dest[indexDest] = new Rgb(fxR, fxG, fxB);
+                }
+                else if (x1 < imageWidth && y2 < imageHeight)
+                {
+                    Rgb q11 = src[y1ImageWidth + x1];
+                    Rgb q12 = src[y2ImageWidth + x1];
+
+                    float fyR = Interpolate(y, y1, y2, q11.Red, q12.Red);
+                    float fyG = Interpolate(y, y1, y2, q11.Green, q12.Green);
+                    float fyB = Interpolate(y, y1, y2, q11.Blue, q12.Blue);
+
+                    dest[indexDest] = new Rgb(fyR, fyG, fyB);
+                }
+                else if (x1 < imageWidth && y1 < imageHeight)
+                {
+                    dest[indexDest] = src[y1ImageWidth + x1];
+                }
+                else
+                {
+                    dest[indexDest] = default;
+                }
+            }
+            else
+            {
+                dest[indexDest] = default;
+            }
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -143,13 +241,95 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
         {
-            Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
+            Parallel.For(0, targetBuffer.Height, parameters.ParallelOptions, rowIndex =>
             {
-                CropRgb24(sourceBuffer.Pixels, targetBuffer.Pixels, sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
+                CropRgb24(sourceBuffer.Pixels, targetBuffer.Pixels, sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
             });
         }
 
         return targetBuffer;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    private static void CropRgb24(ReadOnlySpan<Rgb24> src, Span<Rgb24> dest, int imageWidth, int imageHeight, int yDest, CropRectangle rectangle)
+    {
+        float yc = yDest - rectangle.HalfHeight;
+        for (int xDest = 0; xDest < rectangle.Width; xDest++)
+        {
+            float xc = xDest - rectangle.HalfWidth;
+            float xr = xc * rectangle.Cos - yc * rectangle.Sin;
+            float yr = xc * rectangle.Sin + yc * rectangle.Cos;
+            float x = xr + rectangle.Left;
+            float y = yr + rectangle.Top;
+
+            int x1 = (int)x;
+            int y1 = (int)y;
+
+            int indexDest = (yDest * rectangle.Width) + xDest;
+            if (x1 >= 0 && y1 >= 0)
+            {
+                int x2 = x1 + 1;
+                int y2 = y1 + 1;
+
+                int y1ImageWidth = y1 * imageWidth;
+                int y2ImageWidth = y1ImageWidth + imageWidth;
+
+                // See https://en.wikipedia.org/wiki/Bilinear_interpolation
+                if (x2 < imageWidth && y2 < imageHeight)
+                {
+                    Rgb24 q11 = src[y1ImageWidth + x1];
+                    Rgb24 q21 = src[y1ImageWidth + x2];
+                    Rgb24 q12 = src[y2ImageWidth + x1];
+                    Rgb24 q22 = src[y2ImageWidth + x2];
+
+                    float fx1R = Interpolate(x, x1, x2, q11.Red, q21.Red);
+                    float fx1G = Interpolate(x, x1, x2, q11.Green, q21.Green);
+                    float fx1B = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
+                    float fx2R = Interpolate(x, x1, x2, q12.Red, q22.Red);
+                    float fx2G = Interpolate(x, x1, x2, q12.Green, q22.Green);
+                    float fx2B = Interpolate(x, x1, x2, q12.Blue, q22.Blue);
+                    float fxyR = Interpolate(y, y1, y2, fx1R, fx2R);
+                    float fxyG = Interpolate(y, y1, y2, fx1G, fx2G);
+                    float fxyB = Interpolate(y, y1, y2, fx1B, fx2B);
+
+                    dest[indexDest] = new Rgb24((byte)Math.Round(fxyR), (byte)Math.Round(fxyG), (byte)Math.Round(fxyB));
+                }
+                else if (x2 < imageWidth && y1 < imageHeight)
+                {
+                    Rgb24 q11 = src[y1ImageWidth + x1];
+                    Rgb24 q21 = src[y1ImageWidth + x2];
+
+                    float fxR = Interpolate(x, x1, x2, q11.Red, q21.Red);
+                    float fxG = Interpolate(x, x1, x2, q11.Green, q21.Green);
+                    float fxB = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
+
+                    dest[indexDest] = new Rgb24((byte)Math.Round(fxR), (byte)Math.Round(fxG), (byte)Math.Round(fxB));
+                }
+                else if (x1 < imageWidth && y2 < imageHeight)
+                {
+                    Rgb24 q11 = src[y1ImageWidth + x1];
+                    Rgb24 q12 = src[y2ImageWidth + x1];
+
+                    float fyR = Interpolate(y, y1, y2, q11.Red, q12.Red);
+                    float fyG = Interpolate(y, y1, y2, q11.Green, q12.Green);
+                    float fyB = Interpolate(y, y1, y2, q11.Blue, q12.Blue);
+
+                    dest[indexDest] = new Rgb24((byte)Math.Round(fyR), (byte)Math.Round(fyG), (byte)Math.Round(fyB));
+                }
+                else if (x1 < imageWidth && y1 < imageHeight)
+                {
+                    dest[indexDest] = src[y1ImageWidth + x1];
+                }
+                else
+                {
+                    dest[indexDest] = default;
+                }
+            }
+            else
+            {
+                dest[indexDest] = default;
+            }
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -161,13 +341,95 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
         {
-            Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
+            Parallel.For(0, targetBuffer.Height, parameters.ParallelOptions, rowIndex =>
             {
-                CropRgb48(sourceBuffer.Pixels, targetBuffer.Pixels, sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
+                CropRgb48(sourceBuffer.Pixels, targetBuffer.Pixels, sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
             });
         }
 
         return targetBuffer;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+    private static void CropRgb48(ReadOnlySpan<Rgb48> src, Span<Rgb48> dest, int imageWidth, int imageHeight, int yDest, CropRectangle rectangle)
+    {
+        float yc = yDest - rectangle.HalfHeight;
+        for (int xDest = 0; xDest < rectangle.Width; xDest++)
+        {
+            float xc = xDest - rectangle.HalfWidth;
+            float xr = xc * rectangle.Cos - yc * rectangle.Sin;
+            float yr = xc * rectangle.Sin + yc * rectangle.Cos;
+            float x = xr + rectangle.Left;
+            float y = yr + rectangle.Top;
+
+            int x1 = (int)x;
+            int y1 = (int)y;
+
+            int indexDest = (yDest * rectangle.Width) + xDest;
+            if (x1 >= 0 && y1 >= 0)
+            {
+                int x2 = x1 + 1;
+                int y2 = y1 + 1;
+
+                int y1ImageWidth = y1 * imageWidth;
+                int y2ImageWidth = y1ImageWidth + imageWidth;
+
+                // See https://en.wikipedia.org/wiki/Bilinear_interpolation
+                if (x2 < imageWidth && y2 < imageHeight)
+                {
+                    Rgb48 q11 = src[y1ImageWidth + x1];
+                    Rgb48 q21 = src[y1ImageWidth + x2];
+                    Rgb48 q12 = src[y2ImageWidth + x1];
+                    Rgb48 q22 = src[y2ImageWidth + x2];
+
+                    float fx1R = Interpolate(x, x1, x2, q11.Red, q21.Red);
+                    float fx1G = Interpolate(x, x1, x2, q11.Green, q21.Green);
+                    float fx1B = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
+                    float fx2R = Interpolate(x, x1, x2, q12.Red, q22.Red);
+                    float fx2G = Interpolate(x, x1, x2, q12.Green, q22.Green);
+                    float fx2B = Interpolate(x, x1, x2, q12.Blue, q22.Blue);
+                    float fxyR = Interpolate(y, y1, y2, fx1R, fx2R);
+                    float fxyG = Interpolate(y, y1, y2, fx1G, fx2G);
+                    float fxyB = Interpolate(y, y1, y2, fx1B, fx2B);
+
+                    dest[indexDest] = new Rgb48((ushort)Math.Round(fxyR), (ushort)Math.Round(fxyG), (ushort)Math.Round(fxyB));
+                }
+                else if (x2 < imageWidth && y1 < imageHeight)
+                {
+                    Rgb48 q11 = src[y1ImageWidth + x1];
+                    Rgb48 q21 = src[y1ImageWidth + x2];
+
+                    float fxR = Interpolate(x, x1, x2, q11.Red, q21.Red);
+                    float fxG = Interpolate(x, x1, x2, q11.Green, q21.Green);
+                    float fxB = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
+
+                    dest[indexDest] = new Rgb48((ushort)Math.Round(fxR), (ushort)Math.Round(fxG), (ushort)Math.Round(fxB));
+                }
+                else if (x1 < imageWidth && y2 < imageHeight)
+                {
+                    Rgb48 q11 = src[y1ImageWidth + x1];
+                    Rgb48 q12 = src[y2ImageWidth + x1];
+
+                    float fyR = Interpolate(y, y1, y2, q11.Red, q12.Red);
+                    float fyG = Interpolate(y, y1, y2, q11.Green, q12.Green);
+                    float fyB = Interpolate(y, y1, y2, q11.Blue, q12.Blue);
+
+                    dest[indexDest] = new Rgb48((ushort)Math.Round(fyR), (ushort)Math.Round(fyG), (ushort)Math.Round(fyB));
+                }
+                else if (x1 < imageWidth && y1 < imageHeight)
+                {
+                    dest[indexDest] = src[y1ImageWidth + x1];
+                }
+                else
+                {
+                    dest[indexDest] = default;
+                }
+            }
+            else
+            {
+                dest[indexDest] = default;
+            }
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -445,20 +707,19 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void CropByte(ReadOnlySpan<byte> byteSrc, Span<byte> byteDest, int imageWidth, int imageHeight, int yDest, CropRectangle rectangle)
     {
-        int yDestWidth = yDest * rectangle.Width;
-        double yc = yDest - rectangle.HalfHeight;
+        float yc = yDest - rectangle.HalfHeight;
         for (int xDest = 0; xDest < rectangle.Width; xDest++)
         {
-            double xc = xDest - rectangle.HalfWidth;
-            double xr = xc * rectangle.Cos - yc * rectangle.Sin;
-            double yr = xc * rectangle.Sin + yc * rectangle.Cos;
-            double x = xr + rectangle.X;
-            double y = yr + rectangle.Y;
+            float xc = xDest - rectangle.HalfWidth;
+            float xr = xc * rectangle.Cos - yc * rectangle.Sin;
+            float yr = xc * rectangle.Sin + yc * rectangle.Cos;
+            float x = xr + rectangle.Left;
+            float y = yr + rectangle.Top;
 
             int x1 = (int)x;
             int y1 = (int)y;
 
-            int indexDest = yDestWidth + xDest;
+            int indexDest = (yDest * rectangle.Width) + xDest;
             if (x1 >= 0 && y1 >= 0)
             {
                 int x2 = x1 + 1;
@@ -475,9 +736,9 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
                     byte q12 = byteSrc[y2ImageWidth + x1];
                     byte q22 = byteSrc[y2ImageWidth + x2];
 
-                    double fx1 = Interpolate(x, x1, x2, q11, q21);
-                    double fx2 = Interpolate(x, x1, x2, q12, q22);
-                    double fxy = Interpolate(y, y1, y2, fx1, fx2);
+                    float fx1 = Interpolate(x, x1, x2, q11, q21);
+                    float fx2 = Interpolate(x, x1, x2, q12, q22);
+                    float fxy = Interpolate(y, y1, y2, fx1, fx2);
 
                     byteDest[indexDest] = (byte)Math.Round(fxy);
                 }
@@ -486,7 +747,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
                     byte q11 = byteSrc[y1ImageWidth + x1];
                     byte q21 = byteSrc[y1ImageWidth + x2];
 
-                    double fx = Interpolate(x, x1, x2, q11, q21);
+                    float fx = Interpolate(x, x1, x2, q11, q21);
 
                     byteDest[indexDest] = (byte)Math.Round(fx);
                 }
@@ -495,7 +756,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
                     byte q11 = byteSrc[y1ImageWidth + x1];
                     byte q12 = byteSrc[y2ImageWidth + x1];
 
-                    double fy = Interpolate(y, y1, y2, q11, q12);
+                    float fy = Interpolate(y, y1, y2, q11, q12);
 
                     byteDest[indexDest] = (byte)Math.Round(fy);
                 }
@@ -518,20 +779,19 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void CropSingle(ReadOnlySpan<float> floatSrc, Span<float> floatDest, int imageWidth, int imageHeight, int yDest, CropRectangle rectangle)
     {
-        int yDestWidth = yDest * rectangle.Width;
-        double yc = yDest - rectangle.HalfHeight;
+        float yc = yDest - rectangle.HalfHeight;
         for (int xDest = 0; xDest < rectangle.Width; xDest++)
         {
-            double xc = xDest - rectangle.HalfWidth;
-            double xr = xc * rectangle.Cos - yc * rectangle.Sin;
-            double yr = xc * rectangle.Sin + yc * rectangle.Cos;
-            double x = xr + rectangle.X;
-            double y = yr + rectangle.Y;
+            float xc = xDest - rectangle.HalfWidth;
+            float xr = xc * rectangle.Cos - yc * rectangle.Sin;
+            float yr = xc * rectangle.Sin + yc * rectangle.Cos;
+            float x = xr + rectangle.Left;
+            float y = yr + rectangle.Top;
 
             int x1 = (int)x;
             int y1 = (int)y;
 
-            int indexDest = yDestWidth + xDest;
+            int indexDest = (yDest * rectangle.Width) + xDest;
             if (x1 >= 0 && y1 >= 0)
             {
                 int x2 = x1 + 1;
@@ -548,9 +808,9 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
                     float q12 = floatSrc[y2ImageWidth + x1];
                     float q22 = floatSrc[y2ImageWidth + x2];
 
-                    double fx1 = Interpolate(x, x1, x2, q11, q21);
-                    double fx2 = Interpolate(x, x1, x2, q12, q22);
-                    double fxy = Interpolate(y, y1, y2, fx1, fx2);
+                    float fx1 = Interpolate(x, x1, x2, q11, q21);
+                    float fx2 = Interpolate(x, x1, x2, q12, q22);
+                    float fxy = Interpolate(y, y1, y2, fx1, fx2);
 
                     floatDest[indexDest] = (float)fxy;
                 }
@@ -559,7 +819,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
                     float q11 = floatSrc[y1ImageWidth + x1];
                     float q21 = floatSrc[y1ImageWidth + x2];
 
-                    double fx = Interpolate(x, x1, x2, q11, q21);
+                    float fx = Interpolate(x, x1, x2, q11, q21);
 
                     floatDest[indexDest] = (float)fx;
                 }
@@ -568,7 +828,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
                     float q11 = floatSrc[y1ImageWidth + x1];
                     float q12 = floatSrc[y2ImageWidth + x1];
 
-                    double fy = Interpolate(y, y1, y2, q11, q12);
+                    float fy = Interpolate(y, y1, y2, q11, q12);
 
                     floatDest[indexDest] = (float)fy;
                 }
@@ -591,20 +851,19 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private static void CropUInt16(ReadOnlySpan<ushort> byteSrc, Span<ushort> byteDest, int imageWidth, int imageHeight, int yDest, CropRectangle rectangle)
     {
-        int yDestWidth = yDest * rectangle.Width;
-        double yc = yDest - rectangle.HalfHeight;
+        float yc = yDest - rectangle.HalfHeight;
         for (int xDest = 0; xDest < rectangle.Width; xDest++)
         {
-            double xc = xDest - rectangle.HalfWidth;
-            double xr = xc * rectangle.Cos - yc * rectangle.Sin;
-            double yr = xc * rectangle.Sin + yc * rectangle.Cos;
-            double x = xr + rectangle.X;
-            double y = yr + rectangle.Y;
+            float xc = xDest - rectangle.HalfWidth;
+            float xr = xc * rectangle.Cos - yc * rectangle.Sin;
+            float yr = xc * rectangle.Sin + yc * rectangle.Cos;
+            float x = xr + rectangle.Left;
+            float y = yr + rectangle.Top;
 
             int x1 = (int)x;
             int y1 = (int)y;
 
-            int indexDest = yDestWidth + xDest;
+            int indexDest = (yDest * rectangle.Width) + xDest;
             if (x1 >= 0 && y1 >= 0)
             {
                 int x2 = x1 + 1;
@@ -621,9 +880,9 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
                     ushort q12 = byteSrc[y2ImageWidth + x1];
                     ushort q22 = byteSrc[y2ImageWidth + x2];
 
-                    double fx1 = Interpolate(x, x1, x2, q11, q21);
-                    double fx2 = Interpolate(x, x1, x2, q12, q22);
-                    double fxy = Interpolate(y, y1, y2, fx1, fx2);
+                    float fx1 = Interpolate(x, x1, x2, q11, q21);
+                    float fx2 = Interpolate(x, x1, x2, q12, q22);
+                    float fxy = Interpolate(y, y1, y2, fx1, fx2);
 
                     byteDest[indexDest] = (ushort)Math.Round(fxy);
                 }
@@ -632,7 +891,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
                     ushort q11 = byteSrc[y1ImageWidth + x1];
                     ushort q21 = byteSrc[y1ImageWidth + x2];
 
-                    double fx = Interpolate(x, x1, x2, q11, q21);
+                    float fx = Interpolate(x, x1, x2, q11, q21);
 
                     byteDest[indexDest] = (ushort)Math.Round(fx);
                 }
@@ -641,7 +900,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
                     ushort q11 = byteSrc[y1ImageWidth + x1];
                     ushort q12 = byteSrc[y2ImageWidth + x1];
 
-                    double fy = Interpolate(y, y1, y2, q11, q12);
+                    float fy = Interpolate(y, y1, y2, q11, q12);
 
                     byteDest[indexDest] = (ushort)Math.Round(fy);
                 }
@@ -661,260 +920,11 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void CropRgb(ReadOnlySpan<Rgb> src, Span<Rgb> dest, int imageWidth, int imageHeight, int yDest, CropRectangle rectangle)
-    {
-        int yDestWidth = yDest * rectangle.Width;
-        double yc = yDest - rectangle.HalfHeight;
-        for (int xDest = 0; xDest < rectangle.Width; xDest++)
-        {
-            double xc = xDest - rectangle.HalfWidth;
-            double xr = xc * rectangle.Cos - yc * rectangle.Sin;
-            double yr = xc * rectangle.Sin + yc * rectangle.Cos;
-            double x = xr + rectangle.X;
-            double y = yr + rectangle.Y;
-
-            int x1 = (int)x;
-            int y1 = (int)y;
-
-            int indexDest = yDestWidth + xDest;
-            if (x1 >= 0 && y1 >= 0)
-            {
-                int x2 = x1 + 1;
-                int y2 = y1 + 1;
-
-                int y1ImageWidth = y1 * imageWidth;
-                int y2ImageWidth = y1ImageWidth + imageWidth;
-
-                // See https://en.wikipedia.org/wiki/Bilinear_interpolation
-                if (x2 < imageWidth && y2 < imageHeight)
-                {
-                    Rgb q11 = src[y1ImageWidth + x1];
-                    Rgb q21 = src[y1ImageWidth + x2];
-                    Rgb q12 = src[y2ImageWidth + x1];
-                    Rgb q22 = src[y2ImageWidth + x2];
-
-                    double fx1R = Interpolate(x, x1, x2, q11.Red, q21.Red);
-                    double fx1G = Interpolate(x, x1, x2, q11.Green, q21.Green);
-                    double fx1B = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
-                    double fx2R = Interpolate(x, x1, x2, q12.Red, q22.Red);
-                    double fx2G = Interpolate(x, x1, x2, q12.Green, q22.Green);
-                    double fx2B = Interpolate(x, x1, x2, q12.Blue, q22.Blue);
-                    double fxyR = Interpolate(y, y1, y2, fx1R, fx2R);
-                    double fxyG = Interpolate(y, y1, y2, fx1G, fx2G);
-                    double fxyB = Interpolate(y, y1, y2, fx1B, fx2B);
-
-                    dest[indexDest] = new Rgb((float)fxyR, (float)fxyG, (float)fxyB);
-                }
-                else if (x2 < imageWidth && y1 < imageHeight)
-                {
-                    Rgb q11 = src[y1ImageWidth + x1];
-                    Rgb q21 = src[y1ImageWidth + x2];
-
-                    double fxR = Interpolate(x, x1, x2, q11.Red, q21.Red);
-                    double fxG = Interpolate(x, x1, x2, q11.Green, q21.Green);
-                    double fxB = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
-
-                    dest[indexDest] = new Rgb((float)fxR, (float)fxG, (float)fxB);
-                }
-                else if (x1 < imageWidth && y2 < imageHeight)
-                {
-                    Rgb q11 = src[y1ImageWidth + x1];
-                    Rgb q12 = src[y2ImageWidth + x1];
-
-                    double fyR = Interpolate(y, y1, y2, q11.Red, q12.Red);
-                    double fyG = Interpolate(y, y1, y2, q11.Green, q12.Green);
-                    double fyB = Interpolate(y, y1, y2, q11.Blue, q12.Blue);
-
-                    dest[indexDest] = new Rgb((float)fyR, (float)fyG, (float)fyB);
-                }
-                else if (x1 < imageWidth && y1 < imageHeight)
-                {
-                    dest[indexDest] = src[y1ImageWidth + x1];
-                }
-                else
-                {
-                    dest[indexDest] = default;
-                }
-            }
-            else
-            {
-                dest[indexDest] = default;
-            }
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void CropRgb24(ReadOnlySpan<Rgb24> src, Span<Rgb24> dest, int imageWidth, int imageHeight, int yDest, CropRectangle rectangle)
-    {
-        int yDestWidth = yDest * rectangle.Width;
-        double yc = yDest - rectangle.HalfHeight;
-        for (int xDest = 0; xDest < rectangle.Width; xDest++)
-        {
-            double xc = xDest - rectangle.HalfWidth;
-            double xr = xc * rectangle.Cos - yc * rectangle.Sin;
-            double yr = xc * rectangle.Sin + yc * rectangle.Cos;
-            double x = xr + rectangle.X;
-            double y = yr + rectangle.Y;
-
-            int x1 = (int)x;
-            int y1 = (int)y;
-
-            int indexDest = yDestWidth + xDest;
-            if (x1 >= 0 && y1 >= 0)
-            {
-                int x2 = x1 + 1;
-                int y2 = y1 + 1;
-
-                int y1ImageWidth = y1 * imageWidth;
-                int y2ImageWidth = y1ImageWidth + imageWidth;
-
-                // See https://en.wikipedia.org/wiki/Bilinear_interpolation
-                if (x2 < imageWidth && y2 < imageHeight)
-                {
-                    Rgb24 q11 = src[y1ImageWidth + x1];
-                    Rgb24 q21 = src[y1ImageWidth + x2];
-                    Rgb24 q12 = src[y2ImageWidth + x1];
-                    Rgb24 q22 = src[y2ImageWidth + x2];
-
-                    double fx1R = Interpolate(x, x1, x2, q11.Red, q21.Red);
-                    double fx1G = Interpolate(x, x1, x2, q11.Green, q21.Green);
-                    double fx1B = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
-                    double fx2R = Interpolate(x, x1, x2, q12.Red, q22.Red);
-                    double fx2G = Interpolate(x, x1, x2, q12.Green, q22.Green);
-                    double fx2B = Interpolate(x, x1, x2, q12.Blue, q22.Blue);
-                    double fxyR = Interpolate(y, y1, y2, fx1R, fx2R);
-                    double fxyG = Interpolate(y, y1, y2, fx1G, fx2G);
-                    double fxyB = Interpolate(y, y1, y2, fx1B, fx2B);
-
-                    dest[indexDest] = new Rgb24((byte)Math.Round(fxyR), (byte)Math.Round(fxyG), (byte)Math.Round(fxyB));
-                }
-                else if (x2 < imageWidth && y1 < imageHeight)
-                {
-                    Rgb24 q11 = src[y1ImageWidth + x1];
-                    Rgb24 q21 = src[y1ImageWidth + x2];
-
-                    double fxR = Interpolate(x, x1, x2, q11.Red, q21.Red);
-                    double fxG = Interpolate(x, x1, x2, q11.Green, q21.Green);
-                    double fxB = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
-
-                    dest[indexDest] = new Rgb24((byte)Math.Round(fxR), (byte)Math.Round(fxG), (byte)Math.Round(fxB));
-                }
-                else if (x1 < imageWidth && y2 < imageHeight)
-                {
-                    Rgb24 q11 = src[y1ImageWidth + x1];
-                    Rgb24 q12 = src[y2ImageWidth + x1];
-
-                    double fyR = Interpolate(y, y1, y2, q11.Red, q12.Red);
-                    double fyG = Interpolate(y, y1, y2, q11.Green, q12.Green);
-                    double fyB = Interpolate(y, y1, y2, q11.Blue, q12.Blue);
-
-                    dest[indexDest] = new Rgb24((byte)Math.Round(fyR), (byte)Math.Round(fyG), (byte)Math.Round(fyB));
-                }
-                else if (x1 < imageWidth && y1 < imageHeight)
-                {
-                    dest[indexDest] = src[y1ImageWidth + x1];
-                }
-                else
-                {
-                    dest[indexDest] = default;
-                }
-            }
-            else
-            {
-                dest[indexDest] = default;
-            }
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static void CropRgb48(ReadOnlySpan<Rgb48> src, Span<Rgb48> dest, int imageWidth, int imageHeight, int yDest, CropRectangle rectangle)
-    {
-        int yDestWidth = yDest * rectangle.Width;
-        double yc = yDest - rectangle.HalfHeight;
-        for (int xDest = 0; xDest < rectangle.Width; xDest++)
-        {
-            double xc = xDest - rectangle.HalfWidth;
-            double xr = xc * rectangle.Cos - yc * rectangle.Sin;
-            double yr = xc * rectangle.Sin + yc * rectangle.Cos;
-            double x = xr + rectangle.X;
-            double y = yr + rectangle.Y;
-
-            int x1 = (int)x;
-            int y1 = (int)y;
-
-            int indexDest = yDestWidth + xDest;
-            if (x1 >= 0 && y1 >= 0)
-            {
-                int x2 = x1 + 1;
-                int y2 = y1 + 1;
-
-                int y1ImageWidth = y1 * imageWidth;
-                int y2ImageWidth = y1ImageWidth + imageWidth;
-
-                // See https://en.wikipedia.org/wiki/Bilinear_interpolation
-                if (x2 < imageWidth && y2 < imageHeight)
-                {
-                    Rgb48 q11 = src[y1ImageWidth + x1];
-                    Rgb48 q21 = src[y1ImageWidth + x2];
-                    Rgb48 q12 = src[y2ImageWidth + x1];
-                    Rgb48 q22 = src[y2ImageWidth + x2];
-
-                    double fx1R = Interpolate(x, x1, x2, q11.Red, q21.Red);
-                    double fx1G = Interpolate(x, x1, x2, q11.Green, q21.Green);
-                    double fx1B = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
-                    double fx2R = Interpolate(x, x1, x2, q12.Red, q22.Red);
-                    double fx2G = Interpolate(x, x1, x2, q12.Green, q22.Green);
-                    double fx2B = Interpolate(x, x1, x2, q12.Blue, q22.Blue);
-                    double fxyR = Interpolate(y, y1, y2, fx1R, fx2R);
-                    double fxyG = Interpolate(y, y1, y2, fx1G, fx2G);
-                    double fxyB = Interpolate(y, y1, y2, fx1B, fx2B);
-
-                    dest[indexDest] = new Rgb48((ushort)Math.Round(fxyR), (ushort)Math.Round(fxyG), (ushort)Math.Round(fxyB));
-                }
-                else if (x2 < imageWidth && y1 < imageHeight)
-                {
-                    Rgb48 q11 = src[y1ImageWidth + x1];
-                    Rgb48 q21 = src[y1ImageWidth + x2];
-
-                    double fxR = Interpolate(x, x1, x2, q11.Red, q21.Red);
-                    double fxG = Interpolate(x, x1, x2, q11.Green, q21.Green);
-                    double fxB = Interpolate(x, x1, x2, q11.Blue, q21.Blue);
-
-                    dest[indexDest] = new Rgb48((ushort)Math.Round(fxR), (ushort)Math.Round(fxG), (ushort)Math.Round(fxB));
-                }
-                else if (x1 < imageWidth && y2 < imageHeight)
-                {
-                    Rgb48 q11 = src[y1ImageWidth + x1];
-                    Rgb48 q12 = src[y2ImageWidth + x1];
-
-                    double fyR = Interpolate(y, y1, y2, q11.Red, q12.Red);
-                    double fyG = Interpolate(y, y1, y2, q11.Green, q12.Green);
-                    double fyB = Interpolate(y, y1, y2, q11.Blue, q12.Blue);
-
-                    dest[indexDest] = new Rgb48((ushort)Math.Round(fyR), (ushort)Math.Round(fyG), (ushort)Math.Round(fyB));
-                }
-                else if (x1 < imageWidth && y1 < imageHeight)
-                {
-                    dest[indexDest] = src[y1ImageWidth + x1];
-                }
-                else
-                {
-                    dest[indexDest] = default;
-                }
-            }
-            else
-            {
-                dest[indexDest] = default;
-            }
-        }
-    }
-
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static double Interpolate(double v, double v1, double v2, double t1, double t2)
+    private static float Interpolate(float v, float v1, float v2, float t1, float t2)
     {
-        double p1 = (v2 - v) * t1;
-        double p2 = (v - v1) * t2;
+        float p1 = (v2 - v) * t1;
+        float p2 = (v - v1) * t2;
         return p1 + p2;
     }
 }
