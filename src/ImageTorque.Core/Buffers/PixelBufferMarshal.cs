@@ -36,7 +36,7 @@ public static class PixelBufferMarshal
         {
             PixelBufferType.Packed => pixelType switch
             {
-                PixelType.LF => PixelFormat.Mono,
+                PixelType.LS => PixelFormat.Mono,
                 PixelType.L8 => PixelFormat.Mono8,
                 PixelType.L16 => PixelFormat.Mono16,
                 PixelType.Rgb => PixelFormat.RgbPacked,
@@ -46,9 +46,9 @@ public static class PixelBufferMarshal
             },
             PixelBufferType.Planar => pixelType switch
             {
-                PixelType.Rgb => PixelFormat.RgbPlanar,
-                PixelType.Rgb24 => PixelFormat.Rgb888Planar,
-                PixelType.Rgb48 => PixelFormat.Rgb161616Planar,
+                PixelType.LS => PixelFormat.RgbPlanar,
+                PixelType.L8 => PixelFormat.Rgb888Planar,
+                PixelType.L16 => PixelFormat.Rgb161616Planar,
                 _ => PixelFormat.Unknown
             },
             _ => PixelFormat.Unknown

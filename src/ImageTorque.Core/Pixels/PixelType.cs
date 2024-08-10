@@ -8,7 +8,7 @@ public enum PixelType
     /// <summary>
     /// Single-precision floating point lumincance pixel.
     /// </summary>
-    LF,
+    LS,
     /// <summary>
     /// 8-bit luminance pixel.
     /// </summary>

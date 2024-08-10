@@ -35,7 +35,7 @@ public record struct LS : IL1Pixel<float>
     /// <summary>
     /// Gets the pixel type.
     /// </summary>
-    public PixelType PixelType => PixelType.LF;
+    public PixelType PixelType => PixelType.LS;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LS"/> struct.

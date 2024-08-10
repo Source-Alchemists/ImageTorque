@@ -99,7 +99,7 @@ public record PixelBuffer<T> : IPixelBuffer<T>
         T pixel = Activator.CreateInstance<T>();
         PixelType = pixel.PixelType;
         PixelFormat = PixelBufferMarshal.GetPixelFormat(PixelBufferType, PixelType);
-        if (PixelBufferType == PixelBufferType.Planar && (PixelType == PixelType.LF || PixelType == PixelType.L8 || PixelType == PixelType.L16))
+        if (PixelBufferType == PixelBufferType.Planar && (PixelType == PixelType.LS || PixelType == PixelType.L8 || PixelType == PixelType.L16))
         {
             NumberOfFrames *= 3;
         }
