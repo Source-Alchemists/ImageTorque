@@ -269,27 +269,9 @@ internal partial class Resizer
             Rgb p32 = GetPixelClamped_Rgb(rgbSrc, originalWidth, originalHeight, xint + 1, yint + 2);
             Rgb p33 = GetPixelClamped_Rgb(rgbSrc, originalWidth, originalHeight, xint + 2, yint + 2);
 
-            // Red channel
-            float col0R = CubicHermite(p00.Red, p10.Red, p20.Red, p30.Red, yfract);
-            float col1R = CubicHermite(p01.Red, p11.Red, p21.Red, p31.Red, yfract);
-            float col2R = CubicHermite(p02.Red, p12.Red, p22.Red, p32.Red, yfract);
-            float col3R = CubicHermite(p03.Red, p13.Red, p23.Red, p33.Red, yfract);
-            float valueR = CubicHermite(col0R, col1R, col2R, col3R, xfract);
-            valueR = Math.Clamp(valueR, 0.0f, 1.0f);
-            // Green channel
-            float col0G = CubicHermite(p00.Green, p10.Green, p20.Green, p30.Green, yfract);
-            float col1G = CubicHermite(p01.Green, p11.Green, p21.Green, p31.Green, yfract);
-            float col2G = CubicHermite(p02.Green, p12.Green, p22.Green, p32.Green, yfract);
-            float col3G = CubicHermite(p03.Green, p13.Green, p23.Green, p33.Green, yfract);
-            float valueG = CubicHermite(col0G, col1G, col2G, col3G, xfract);
-            valueG = Math.Clamp(valueG, 0.0f, 1.0f);
-            // Blue channel
-            float col0B = CubicHermite(p00.Blue, p10.Blue, p20.Blue, p30.Blue, yfract);
-            float col1B = CubicHermite(p01.Blue, p11.Blue, p21.Blue, p31.Blue, yfract);
-            float col2B = CubicHermite(p02.Blue, p12.Blue, p22.Blue, p32.Blue, yfract);
-            float col3B = CubicHermite(p03.Blue, p13.Blue, p23.Blue, p33.Blue, yfract);
-            float valueB = CubicHermite(col0B, col1B, col2B, col3B, xfract);
-            valueB = Math.Clamp(valueB, 0.0f, 1.0f);
+
+            const float maxValue = 1f;
+            ClampChannels(xfract, yfract, p00, p01, p02, p03, p10, p11, p12, p13, p20, p21, p22, p23, p30, p31, p32, p33, maxValue, out float valueR, out float valueG, out float valueB);
             // combine
             rgbDest[(destY * destinationWidth) + destX] = new Rgb(valueR, valueG, valueB);
         }
@@ -333,27 +315,8 @@ internal partial class Resizer
             Rgb p32 = GetPixelClamped_Rgb24(rgb24Src, originalWidth, originalHeight, xint + 1, yint + 2);
             Rgb p33 = GetPixelClamped_Rgb24(rgb24Src, originalWidth, originalHeight, xint + 2, yint + 2);
 
-            // Red channel
-            float col0R = CubicHermite(p00.Red, p10.Red, p20.Red, p30.Red, yfract);
-            float col1R = CubicHermite(p01.Red, p11.Red, p21.Red, p31.Red, yfract);
-            float col2R = CubicHermite(p02.Red, p12.Red, p22.Red, p32.Red, yfract);
-            float col3R = CubicHermite(p03.Red, p13.Red, p23.Red, p33.Red, yfract);
-            float valueR = CubicHermite(col0R, col1R, col2R, col3R, xfract);
-            valueR = Math.Clamp(valueR, 0.0f, 255.0f);
-            // Green channel
-            float col0G = CubicHermite(p00.Green, p10.Green, p20.Green, p30.Green, yfract);
-            float col1G = CubicHermite(p01.Green, p11.Green, p21.Green, p31.Green, yfract);
-            float col2G = CubicHermite(p02.Green, p12.Green, p22.Green, p32.Green, yfract);
-            float col3G = CubicHermite(p03.Green, p13.Green, p23.Green, p33.Green, yfract);
-            float valueG = CubicHermite(col0G, col1G, col2G, col3G, xfract);
-            valueG = Math.Clamp(valueG, 0.0f, 255.0f);
-            // Blue channel
-            float col0B = CubicHermite(p00.Blue, p10.Blue, p20.Blue, p30.Blue, yfract);
-            float col1B = CubicHermite(p01.Blue, p11.Blue, p21.Blue, p31.Blue, yfract);
-            float col2B = CubicHermite(p02.Blue, p12.Blue, p22.Blue, p32.Blue, yfract);
-            float col3B = CubicHermite(p03.Blue, p13.Blue, p23.Blue, p33.Blue, yfract);
-            float valueB = CubicHermite(col0B, col1B, col2B, col3B, xfract);
-            valueB = Math.Clamp(valueB, 0.0f, 255.0f);
+            const float maxValue = 255f;
+            ClampChannels(xfract, yfract, p00, p01, p02, p03, p10, p11, p12, p13, p20, p21, p22, p23, p30, p31, p32, p33, maxValue, out float valueR, out float valueG, out float valueB);
             // combine
             rgb24Dest[(destY * destinationWidth) + destX] = new Rgb24((byte)valueR, (byte)valueG, (byte)valueB);
         }
@@ -397,27 +360,8 @@ internal partial class Resizer
             Rgb p32 = GetPixelClamped_Rgb48(rgb48Src, originalWidth, originalHeight, xint + 1, yint + 2);
             Rgb p33 = GetPixelClamped_Rgb48(rgb48Src, originalWidth, originalHeight, xint + 2, yint + 2);
 
-            // Red channel
-            float col0R = CubicHermite(p00.Red, p10.Red, p20.Red, p30.Red, yfract);
-            float col1R = CubicHermite(p01.Red, p11.Red, p21.Red, p31.Red, yfract);
-            float col2R = CubicHermite(p02.Red, p12.Red, p22.Red, p32.Red, yfract);
-            float col3R = CubicHermite(p03.Red, p13.Red, p23.Red, p33.Red, yfract);
-            float valueR = CubicHermite(col0R, col1R, col2R, col3R, xfract);
-            valueR = Math.Clamp(valueR, 0.0f, 65535.0f);
-            // Green channel
-            float col0G = CubicHermite(p00.Green, p10.Green, p20.Green, p30.Green, yfract);
-            float col1G = CubicHermite(p01.Green, p11.Green, p21.Green, p31.Green, yfract);
-            float col2G = CubicHermite(p02.Green, p12.Green, p22.Green, p32.Green, yfract);
-            float col3G = CubicHermite(p03.Green, p13.Green, p23.Green, p33.Green, yfract);
-            float valueG = CubicHermite(col0G, col1G, col2G, col3G, xfract);
-            valueG = Math.Clamp(valueG, 0.0f, 65535.0f);
-            // Blue channel
-            float col0B = CubicHermite(p00.Blue, p10.Blue, p20.Blue, p30.Blue, yfract);
-            float col1B = CubicHermite(p01.Blue, p11.Blue, p21.Blue, p31.Blue, yfract);
-            float col2B = CubicHermite(p02.Blue, p12.Blue, p22.Blue, p32.Blue, yfract);
-            float col3B = CubicHermite(p03.Blue, p13.Blue, p23.Blue, p33.Blue, yfract);
-            float valueB = CubicHermite(col0B, col1B, col2B, col3B, xfract);
-            valueB = Math.Clamp(valueB, 0.0f, 65535.0f);
+            const float maxValue = 65535f;
+            ClampChannels(xfract, yfract, p00, p01, p02, p03, p10, p11, p12, p13, p20, p21, p22, p23, p30, p31, p32, p33, maxValue, out float valueR, out float valueG, out float valueB);
             // combine
             rgb48Dest[(destY * destinationWidth) + destX] = new Rgb48((ushort)valueR, (ushort)valueG, (ushort)valueB);
         }
@@ -807,5 +751,33 @@ internal partial class Resizer
         srcIndexX1 = (gyi0 * originalWidth) + gxi1;
         srcIndexY1 = (gyi1 * originalWidth) + gxi0;
         srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    #pragma warning disable S107 // Method have by design more parameters
+    private static void ClampChannels(float xfract, float yfract, Rgb p00, Rgb p01, Rgb p02, Rgb p03, Rgb p10, Rgb p11, Rgb p12, Rgb p13, Rgb p20, Rgb p21, Rgb p22, Rgb p23, Rgb p30, Rgb p31, Rgb p32, Rgb p33, float maxValue, out float valueR, out float valueG, out float valueB)
+    #pragma warning restore S107 // Method have by design more parameters
+    {
+        // Red channel
+        float col0R = CubicHermite(p00.Red, p10.Red, p20.Red, p30.Red, yfract);
+        float col1R = CubicHermite(p01.Red, p11.Red, p21.Red, p31.Red, yfract);
+        float col2R = CubicHermite(p02.Red, p12.Red, p22.Red, p32.Red, yfract);
+        float col3R = CubicHermite(p03.Red, p13.Red, p23.Red, p33.Red, yfract);
+        valueR = CubicHermite(col0R, col1R, col2R, col3R, xfract);
+        valueR = Math.Clamp(valueR, 0.0f, maxValue);
+        // Green channel
+        float col0G = CubicHermite(p00.Green, p10.Green, p20.Green, p30.Green, yfract);
+        float col1G = CubicHermite(p01.Green, p11.Green, p21.Green, p31.Green, yfract);
+        float col2G = CubicHermite(p02.Green, p12.Green, p22.Green, p32.Green, yfract);
+        float col3G = CubicHermite(p03.Green, p13.Green, p23.Green, p33.Green, yfract);
+        valueG = CubicHermite(col0G, col1G, col2G, col3G, xfract);
+        valueG = Math.Clamp(valueG, 0.0f, maxValue);
+        // Blue channel
+        float col0B = CubicHermite(p00.Blue, p10.Blue, p20.Blue, p30.Blue, yfract);
+        float col1B = CubicHermite(p01.Blue, p11.Blue, p21.Blue, p31.Blue, yfract);
+        float col2B = CubicHermite(p02.Blue, p12.Blue, p22.Blue, p32.Blue, yfract);
+        float col3B = CubicHermite(p03.Blue, p13.Blue, p23.Blue, p33.Blue, yfract);
+        valueB = CubicHermite(col0B, col1B, col2B, col3B, xfract);
+        valueB = Math.Clamp(valueB, 0.0f, maxValue);
     }
 }
