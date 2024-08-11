@@ -90,6 +90,38 @@ public class CropTests
     }
 
     [Theory]
+    [InlineData("./lena24.bmp", 300, 300, 200, 200, 0, "a264845b6349bbd5ca666974333d37e74b2ab73a2d12c0d7f653d21f94d35778")]
+    [InlineData("./lena24.bmp", 150, 150, 200, 200, 90, "176005e40d7117c9bc4fa308a0a213bd3b48f903135861671de165c322baaee2")]
+    [InlineData("./lena24.bmp", 300, 300, 200, 200, 180, "277746a11628cb96d479a79675815df1b7029da459256b76dd327a1d314946be")]
+    [InlineData("./lena24.bmp", 150, 150, 200, 200, 270, "8fefa6ccc8d3214678ac9bd611377e655b636aec94dbfe3c55d332281b5a7734")]
+    [InlineData("./lena24.bmp", 150, 150, 200, 200, 55, "b9df888fe12245b0ea96290f7e21ee74e9bd29fed20fc050790d110bb74d9252")]
+    public void Test_Crop_Rgb_Planar(string imagePath, int x, int y, int width, int height, int rotationDegree, string expectedHash)
+    {
+        // Arrange
+        var crop = new Crop();
+        var decoder = new BmpDecoder();
+        var converter = new PixelBufferConverter();
+        Configuration configuration =  ConfigurationFactory.Build([new BmpCodec()]);
+        using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+        IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
+        IPixelBuffer convertedPixelBuffer = converter.Execute(new PixelBufferConvertParameters {
+            Input = pixelBuffer.AsReadOnly(),
+            OutputType = typeof(PlanarPixelBuffer<LS>)
+        });
+
+        // Act
+        PixelBuffer<LS> result = (PlanarPixelBuffer<LS>)crop.Execute(new CropParameters
+        {
+            Input = convertedPixelBuffer.AsReadOnly(),
+            Rectangle = new(x, y, width, height, rotationDegree)
+        });
+
+        // Assert
+        string hash = TestHelper.CreateHash(MemoryMarshal.Cast<LS, byte>(result!.Pixels));
+        Assert.Equal(expectedHash, hash);
+    }
+
+    [Theory]
     [InlineData("./lena8.bmp", 300, 300, 200, 200, 0, "c573ee9d07310077be44e9d9bc2993123715e70e57d33bd29b2a32a30bc51ce6")]
     [InlineData("./lena8.bmp", 150, 150, 200, 200, 90, "61f886368b8bf5890fec6d1455e428fdde78ffc44384683de763c3a079a53387")]
     [InlineData("./lena8.bmp", 300, 300, 200, 200, 180, "b106f9d499ebef8162cc461156427b7a4441ff2a410e26922016ebb53d764381")]

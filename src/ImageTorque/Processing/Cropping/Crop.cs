@@ -441,11 +441,11 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
         {
-            Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
+            Parallel.For(0, targetBuffer.Height, parameters.ParallelOptions, rowIndex =>
             {
-                CropSingle(sourceBuffer.GetChannel(0).AsSingle(), targetBuffer.GetChannel(0).AsSingle(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
-                CropSingle(sourceBuffer.GetChannel(1).AsSingle(), targetBuffer.GetChannel(1).AsSingle(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
-                CropSingle(sourceBuffer.GetChannel(2).AsSingle(), targetBuffer.GetChannel(2).AsSingle(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
+                CropSingle(sourceBuffer.GetChannel(0).AsSingle(), targetBuffer.GetChannel(0).AsSingle(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
+                CropSingle(sourceBuffer.GetChannel(1).AsSingle(), targetBuffer.GetChannel(1).AsSingle(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
+                CropSingle(sourceBuffer.GetChannel(2).AsSingle(), targetBuffer.GetChannel(2).AsSingle(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
             });
         }
 
