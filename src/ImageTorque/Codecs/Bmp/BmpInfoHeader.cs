@@ -158,68 +158,26 @@ internal record struct BmpInfoHeader
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static BmpInfoHeader ParseAsBITMAPV2INFOHEADER(ReadOnlySpan<byte> data) => new(
-            version: HeaderVersionType.BITMAPV2INFOHEADER,
-            size: BinaryPrimitives.ReadInt32LittleEndian(data[..4]),
-            width: BinaryPrimitives.ReadInt32LittleEndian(data.Slice(4, 4)),
-            height: BinaryPrimitives.ReadInt32LittleEndian(data.Slice(8, 4)),
-            planes: BinaryPrimitives.ReadInt16LittleEndian(data.Slice(12, 2)),
-            bitsPerPixel: BinaryPrimitives.ReadUInt16LittleEndian(data.Slice(14, 2)))
-    {
-        Compression = (CompressionType)BinaryPrimitives.ReadInt32LittleEndian(data.Slice(16, 4)),
-        ImageSize = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(20, 4)),
-        ClrUsed = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(32, 4)),
-        ClrImportant = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(36, 4)),
-        RedMask = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(40, 4)),
-        GreenMask = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(44, 4)),
-        BlueMask = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(48, 4)),
-    };
+    public static BmpInfoHeader ParseAsBITMAPV2INFOHEADER(ReadOnlySpan<byte> data) => Create(data, HeaderVersionType.BITMAPV2INFOHEADER);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static BmpInfoHeader ParseAsBITMAPV3INFOHEADER(ReadOnlySpan<byte> data) => new(
-            version: HeaderVersionType.BITMAPV3INFOHEADER,
-            size: BinaryPrimitives.ReadInt32LittleEndian(data[..4]),
-            width: BinaryPrimitives.ReadInt32LittleEndian(data.Slice(4, 4)),
-            height: BinaryPrimitives.ReadInt32LittleEndian(data.Slice(8, 4)),
-            planes: BinaryPrimitives.ReadInt16LittleEndian(data.Slice(12, 2)),
-            bitsPerPixel: BinaryPrimitives.ReadUInt16LittleEndian(data.Slice(14, 2)))
-    {
-        Compression = (CompressionType)BinaryPrimitives.ReadInt32LittleEndian(data.Slice(16, 4)),
-        ImageSize = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(20, 4)),
-        ClrUsed = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(32, 4)),
-        ClrImportant = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(36, 4)),
-        RedMask = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(40, 4)),
-        GreenMask = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(44, 4)),
-        BlueMask = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(48, 4)),
-    };
+    public static BmpInfoHeader ParseAsBITMAPV3INFOHEADER(ReadOnlySpan<byte> data) => Create(data, HeaderVersionType.BITMAPV3INFOHEADER);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static BmpInfoHeader ParseAsBITMAPV4HEADER(ReadOnlySpan<byte> data) => new(
-        version: HeaderVersionType.BITMAPV4HEADER,
+    public static BmpInfoHeader ParseAsBITMAPV4HEADER(ReadOnlySpan<byte> data) => Create(data, HeaderVersionType.BITMAPV4HEADER);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static BmpInfoHeader ParseAsBITMAPV5HEADER(ReadOnlySpan<byte> data) => Create(data, HeaderVersionType.BITMAPV5HEADER);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static BmpInfoHeader Create(ReadOnlySpan<byte> data, HeaderVersionType version) => new(
+        version: version,
         size: BinaryPrimitives.ReadInt32LittleEndian(data[..4]),
         width: BinaryPrimitives.ReadInt32LittleEndian(data.Slice(4, 4)),
         height: BinaryPrimitives.ReadInt32LittleEndian(data.Slice(8, 4)),
         planes: BinaryPrimitives.ReadInt16LittleEndian(data.Slice(12, 2)),
         bitsPerPixel: BinaryPrimitives.ReadUInt16LittleEndian(data.Slice(14, 2)))
-        {
-        Compression = (CompressionType)BinaryPrimitives.ReadInt32LittleEndian(data.Slice(16, 4)),
-        ImageSize = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(20, 4)),
-        ClrUsed = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(32, 4)),
-        ClrImportant = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(36, 4)),
-        RedMask = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(40, 4)),
-        GreenMask = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(44, 4)),
-        BlueMask = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(48, 4))
-    };
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static BmpInfoHeader ParseAsBITMAPV5HEADER(ReadOnlySpan<byte> data) => new(
-        version: HeaderVersionType.BITMAPV5HEADER,
-        size: BinaryPrimitives.ReadInt32LittleEndian(data[..4]),
-        width: BinaryPrimitives.ReadInt32LittleEndian(data.Slice(4, 4)),
-        height: BinaryPrimitives.ReadInt32LittleEndian(data.Slice(8, 4)),
-        planes: BinaryPrimitives.ReadInt16LittleEndian(data.Slice(12, 2)),
-        bitsPerPixel: BinaryPrimitives.ReadUInt16LittleEndian(data.Slice(14, 2)))
-        {
+    {
         Compression = (CompressionType)BinaryPrimitives.ReadInt32LittleEndian(data.Slice(16, 4)),
         ImageSize = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(20, 4)),
         ClrUsed = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(32, 4)),
