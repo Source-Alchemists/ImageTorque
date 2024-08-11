@@ -23,8 +23,8 @@ namespace ImageTorque.Processing;
 
 internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 {
-    private const double D270 = 3d * Math.PI / 2d;
-    private const double D90 = Math.PI / 2d;
+    private const float D270 = 3f * MathF.PI / 2f;
+    private const float D90 = MathF.PI / 2f;
 
     public IPixelBuffer Execute(CropParameters parameters)
     {
@@ -87,9 +87,9 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
         {
-            Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
+            Parallel.For(0, targetBuffer.Height, parameters.ParallelOptions, rowIndex =>
             {
-                CropSingle(sourceBuffer.Pixels.AsSingle(), targetBuffer.Pixels.AsSingle(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
+                CropSingle(sourceBuffer.Pixels.AsSingle(), targetBuffer.Pixels.AsSingle(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
             });
         }
 
@@ -461,11 +461,11 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
         {
-            Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
+            Parallel.For(0, targetBuffer.Height, parameters.ParallelOptions, rowIndex =>
             {
-                CropByte(sourceBuffer.GetChannel(0).AsByte(), targetBuffer.GetChannel(0).AsByte(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
-                CropByte(sourceBuffer.GetChannel(1).AsByte(), targetBuffer.GetChannel(1).AsByte(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
-                CropByte(sourceBuffer.GetChannel(2).AsByte(), targetBuffer.GetChannel(2).AsByte(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
+                CropByte(sourceBuffer.GetChannel(0).AsByte(), targetBuffer.GetChannel(0).AsByte(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
+                CropByte(sourceBuffer.GetChannel(1).AsByte(), targetBuffer.GetChannel(1).AsByte(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
+                CropByte(sourceBuffer.GetChannel(2).AsByte(), targetBuffer.GetChannel(2).AsByte(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
             });
         }
 
@@ -481,11 +481,11 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
         if (!TryCrop(sourceBuffer, targetBuffer, parameters.ParallelOptions, rectangle))
         {
-            Parallel.For(0, sourceBuffer.Height, parameters.ParallelOptions, rowIndex =>
+            Parallel.For(0, targetBuffer.Height, parameters.ParallelOptions, rowIndex =>
             {
-                CropUInt16(sourceBuffer.GetChannel(0).AsUInt16(), targetBuffer.GetChannel(0).AsUInt16(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
-                CropUInt16(sourceBuffer.GetChannel(1).AsUInt16(), targetBuffer.GetChannel(1).AsUInt16(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
-                CropUInt16(sourceBuffer.GetChannel(2).AsUInt16(), targetBuffer.GetChannel(2).AsUInt16(), sourceBuffer.Width, targetBuffer.Width, rowIndex, rectangle);
+                CropUInt16(sourceBuffer.GetChannel(0).AsUInt16(), targetBuffer.GetChannel(0).AsUInt16(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
+                CropUInt16(sourceBuffer.GetChannel(1).AsUInt16(), targetBuffer.GetChannel(1).AsUInt16(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
+                CropUInt16(sourceBuffer.GetChannel(2).AsUInt16(), targetBuffer.GetChannel(2).AsUInt16(), sourceBuffer.Width, sourceBuffer.Height, rowIndex, rectangle);
             });
         }
 
@@ -496,22 +496,22 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
     private static bool TryCrop<TPixel>(ReadOnlyPixelBuffer<TPixel> sourcePixelBuffer, IPixelBuffer<TPixel> targetPixelBuffer, ParallelOptions parallelOptions, CropRectangle rectangle)
             where TPixel : unmanaged, IPixel
     {
-        if (Math.Abs(rectangle.Rotation) <= float.Epsilon)
+        if (Math.Abs(rectangle.Radian) <= float.Epsilon)
         {
             Crop0Degree(sourcePixelBuffer, targetPixelBuffer, parallelOptions, rectangle);
             return true;
         }
-        else if (Math.Abs(rectangle.Rotation - D90) <= float.Epsilon)
+        else if (Math.Abs(rectangle.Radian - D90) <= float.Epsilon)
         {
             Crop90Degree(sourcePixelBuffer, targetPixelBuffer, parallelOptions, rectangle);
             return true;
         }
-        else if (Math.Abs(rectangle.Rotation - Math.PI) <= float.Epsilon)
+        else if (Math.Abs(rectangle.Radian - MathF.PI) <= float.Epsilon)
         {
             Crop180Degree(sourcePixelBuffer, targetPixelBuffer, parallelOptions, rectangle);
             return true;
         }
-        else if (Math.Abs(rectangle.Rotation - D270) <= float.Epsilon)
+        else if (Math.Abs(rectangle.Radian - D270) <= float.Epsilon)
         {
             Crop270Degree(sourcePixelBuffer, targetPixelBuffer, parallelOptions, rectangle);
             return true;

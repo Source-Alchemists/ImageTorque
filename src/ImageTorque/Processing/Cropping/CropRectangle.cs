@@ -24,7 +24,7 @@ internal readonly record struct CropRectangle
     public readonly int Y;
     public readonly int Top;
     public readonly int Left;
-    public readonly float Rotation;
+    public readonly float Radian;
     public readonly float HalfHeight;
     public readonly float HalfWidth;
     public readonly float Cos;
@@ -32,7 +32,7 @@ internal readonly record struct CropRectangle
 
     public CropRectangle(Rectangle rectangle)
     {
-        Rotation = rectangle.Radian;
+        Radian = rectangle.Radian;
         Cos = MathF.Cos(rectangle.Radian);
         Sin = MathF.Sin(rectangle.Radian);
         Width = rectangle.Width;
