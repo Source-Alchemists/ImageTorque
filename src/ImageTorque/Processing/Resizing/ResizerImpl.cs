@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Source Alchemists
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 using System.Runtime.CompilerServices;
 using ImageTorque.Pixels;
 
@@ -178,13 +194,7 @@ internal partial class Resizer
 
             float v = destY / (float)(destinationHeight - 1);
             float u = destX / (float)(destinationWidth - 1);
-            float x2 = (u * originalWidth) - 0.5f;
-            int xint = (int)x2;
-            float xfract = x2 - MathF.Floor(x2);
-
-            float y2 = (v * originalHeight) - 0.5f;
-            int yint = (int)y2;
-            float yfract = y2 - MathF.Floor(y2);
+            GetCoordinates(originalWidth, originalHeight, v, u, out int xint, out float xfract, out int yint, out float yfract);
 
             // 1st row
             float p00 = GetPixelClamped_Byte(byteSrc, originalWidth, originalHeight, xint - 1, yint - 1);
@@ -233,13 +243,7 @@ internal partial class Resizer
 
             float v = destY / (float)(destinationHeight - 1);
             float u = destX / (float)(destinationWidth - 1);
-            float x2 = (u * originalWidth) - 0.5f;
-            int xint = (int)x2;
-            float xfract = x2 - MathF.Floor(x2);
-
-            float y2 = (v * originalHeight) - 0.5f;
-            int yint = (int)y2;
-            float yfract = y2 - MathF.Floor(y2);
+            GetCoordinates(originalWidth, originalHeight, v, u, out int xint, out float xfract, out int yint, out float yfract);
 
             // 1st row
             Rgb p00 = GetPixelClamped_Rgb(rgbSrc, originalWidth, originalHeight, xint - 1, yint - 1);
@@ -303,13 +307,7 @@ internal partial class Resizer
 
             float v = destY / (float)destinationHeight;
             float u = destX / (float)destinationWidth;
-            float x2 = (u * originalWidth) - 0.5f;
-            int xint = (int)x2;
-            float xfract = x2 - MathF.Floor(x2);
-
-            float y2 = (v * originalHeight) - 0.5f;
-            int yint = (int)y2;
-            float yfract = y2 - MathF.Floor(y2);
+            GetCoordinates(originalWidth, originalHeight, v, u, out int xint, out float xfract, out int yint, out float yfract);
 
             // 1st row
             Rgb p00 = GetPixelClamped_Rgb24(rgb24Src, originalWidth, originalHeight, xint - 1, yint - 1);
@@ -373,13 +371,7 @@ internal partial class Resizer
 
             float v = destY / (float)(destinationHeight - 1);
             float u = destX / (float)(destinationWidth - 1);
-            float x2 = (u * originalWidth) - 0.5f;
-            int xint = (int)x2;
-            float xfract = x2 - MathF.Floor(x2);
-
-            float y2 = (v * originalHeight) - 0.5f;
-            int yint = (int)y2;
-            float yfract = y2 - MathF.Floor(y2);
+            GetCoordinates(originalWidth, originalHeight, v, u, out int xint, out float xfract, out int yint, out float yfract);
 
             // 1st row
             Rgb p00 = GetPixelClamped_Rgb48(rgb48Src, originalWidth, originalHeight, xint - 1, yint - 1);
@@ -443,13 +435,7 @@ internal partial class Resizer
 
             float v = destY / (float)(destinationHeight - 1);
             float u = destX / (float)(destinationWidth - 1);
-            float x2 = (u * originalWidth) - 0.5f;
-            int xint = (int)x2;
-            float xfract = x2 - MathF.Floor(x2);
-
-            float y2 = (v * originalHeight) - 0.5f;
-            int yint = (int)y2;
-            float yfract = y2 - MathF.Floor(y2);
+            GetCoordinates(originalWidth, originalHeight, v, u, out int xint, out float xfract, out int yint, out float yfract);
 
             // 1st row
             float p00 = GetPixelClamped_Float(byteSrc, originalWidth, originalHeight, xint - 1, yint - 1);
@@ -498,13 +484,7 @@ internal partial class Resizer
 
             float v = destY / (float)(destinationHeight - 1);
             float u = destX / (float)(destinationWidth - 1);
-            float x2 = (u * originalWidth) - 0.5f;
-            int xint = (int)x2;
-            float xfract = x2 - MathF.Floor(x2);
-
-            float y2 = (v * originalHeight) - 0.5f;
-            int yint = (int)y2;
-            float yfract = y2 - MathF.Floor(y2);
+            GetCoordinates(originalWidth, originalHeight, v, u, out int xint, out float xfract, out int yint, out float yfract);
 
             // 1st row
             float p00 = GetPixelClamped_Ushort(byteSrc, originalWidth, originalHeight, xint - 1, yint - 1);
@@ -550,17 +530,7 @@ internal partial class Resizer
 
             int destX = xDest;
             int destY = yDest;
-
-            float gx = ((float)xDest) / destinationWidth * (originalWidth - 1);
-            float gy = ((float)yDest) / destinationHeight * (originalHeight - 1);
-            int gxi0 = (int)Math.Floor(gx);
-            int gyi0 = (int)Math.Floor(gy);
-            int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
-            int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = (gyi0 * originalWidth) + gxi0;
-            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
-            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
-            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
+            GetCoordinates(originalWidth, originalHeight, destinationWidth, destinationHeight, yDest, xDest, out float gx, out float gy, out int gxi0, out int gyi0, out int srcIndex, out int srcIndexX1, out int srcIndexY1, out int srcIndexXY1);
             float c00 = byteSrc[srcIndex];
             float c10 = byteSrc[srcIndexX1];
             float c01 = byteSrc[srcIndexY1];
@@ -581,17 +551,7 @@ internal partial class Resizer
 
             int destX = xDest;
             int destY = yDest;
-
-            float gx = ((float)destX) / destinationWidth * (originalWidth - 1);
-            float gy = ((float)destY) / destinationHeight * (originalHeight - 1);
-            int gxi0 = (int)Math.Floor(gx);
-            int gyi0 = (int)Math.Floor(gy);
-            int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
-            int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = (gyi0 * originalWidth) + gxi0;
-            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
-            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
-            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
+            GetCoordinates(originalWidth, originalHeight, destinationWidth, destinationHeight, yDest, xDest, out float gx, out float gy, out int gxi0, out int gyi0, out int srcIndex, out int srcIndexX1, out int srcIndexY1, out int srcIndexXY1);
             float c00R = byteSrc[srcIndex].Red;
             float c00G = byteSrc[srcIndex].Green;
             float c00B = byteSrc[srcIndex].Blue;
@@ -622,17 +582,7 @@ internal partial class Resizer
 
             int destX = xDest;
             int destY = yDest;
-
-            float gx = ((float)destX) / destinationWidth * (originalWidth - 1);
-            float gy = ((float)destY) / destinationHeight * (originalHeight - 1);
-            int gxi0 = (int)Math.Floor(gx);
-            int gyi0 = (int)Math.Floor(gy);
-            int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
-            int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = (gyi0 * originalWidth) + gxi0;
-            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
-            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
-            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
+            GetCoordinates(originalWidth, originalHeight, destinationWidth, destinationHeight, yDest, xDest, out float gx, out float gy, out int gxi0, out int gyi0, out int srcIndex, out int srcIndexX1, out int srcIndexY1, out int srcIndexXY1);
             float c00R = byteSrc[srcIndex].Red;
             float c00G = byteSrc[srcIndex].Green;
             float c00B = byteSrc[srcIndex].Blue;
@@ -663,17 +613,7 @@ internal partial class Resizer
 
             int destX = xDest;
             int destY = yDest;
-
-            float gx = ((float)destX) / destinationWidth * (originalWidth - 1);
-            float gy = ((float)destY) / destinationHeight * (originalHeight - 1);
-            int gxi0 = (int)Math.Floor(gx);
-            int gyi0 = (int)Math.Floor(gy);
-            int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
-            int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = (gyi0 * originalWidth) + gxi0;
-            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
-            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
-            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
+            GetCoordinates(originalWidth, originalHeight, destinationWidth, destinationHeight, yDest, xDest, out float gx, out float gy, out int gxi0, out int gyi0, out int srcIndex, out int srcIndexX1, out int srcIndexY1, out int srcIndexXY1);
             float c00R = byteSrc[srcIndex].Red;
             float c00G = byteSrc[srcIndex].Green;
             float c00B = byteSrc[srcIndex].Blue;
@@ -704,17 +644,7 @@ internal partial class Resizer
 
             int destX = xDest;
             int destY = yDest;
-
-            float gx = ((float)xDest) / destinationWidth * (originalWidth - 1);
-            float gy = ((float)yDest) / destinationHeight * (originalHeight - 1);
-            int gxi0 = (int)Math.Floor(gx);
-            int gyi0 = (int)Math.Floor(gy);
-            int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
-            int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = (gyi0 * originalWidth) + gxi0;
-            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
-            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
-            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
+            GetCoordinates(originalWidth, originalHeight, destinationWidth, destinationHeight, yDest, xDest, out float gx, out float gy, out int gxi0, out int gyi0, out int srcIndex, out int srcIndexX1, out int srcIndexY1, out int srcIndexXY1);
             float c00 = byteSrc[srcIndex];
             float c10 = byteSrc[srcIndexX1];
             float c01 = byteSrc[srcIndexY1];
@@ -735,17 +665,7 @@ internal partial class Resizer
 
             int destX = xDest;
             int destY = yDest;
-
-            float gx = ((float)xDest) / destinationWidth * (originalWidth - 1);
-            float gy = ((float)yDest) / destinationHeight * (originalHeight - 1);
-            int gxi0 = (int)Math.Floor(gx);
-            int gyi0 = (int)Math.Floor(gy);
-            int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
-            int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
-            int srcIndex = (gyi0 * originalWidth) + gxi0;
-            int srcIndexX1 = (gyi0 * originalWidth) + gxi1;
-            int srcIndexY1 = (gyi1 * originalWidth) + gxi0;
-            int srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
+            GetCoordinates(originalWidth, originalHeight, destinationWidth, destinationHeight, yDest, xDest, out float gx, out float gy, out int gxi0, out int gyi0, out int srcIndex, out int srcIndexX1, out int srcIndexY1, out int srcIndexXY1);
             float c00 = byteSrc[srcIndex];
             float c10 = byteSrc[srcIndexX1];
             float c01 = byteSrc[srcIndexY1];
@@ -857,5 +777,35 @@ internal partial class Resizer
             int dstIndex = (destY * destinationWidth) + destX;
             destination[dstIndex] = source[srcIndex];
         }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    #pragma warning disable S107 // Method have by design more parameters
+    private static void GetCoordinates(int originalWidth, int originalHeight, float v, float u, out int xint, out float xfract, out int yint, out float yfract)
+    #pragma warning restore S107 // Method have by design more parameters
+    {
+        float x2 = (u * originalWidth) - 0.5f;
+        xint = (int)x2;
+        xfract = x2 - MathF.Floor(x2);
+        float y2 = (v * originalHeight) - 0.5f;
+        yint = (int)y2;
+        yfract = y2 - MathF.Floor(y2);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    #pragma warning disable S107 // Method have by design more parameters
+    private static void GetCoordinates(int originalWidth, int originalHeight, int destinationWidth, int destinationHeight, int yDest, int xDest, out float gx, out float gy, out int gxi0, out int gyi0, out int srcIndex, out int srcIndexX1, out int srcIndexY1, out int srcIndexXY1)
+    #pragma warning restore S107 // Method have by design more parameters
+    {
+        gx = ((float)xDest) / destinationWidth * (originalWidth - 1);
+        gy = ((float)yDest) / destinationHeight * (originalHeight - 1);
+        gxi0 = (int)Math.Floor(gx);
+        gyi0 = (int)Math.Floor(gy);
+        int gxi1 = Math.Clamp(gxi0 + 1, 0, originalWidth - 1);
+        int gyi1 = Math.Clamp(gyi0 + 1, 0, originalHeight - 1);
+        srcIndex = (gyi0 * originalWidth) + gxi0;
+        srcIndexX1 = (gyi0 * originalWidth) + gxi1;
+        srcIndexY1 = (gyi1 * originalWidth) + gxi0;
+        srcIndexXY1 = (gyi1 * originalWidth) + gxi1;
     }
 }
