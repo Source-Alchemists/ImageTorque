@@ -110,7 +110,9 @@ internal static class FilterPaeth
             Vector256<byte> zero = Vector256<byte>.Zero;
             Vector256<int> sumAccumulator = Vector256<int>.Zero;
 
+            #pragma warning disable S1994 // This loop's stop condition tests 'scanline' and 'x' but the incrementer updates 'xLeft'.
             for (nuint xLeft = x - (uint)bytesPerPixel; (int)x <= scanline.Length - Vector256<byte>.Count; xLeft += (uint)Vector256<byte>.Count)
+            #pragma warning restore S1994 // This loop's stop condition tests 'scanline' and 'x' but the incrementer updates 'xLeft'.
             {
                 Vector256<byte> scan = Unsafe.As<byte, Vector256<byte>>(ref Unsafe.Add(ref scanBaseRef, x));
                 Vector256<byte> left = Unsafe.As<byte, Vector256<byte>>(ref Unsafe.Add(ref scanBaseRef, xLeft));
@@ -130,7 +132,9 @@ internal static class FilterPaeth
         {
             Vector<uint> sumAccumulator = Vector<uint>.Zero;
 
+            #pragma warning disable S1994 // This loop's stop condition tests 'scanline' and 'x' but the incrementer updates 'xLeft'.
             for (nuint xLeft = x - (uint)bytesPerPixel; (int)x <= scanline.Length - Vector<byte>.Count; xLeft += (uint)Vector<byte>.Count)
+            #pragma warning restore S1994 // This loop's stop condition tests 'scanline' and 'x' but the incrementer updates 'xLeft'.
             {
                 Vector<byte> scan = Unsafe.As<byte, Vector<byte>>(ref Unsafe.Add(ref scanBaseRef, x));
                 Vector<byte> left = Unsafe.As<byte, Vector<byte>>(ref Unsafe.Add(ref scanBaseRef, xLeft));
@@ -150,7 +154,9 @@ internal static class FilterPaeth
             }
         }
 
+        #pragma warning disable S1994 // This loop's stop condition tests 'scanline' and 'x' but the incrementer updates 'xLeft'.
         for (nuint xLeft = x - (uint)bytesPerPixel; (int)x < scanline.Length; ++xLeft)
+        #pragma warning restore S1994 // This loop's stop condition tests 'scanline' and 'x' but the incrementer updates 'xLeft'.
         {
             byte scan = Unsafe.Add(ref scanBaseRef, x);
             byte left = Unsafe.Add(ref scanBaseRef, xLeft);

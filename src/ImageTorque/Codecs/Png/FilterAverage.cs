@@ -123,7 +123,9 @@ internal static class FilterAverage
             sum += VectorMath.EvenReduceSum(sumAccumulator);
         }
 
+        #pragma warning disable S1994 // This loop's stop condition tests 'scanline' and 'x' but the incrementer updates 'xLeft'.
         for (nuint xLeft = x - bytesPerPixel; x < (uint)scanline.Length; ++xLeft)
+        #pragma warning restore S1994 // This loop's stop condition tests 'scanline' and 'x' but the incrementer updates 'xLeft'.
         {
             byte scan = Unsafe.Add(ref scanBaseRef, x);
             byte left = Unsafe.Add(ref scanBaseRef, xLeft);

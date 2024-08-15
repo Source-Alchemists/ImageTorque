@@ -138,9 +138,11 @@ public class YoloDetector<[DynamicallyAccessedMembers(DynamicallyAccessedMemberT
             for (int x = 0; x < image.Width; x++)
             {
                 Rgb24 pixel = row[x];
+                #pragma warning disable S4143 // Verify this is the index/key that was intended; a value has already been set for it.
                 tensor[0, 0, y, x] = pixel.R / 255.0F;
                 tensor[0, 1, y, x] = pixel.G / 255.0F;
                 tensor[0, 2, y, x] = pixel.B / 255.0F;
+                #pragma warning restore S4143 // Verify this is the index/key that was intended; a value has already been set for it.
             }
         });
 
@@ -159,9 +161,11 @@ public class YoloDetector<[DynamicallyAccessedMembers(DynamicallyAccessedMemberT
             for (int x = 0; x < image.Width; x++)
             {
                 Rgb24 pixel = row[x];
+                #pragma warning disable S4143 // Verify this is the index/key that was intended; a value has already been set for it.
                 tensor[0, 0, y, x] = pixel.R;
                 tensor[0, 1, y, x] = pixel.G;
                 tensor[0, 2, y, x] = pixel.B;
+                #pragma warning restore S4143 // Verify this is the index/key that was intended; a value has already been set for it.
             }
         });
 
@@ -181,9 +185,11 @@ public class YoloDetector<[DynamicallyAccessedMembers(DynamicallyAccessedMemberT
             {
                 L8 pixel = row[x];
                 float fPixel = pixel / 255.0F;
+                #pragma warning disable S4143 // Verify this is the index/key that was intended; a value has already been set for it.
                 tensor[0, 0, y, x] = fPixel;
                 tensor[0, 1, y, x] = fPixel;
                 tensor[0, 2, y, x] = fPixel;
+                #pragma warning restore S4143 // Verify this is the index/key that was intended; a value has already been set for it.
             }
         });
 
@@ -202,9 +208,11 @@ public class YoloDetector<[DynamicallyAccessedMembers(DynamicallyAccessedMemberT
             for (int x = 0; x < image.Width; x++)
             {
                 L8 pixel = row[x];
+                #pragma warning disable S4143 // Verify this is the index/key that was intended; a value has already been set for it.
                 tensor[0, 0, y, x] = pixel;
                 tensor[0, 1, y, x] = pixel;
                 tensor[0, 2, y, x] = pixel;
+                #pragma warning restore S4143 // Verify this is the index/key that was intended; a value has already been set for it.
             }
         });
 
@@ -338,7 +346,9 @@ public class YoloDetector<[DynamicallyAccessedMembers(DynamicallyAccessedMemberT
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    #pragma warning disable S107 // Methods should not have too many parameters
     private static void ExtractBatchedRelativePredictions(TModel model, DenseTensor<float> output, (int Width, int Height) image, List<YoloPrediction> result, float xGain, float yGain, float xPadding, float yPadding, int dimensions)
+    #pragma warning restore S107 // Methods should not have too many parameters
     {
         for (int i = 0; i < output.Length / dimensions; i++)
         {
@@ -373,7 +383,9 @@ public class YoloDetector<[DynamicallyAccessedMembers(DynamicallyAccessedMemberT
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    #pragma warning disable S107 // Methods should not have too many parameters
     private static void ExtractNonBatchedAbsolutePredictions(TModel model, DenseTensor<float> output, (int Width, int Height) image, List<YoloPrediction> result, float xGain, float yGain, float xPadding, float yPadding, int dimensions)
+    #pragma warning restore S107 // Methods should not have too many parameters
     {
         for (int i = 0; i < output.Length / dimensions; i++)
         {

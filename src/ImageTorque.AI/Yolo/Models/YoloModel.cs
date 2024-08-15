@@ -84,6 +84,9 @@ public record YoloModel
     /// <param name="outputs">The names of the output layers.</param>
     /// <param name="outputTypes">The types of the output layers.</param>
     /// <param name="labels">The list of labels for object detection.</param>
+
+    #pragma warning disable S2368 // Make this constructor private or simplify its parameters to not use multidimensional/jagged arrays.
+    #pragma warning disable S107 // Methods should not have too many parameters
     public YoloModel(int width,
                     int height,
                     int bytePerPixel,
@@ -96,6 +99,8 @@ public record YoloModel
                     string[] outputs,
                     Type[] outputTypes,
                     IList<YoloLabel> labels)
+    #pragma warning restore S2368 // Make this constructor private or simplify its parameters to not use multidimensional/jagged arrays.
+    #pragma warning restore S107 // Methods should not have too many parameters
     {
         Width = width;
         Height = height;

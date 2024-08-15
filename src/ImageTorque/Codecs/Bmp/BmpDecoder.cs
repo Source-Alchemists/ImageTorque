@@ -18,7 +18,9 @@ public sealed class BmpDecoder : IImageDecoder
     public IPixelBuffer Decode(Stream stream) => Decode(stream, Configuration.Default);
 
     /// <inheritdoc/>
+    #pragma warning disable S3776 // Cognitive Complexity of methods should not be too high
     public IPixelBuffer Decode(Stream stream, Configuration configuration)
+    #pragma warning restore S3776 // Cognitive Complexity of methods should not be too high
     {
         if(stream.CanSeek)
         {
@@ -241,7 +243,9 @@ public sealed class BmpDecoder : IImageDecoder
     private static BmpFileHeader ReadFileHeader(Stream stream)
     {
         Span<byte> buffer = stackalloc byte[BmpFileHeader.Size];
+        #pragma warning disable S2674 // Check the return value of the 'Read' call to see how many bytes were read.
         stream.Read(buffer.Slice(0, BmpFileHeader.Size));
+        #pragma warning restore S2674 // Check the return value of the 'Read' call to see how many bytes were read.
         return BmpFileHeader.Parse(buffer);
     }
 
@@ -249,9 +253,11 @@ public sealed class BmpDecoder : IImageDecoder
     private static BmpInfoHeader ReadInfoHeader(Stream stream)
     {
         Span<byte> buffer = stackalloc byte[(int)BmpInfoHeader.SupportedHeaderVersion];
+        #pragma warning disable S2674 // Check the return value of the 'Read' call to see how many bytes were read.
         stream.Read(buffer.Slice(0, BmpInfoHeader.HeaderSize));
         BmpInfoHeader.HeaderVersionType headerVersion = (BmpInfoHeader.HeaderVersionType)BinaryPrimitives.ReadInt32LittleEndian(buffer);
         stream.Read(buffer.Slice(BmpInfoHeader.HeaderSize, (int)headerVersion - BmpInfoHeader.HeaderSize));
+        #pragma warning restore S2674 // Check the return value of the 'Read' call to see how many bytes were read.
         return headerVersion switch
         {
             BmpInfoHeader.HeaderVersionType.BITMAPCOREHEADER => BmpInfoHeader.ParseAsBITMAPCOREHEADER(buffer),

@@ -148,7 +148,9 @@ internal record struct BmpInfoHeader
         if (infoHeader.Compression == CompressionType.BitFields || infoHeader.Compression == CompressionType.AlphaBitFields)
         {
             Span<byte> buffer = stackalloc byte[12];
+            #pragma warning disable S2674 // Check the return value of the 'Read' call to see how many bytes were read.
             stream.Read(buffer);
+            #pragma warning restore S2674 // Check the return value of the 'Read' call to see how many bytes were read.
             infoHeader.RedMask = BinaryPrimitives.ReadInt32LittleEndian(buffer[..4]);
             infoHeader.GreenMask = BinaryPrimitives.ReadInt32LittleEndian(buffer.Slice(4, 4));
             infoHeader.BlueMask = BinaryPrimitives.ReadInt32LittleEndian(buffer.Slice(8, 4));

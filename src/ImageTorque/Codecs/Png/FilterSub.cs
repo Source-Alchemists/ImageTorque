@@ -106,7 +106,9 @@ internal static class FilterSub
             }
         }
 
+        #pragma warning disable S1994 // This loop's stop condition tests 'scanline' and 'x' but the incrementer updates 'xLeft'.
         for (nuint xLeft = x - (uint)bytesPerPixel; x < (uint)scanline.Length; ++xLeft)
+        #pragma warning restore S1994 // This loop's stop condition tests 'scanline' and 'x' but the incrementer updates 'xLeft'.
         {
             byte scan = Unsafe.Add(ref scanBaseRef, x);
             byte prev = Unsafe.Add(ref scanBaseRef, xLeft);
