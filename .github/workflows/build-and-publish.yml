@@ -5,7 +5,10 @@ name: Build and publish
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [
+      "main",
+      "feature/*"
+      ]
 
 jobs:
   build:
@@ -40,18 +43,19 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets') }}
         restore-keys: ${{ runner.os }}-nuget-
 
-    - name: DotNet Pack
+    - if: contains(github.ref, 'main')
+      name: DotNet Pack
       shell: pwsh
       run: dotnet pack -c release
 
-    - name: Nuget.org Publish (ImageTorque)
+    - if: contains(github.ref, 'feature/')
+      name: DotNet Pack
       shell: pwsh
-      env:
-        SECRET_KEY: ${{ secrets.IMAGETORQUE_NUGET_ORG }}
-      run: dotnet nuget push src/ImageTorque/artifacts/*.nupkg --api-key $env:SECRET_KEY --source https://api.nuget.org/v3/index.json  --skip-duplicate
+      run: dotnet pack -c release --version-suffix "preview+$(echo $GITHUB_SHA | cut -c1-7)"
 
-    - name: Nuget.org Publish (ImageTorque.AI)
+    - name: Nuget.org Publish Packages
       shell: pwsh
       env:
         SECRET_KEY: ${{ secrets.IMAGETORQUE_NUGET_ORG }}
-      run: dotnet nuget push src/ImageTorque.AI/artifacts/*.nupkg --api-key $env:SECRET_KEY --source https://api.nuget.org/v3/index.json  --skip-duplicate
+      run: dotnet nuget push src/artifacts/*.nupkg --api-key $env:SECRET_KEY --source https://api.nuget.org/v3/index.json  --skip-duplicate
+

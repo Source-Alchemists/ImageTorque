@@ -1,9 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <AssemblyName>ImageTorque.Codecs.ImageMagick</AssemblyName>
+    <AssemblyTitle>ImageTorque.Codecs.ImageMagick</AssemblyTitle>
+    <RootNamespace>ImageTorque.Codecs.ImageMagick</RootNamespace>
+    <PackageId>ImageTorque.Codecs.ImageMagick</PackageId>
+    <PackageTags>ImageTorque ImageMagick</PackageTags>
+    <Description>ImageMagick codecs extension for ImageTorque</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +16,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ImageTorque.Core\ImageTorque.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
