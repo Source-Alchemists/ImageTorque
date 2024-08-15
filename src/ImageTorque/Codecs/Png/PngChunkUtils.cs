@@ -69,7 +69,9 @@ internal static class PngChunkUtils
 
         length = (int)Math.Min(length, stream.Length - stream.Position);
         IMemoryOwner<byte> buffer = OptimizedMemoryPool<byte>.Shared.Rent(length);
+        #pragma warning disable S2674 // Check the return value of the 'Read' call to see how many bytes were read.
         stream.Read(buffer.Memory.Span.Slice(0, length));
+        #pragma warning restore S2674 // Check the return value of the 'Read' call to see how many bytes were read.
         return buffer;
     }
 
