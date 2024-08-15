@@ -51,7 +51,7 @@ jobs:
     - if: contains(github.ref, 'feature/')
       name: DotNet Pack
       shell: pwsh
-      run: dotnet pack -c release --version-suffix "preview+$(echo $GITHUB_SHA | cut -c1-7)"
+      run: dotnet pack -c release --version-suffix "preview+$(echo $GITHUB_SHA)"
 
     - name: Nuget.org Publish Packages
       shell: pwsh
