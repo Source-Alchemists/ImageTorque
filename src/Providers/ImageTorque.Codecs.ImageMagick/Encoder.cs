@@ -47,7 +47,7 @@ internal sealed class Encoder : IImageEncoder
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void SaveL8(Stream stream, ReadOnlyPackedPixelBuffer<L8> pixelBuffer, MagickFormat magickFormat)
     {
-        PixelReadSettings settings = new(pixelBuffer.Width, pixelBuffer.Height, StorageType.Char, PixelMapping.RGB)
+        PixelReadSettings settings = new((uint)pixelBuffer.Width, (uint)pixelBuffer.Height, StorageType.Char, PixelMapping.RGB)
         {
             Mapping = "R"
         };
@@ -60,7 +60,7 @@ internal sealed class Encoder : IImageEncoder
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void SaveL16(Stream stream, ReadOnlyPackedPixelBuffer<L16> pixelBuffer, MagickFormat magickFormat)
     {
-        PixelReadSettings settings = new(pixelBuffer.Width, pixelBuffer.Height, StorageType.Quantum, PixelMapping.RGB)
+        PixelReadSettings settings = new((uint)pixelBuffer.Width, (uint)pixelBuffer.Height, StorageType.Quantum, PixelMapping.RGB)
         {
             Mapping = "R"
         };
@@ -73,7 +73,7 @@ internal sealed class Encoder : IImageEncoder
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void SaveRgb24(Stream stream, ReadOnlyPackedPixelBuffer<Rgb24> pixelBuffer, MagickFormat magickFormat)
     {
-        PixelReadSettings settings = new(pixelBuffer.Width, pixelBuffer.Height, StorageType.Char, PixelMapping.RGB);
+        PixelReadSettings settings = new((uint)pixelBuffer.Width, (uint)pixelBuffer.Height, StorageType.Char, PixelMapping.RGB);
 
         using var image = new MagickImage();
         image.ReadPixels(pixelBuffer!.Pixels.AsByte(), settings);
@@ -83,7 +83,7 @@ internal sealed class Encoder : IImageEncoder
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void SaveRgb48(Stream stream, ReadOnlyPackedPixelBuffer<Rgb48> pixelBuffer, MagickFormat magickFormat)
     {
-        PixelReadSettings settings = new(pixelBuffer.Width, pixelBuffer.Height, StorageType.Quantum, PixelMapping.RGB);
+        PixelReadSettings settings = new((uint)pixelBuffer.Width, (uint)pixelBuffer.Height, StorageType.Quantum, PixelMapping.RGB);
 
         using var image = new MagickImage();
         image.ReadPixels(pixelBuffer!.Pixels.AsUInt16(), settings);

@@ -67,12 +67,14 @@ internal sealed class Decoder : IImageDecoder
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static IPixelBuffer DecodeL8(MagickImage image)
     {
-        var targetBuffer = new PixelBuffer<L8>(image.Width, image.Height);
+        int width = Convert.ToInt32(image.Width);
+        int height = Convert.ToInt32(image.Height);
+        var targetBuffer = new PixelBuffer<L8>(width, height);
         IPixelCollection<ushort> sourcePixels = image.GetPixelsUnsafe();
-        Parallel.For(0, image.Height, y =>
+        Parallel.For(0, height, y =>
         {
             Span<L8> row = targetBuffer.GetRow(y);
-            for (int x = 0; x < image.Width; x++)
+            for (int x = 0; x < width; x++)
             {
                 ushort[] sourcePixel = sourcePixels.GetValue(x, y)!;
                 row[x] = new L8(BitConverter.GetBytes(sourcePixel[0])[0]);
@@ -85,12 +87,14 @@ internal sealed class Decoder : IImageDecoder
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static IPixelBuffer DecodeL16(MagickImage image)
     {
-        var targetBuffer = new PixelBuffer<L16>(image.Width, image.Height);
+        int width = Convert.ToInt32(image.Width);
+        int height = Convert.ToInt32(image.Height);
+        var targetBuffer = new PixelBuffer<L16>(width, height);
         IPixelCollection<ushort> sourcePixels = image.GetPixelsUnsafe();
-        Parallel.For(0, image.Height, y =>
+        Parallel.For(0, height, y =>
         {
             Span<L16> row = targetBuffer.GetRow(y);
-            for (int x = 0; x < image.Width; x++)
+            for (int x = 0; x < width; x++)
             {
                 ushort[] sourcePixel = sourcePixels.GetValue(x, y)!;
                 row[x] = new L16(sourcePixel[0]);
@@ -103,12 +107,14 @@ internal sealed class Decoder : IImageDecoder
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static IPixelBuffer DecodeRgb24(MagickImage image)
     {
-        var targetBuffer = new PixelBuffer<Rgb24>(image.Width, image.Height);
+        int width = Convert.ToInt32(image.Width);
+        int height = Convert.ToInt32(image.Height);
+        var targetBuffer = new PixelBuffer<Rgb24>(width, height);
         IPixelCollection<ushort> sourcePixels = image.GetPixelsUnsafe();
-        Parallel.For(0, image.Height, y =>
+        Parallel.For(0, height, y =>
         {
             Span<Rgb24> row = targetBuffer.GetRow(y);
-            for (int x = 0; x < image.Width; x++)
+            for (int x = 0; x < width; x++)
             {
                 ushort[] sourcePixel = sourcePixels.GetValue(x, y)!;
                 row[x] = new Rgb24(BitConverter.GetBytes(sourcePixel[0])[0], BitConverter.GetBytes(sourcePixel[1])[0], BitConverter.GetBytes(sourcePixel[2])[0]);
@@ -121,12 +127,14 @@ internal sealed class Decoder : IImageDecoder
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static IPixelBuffer DecodeRgb48(MagickImage image)
     {
-        var targetBuffer = new PixelBuffer<Rgb48>(image.Width, image.Height);
+        int width = Convert.ToInt32(image.Width);
+        int height = Convert.ToInt32(image.Height);
+        var targetBuffer = new PixelBuffer<Rgb48>(width, height);
         IPixelCollection<ushort> sourcePixels = image.GetPixelsUnsafe();
-        Parallel.For(0, image.Height, y =>
+        Parallel.For(0, height, y =>
         {
             Span<Rgb48> row = targetBuffer.GetRow(y);
-            for (int x = 0; x < image.Width; x++)
+            for (int x = 0; x < width; x++)
             {
                 ushort[] sourcePixel = sourcePixels.GetValue(x, y)!;
                 row[x] = new Rgb48(sourcePixel[0], sourcePixel[1], sourcePixel[2]);
