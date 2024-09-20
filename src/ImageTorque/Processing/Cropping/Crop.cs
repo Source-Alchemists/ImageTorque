@@ -159,8 +159,8 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
             float xc = xDest - rectangle.HalfWidth;
             float xr = xc * rectangle.Cos - yc * rectangle.Sin;
             float yr = xc * rectangle.Sin + yc * rectangle.Cos;
-            float x = xr + rectangle.Top;
-            float y = yr + rectangle.Left;
+            float x = xr + rectangle.Left;
+            float y = yr + rectangle.Top;
 
             int x1 = (int)x;
             int y1 = (int)y;
