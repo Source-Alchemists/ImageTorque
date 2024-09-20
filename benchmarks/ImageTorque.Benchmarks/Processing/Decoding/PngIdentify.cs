@@ -7,7 +7,6 @@ namespace ImageTorque.Benchmarks;
 [ShortRunJob]
 public class PngIdentify
 {
-    private readonly PngDecoder _decoder = new();
     private readonly Configuration _configuration = ConfigurationFactory.Build([new PngCodec()]);
     private FileStream _imageTorqueStream = null!;
     private FileStream _imageSharpStream = null!;
@@ -36,7 +35,7 @@ public class PngIdentify
     [Benchmark(Baseline = true)]
     public void ImageTorque()
     {
-        _ = _decoder.Identify(_imageTorqueStream, _configuration);
+        _ = PngDecoder.Identify(_imageTorqueStream, _configuration);
     }
 
     [Benchmark]

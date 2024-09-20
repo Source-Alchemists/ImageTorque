@@ -812,7 +812,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
                     float fx2 = Interpolate(x, x1, x2, q12, q22);
                     float fxy = Interpolate(y, y1, y2, fx1, fx2);
 
-                    floatDest[indexDest] = (float)fxy;
+                    floatDest[indexDest] = fxy;
                 }
                 else if (x2 < imageWidth && y1 < imageHeight)
                 {
@@ -821,7 +821,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
                     float fx = Interpolate(x, x1, x2, q11, q21);
 
-                    floatDest[indexDest] = (float)fx;
+                    floatDest[indexDest] = fx;
                 }
                 else if (x1 < imageWidth && y2 < imageHeight)
                 {
@@ -830,7 +830,7 @@ internal sealed class Crop : IProcessor<CropParameters, IPixelBuffer>
 
                     float fy = Interpolate(y, y1, y2, q11, q12);
 
-                    floatDest[indexDest] = (float)fy;
+                    floatDest[indexDest] = fy;
                 }
                 else if (x1 < imageWidth && y1 < imageHeight)
                 {

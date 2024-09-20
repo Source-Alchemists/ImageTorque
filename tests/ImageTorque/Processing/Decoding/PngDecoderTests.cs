@@ -30,11 +30,10 @@ public class PngDecoderTests
     {
         // Arrange
         Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
-        var decoder = new PngDecoder();
         using var stream = new FileStream("./lena24.png", FileMode.Open, FileAccess.Read);
 
         // Act
-        ImageInfo imageInfo = decoder.Identify(stream, configuration);
+        ImageInfo imageInfo = PngDecoder.Identify(stream, configuration);
 
         // Assert
         Assert.Equal(512, imageInfo.Width);

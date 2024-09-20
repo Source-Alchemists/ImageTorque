@@ -68,7 +68,22 @@ public class PngDecoder : IImageDecoder
         }
     }
 
-    private IPixelBuffer<TPixel> Decode<TPixel>(Stream stream, PngInfos pngIno, Configuration configuration) where TPixel : unmanaged, IPixel
+    /// <summary>
+    /// Represents information about an image.
+    /// </summary>
+    /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
+    /// <returns>The <see cref="ImageInfo"/> containing the image information.</returns>
+    public static ImageInfo Identify(Stream stream) => Identify(stream, Configuration.Default);
+
+    /// <summary>
+    /// Represents information about an image.
+    /// </summary>
+    /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
+    /// <param name="configuration">The <see cref="Configuration"/> to use for decoding.</param>
+    /// <returns>The <see cref="ImageInfo"/> containing the image information.</returns>
+    public static ImageInfo Identify(Stream stream, Configuration configuration) => Identify(stream, configuration, out _);
+
+    private static IPixelBuffer<TPixel> Decode<TPixel>(Stream stream, PngInfos pngIno, Configuration configuration) where TPixel : unmanaged, IPixel
     {
         stream.Skip(PngConstants.HeaderSize);
         PngHeader header = new();
@@ -167,23 +182,7 @@ public class PngDecoder : IImageDecoder
         }
     }
 
-
-    /// <summary>
-    /// Represents information about an image.
-    /// </summary>
-    /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
-    /// <returns>The <see cref="ImageInfo"/> containing the image information.</returns>
-    public ImageInfo Identify(Stream stream) => Identify(stream, Configuration.Default);
-
-    /// <summary>
-    /// Represents information about an image.
-    /// </summary>
-    /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
-    /// <param name="configuration">The <see cref="Configuration"/> to use for decoding.</param>
-    /// <returns>The <see cref="ImageInfo"/> containing the image information.</returns>
-    public ImageInfo Identify(Stream stream, Configuration configuration) => Identify(stream, configuration, out _);
-
-    private ImageInfo Identify(Stream stream, Configuration configuration, out PngInfos pngMeta)
+    private static ImageInfo Identify(Stream stream, Configuration configuration, out PngInfos pngMeta)
     {
         pngMeta = new();
         PngHeader header = new();
