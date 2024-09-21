@@ -18,7 +18,7 @@ namespace ImageTorque.Codecs.Bmp;
 /// <item><description><see cref="PixelType.Rgb24"/></description></item>
 /// </list>
 /// </remarks>
-public sealed class BmpEncoder : IImageEncoder
+internal sealed class BmpEncoder : IImageEncoder
 {
     /// <inheritdoc/>
     public void Encode<TPixel>(Stream stream, ReadOnlyPackedPixelBuffer<TPixel> pixelBuffer, string encoderType, int quality = 80) where TPixel : unmanaged, IPixel

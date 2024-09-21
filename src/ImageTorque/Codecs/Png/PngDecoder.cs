@@ -30,7 +30,7 @@ namespace ImageTorque.Codecs.Png;
 /// <summary>
 /// Represents a PNG image decoder that implements the <see cref="IImageDecoder"/> interface.
 /// </summary>
-public class PngDecoder : IImageDecoder
+internal class PngDecoder : IImageDecoder
 {
     /// <inheritdoc/>
     public IPixelBuffer Decode(Stream stream) => Decode(stream, IConfiguration.Default);
