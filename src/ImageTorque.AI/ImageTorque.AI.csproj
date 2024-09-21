@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>0.4.0</VersionPrefix>
+    <VersionPrefix>0.4.1</VersionPrefix>
     <AssemblyName>ImageTorque.AI</AssemblyName>
     <AssemblyTitle>ImageTorque.AI</AssemblyTitle>
     <RootNamespace>ImageTorque.AI</RootNamespace>

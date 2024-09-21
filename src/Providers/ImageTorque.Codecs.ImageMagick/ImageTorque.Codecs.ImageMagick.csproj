@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>0.0.1</VersionPrefix>
+    <VersionPrefix>0.0.2</VersionPrefix>
     <AssemblyName>ImageTorque.Codecs.ImageMagick</AssemblyName>
     <AssemblyTitle>ImageTorque.Codecs.ImageMagick</AssemblyTitle>
     <RootNamespace>ImageTorque.Codecs.ImageMagick</RootNamespace>

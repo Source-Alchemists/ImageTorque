@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>0.4.0</VersionPrefix>
+    <VersionPrefix>0.4.1</VersionPrefix>
     <AssemblyName>ImageTorque</AssemblyName>
     <AssemblyTitle>ImageTorque</AssemblyTitle>
     <RootNamespace>ImageTorque</RootNamespace>
@@ -27,5 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImageTorque.Core\ImageTorque.Core.csproj" />
+    <ProjectReference Include="..\Providers\ImageTorque.Codecs.ImageMagick\ImageTorque.Codecs.ImageMagick.csproj" />
   </ItemGroup>
 </Project>

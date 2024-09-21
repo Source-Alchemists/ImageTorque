@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>0.0.1</VersionPrefix>
+    <VersionPrefix>0.0.2</VersionPrefix>
     <AssemblyName>ImageTorque.Core</AssemblyName>
     <AssemblyTitle>ImageTorque.Core</AssemblyTitle>
     <RootNamespace>ImageTorque.Core</RootNamespace>

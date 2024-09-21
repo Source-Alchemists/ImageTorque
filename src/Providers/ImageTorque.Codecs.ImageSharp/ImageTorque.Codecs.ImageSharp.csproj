@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>0.0.1</VersionPrefix>
+    <VersionPrefix>0.0.2</VersionPrefix>
     <AssemblyName>ImageTorque.Codecs.ImageSharp</AssemblyName>
     <AssemblyTitle>ImageTorque.Codecs.ImageSharp</AssemblyTitle>
     <RootNamespace>ImageTorque.Codecs.ImageSharp</RootNamespace>
