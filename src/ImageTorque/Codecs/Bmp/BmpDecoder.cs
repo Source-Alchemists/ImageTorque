@@ -31,9 +31,6 @@ namespace ImageTorque.Codecs.Bmp;
 internal sealed class BmpDecoder : IImageDecoder
 {
     /// <inheritdoc/>
-    public IPixelBuffer Decode(Stream stream) => Decode(stream, IConfiguration.Default);
-
-    /// <inheritdoc/>
     #pragma warning disable S3776 // Cognitive Complexity of methods should not be too high
     public IPixelBuffer Decode(Stream stream, IConfiguration configuration)
     #pragma warning restore S3776 // Cognitive Complexity of methods should not be too high

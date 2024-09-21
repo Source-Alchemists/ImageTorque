@@ -33,7 +33,7 @@ public class BmpDecoderTests
         using var stream = new FileStream("./lena8.bmp", FileMode.Open, FileAccess.Read);
 
         // Act
-        var pixelBuffer = decoder.Decode(stream) as PixelBuffer<L8>;
+        var pixelBuffer = decoder.Decode(stream, ConfigurationFactory.GetOrCreateDefault()) as PixelBuffer<L8>;
 
         // Assert
         Assert.NotNull(pixelBuffer);
@@ -49,7 +49,7 @@ public class BmpDecoderTests
         using var stream = new FileStream("./lena24.bmp", FileMode.Open, FileAccess.Read);
 
         // Act
-        var pixelBuffer = decoder.Decode(stream) as PixelBuffer<Rgb24>;
+        var pixelBuffer = decoder.Decode(stream, ConfigurationFactory.GetOrCreateDefault()) as PixelBuffer<Rgb24>;
 
         // Assert
         Assert.NotNull(pixelBuffer);

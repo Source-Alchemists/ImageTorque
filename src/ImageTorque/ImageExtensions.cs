@@ -37,7 +37,7 @@ public static partial class ImageExtensions
     /// <param name="stream">The stream.</param>
     /// <param name="encodeType">Type of the encode.</param>
     /// <param name="quality">The quality.</param>
-    public static void Save(this IImage image, Stream stream, string encodeType, int quality = 80) => Save(image, stream, encodeType, IConfiguration.Default, quality);
+    public static void Save(this IImage image, Stream stream, string encodeType, int quality = 80) => Save(image, stream, encodeType, ConfigurationFactory.GetOrCreateDefault(), quality);
 
     /// <summary>
     /// Saves the image to the specified stream using the specified encoder type, configuration, and quality.
@@ -79,7 +79,7 @@ public static partial class ImageExtensions
     /// <param name="image">The image.</param>
     /// <param name="path">The path.</param>
     /// <param name="quality">The quality.</param>
-    public static void Save(this IImage image, string path, int quality = 80) => Save(image, path, IConfiguration.Default, quality);
+    public static void Save(this IImage image, string path, int quality = 80) => Save(image, path, ConfigurationFactory.GetOrCreateDefault(), quality);
 
 
     /// <summary>

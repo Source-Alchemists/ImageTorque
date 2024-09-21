@@ -30,7 +30,7 @@ public class BmpEncoderTests
         var encoder = new BmpEncoder();
         var decoder = new BmpDecoder();
         using var inputStream = new FileStream("./lena8.bmp", FileMode.Open, FileAccess.Read);
-        var pixelBuffer = decoder.Decode(inputStream) as PixelBuffer<L8>;
+        var pixelBuffer = decoder.Decode(inputStream, ConfigurationFactory.GetOrCreateDefault()) as PixelBuffer<L8>;
         using var outputStream = new MemoryStream();
 
         // Act
@@ -50,7 +50,7 @@ public class BmpEncoderTests
         var encoder = new BmpEncoder();
         var decoder = new BmpDecoder();
         using var inputStream = new FileStream("./lena24.bmp", FileMode.Open, FileAccess.Read);
-        var pixelBuffer = decoder.Decode(inputStream) as PixelBuffer<Rgb24>;
+        var pixelBuffer = decoder.Decode(inputStream, ConfigurationFactory.GetOrCreateDefault()) as PixelBuffer<Rgb24>;
         using var outputStream = new MemoryStream();
 
         // Act

@@ -30,13 +30,6 @@ namespace ImageTorque.Codecs.ImageSharp;
 internal sealed class Decoder : IImageDecoder
 {
     /// <summary>
-    /// Decodes the image from the specified <see cref="Stream"/> using the default configuration.
-    /// </summary>
-    /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
-    /// <returns>The decoded <see cref="IPixelBuffer"/>.</returns>
-    public IPixelBuffer Decode(Stream stream) => Decode(stream, IConfiguration.Default);
-
-    /// <summary>
     /// Decodes the image from the specified <see cref="Stream"/> using the specified configuration.
     /// </summary>
     /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>

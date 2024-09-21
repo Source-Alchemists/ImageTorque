@@ -33,9 +33,6 @@ namespace ImageTorque.Codecs.Png;
 internal class PngDecoder : IImageDecoder
 {
     /// <inheritdoc/>
-    public IPixelBuffer Decode(Stream stream) => Decode(stream, IConfiguration.Default);
-
-    /// <inheritdoc/>
     public IPixelBuffer Decode(Stream stream, IConfiguration configuration)
     {
         _ = Identify(stream, configuration, out PngInfos pngMeta);
@@ -67,13 +64,6 @@ internal class PngDecoder : IImageDecoder
                 throw new NotSupportedException($"Pixel type {color} is not supported!");
         }
     }
-
-    /// <summary>
-    /// Represents information about an image.
-    /// </summary>
-    /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
-    /// <returns>The <see cref="ImageInfo"/> containing the image information.</returns>
-    public static ImageInfo Identify(Stream stream) => Identify(stream, IConfiguration.Default);
 
     /// <summary>
     /// Represents information about an image.

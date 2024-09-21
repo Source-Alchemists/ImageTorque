@@ -24,11 +24,6 @@ namespace ImageTorque;
 public interface IConfiguration
 {
     /// <summary>
-    /// Gets or sets the default configuration instance.
-    /// </summary>
-    static IConfiguration Default { get; set; } = null!;
-
-    /// <summary>
     /// Gets or sets a value indicating whether to prefer contiguous image buffers.
     /// </summary>
     bool PreferContiguousImageBuffers { get; init; }

@@ -24,9 +24,6 @@ namespace ImageTorque;
 public sealed class Configuration : IConfiguration
 {
     /// <inheritdoc/>
-    public static Configuration Default { get; set; } = null!;
-
-    /// <inheritdoc/>
     public bool PreferContiguousImageBuffers { get; init; } = true;
 
     /// <inheritdoc/>

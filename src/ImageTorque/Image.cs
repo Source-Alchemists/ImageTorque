@@ -119,7 +119,7 @@ public partial record Image : IImage
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <returns>The image.</returns>
-    public static Image Load(Stream stream) => Load(stream, IConfiguration.Default);
+    public static Image Load(Stream stream) => Load(stream, ConfigurationFactory.GetOrCreateDefault());
 
     /// <summary>
     /// Loads the image from the specified stream.
@@ -143,7 +143,7 @@ public partial record Image : IImage
     /// </summary>
     /// <param name="path">The path.</param>
     /// <returns>The image.</returns>
-    public static Image Load(string path) => Load(path, IConfiguration.Default);
+    public static Image Load(string path) => Load(path, ConfigurationFactory.GetOrCreateDefault());
 
     /// <summary>
     /// Loads the image from the specified file.

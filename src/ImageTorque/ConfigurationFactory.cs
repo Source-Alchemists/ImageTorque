@@ -23,6 +23,21 @@ namespace ImageTorque;
 /// </summary>
 public static class ConfigurationFactory
 {
+    private static IConfiguration? s_default;
+
+    /// <summary>
+    /// Gets or creates the default configuration object.
+    /// </summary>
+    /// <returns>A new configuration object.</returns>
+    public static IConfiguration GetOrCreateDefault()
+    {
+        return s_default ??= Build([
+            new Codecs.Bmp.BmpCodec(),
+            new Codecs.ImageMagick.PngCodec(),
+            new Codecs.ImageMagick.JpegCodec(),
+            new Codecs.ImageMagick.TiffCodec()
+        ]);
+    }
     /// <summary>
     /// Builds a configuration object based on the provided codecs.
     /// </summary>
