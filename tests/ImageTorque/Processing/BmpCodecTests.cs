@@ -26,7 +26,7 @@ public class BmpCodecTests
     public void Test_Load(string path)
     {
         // Arrange
-        Configuration configuration = ConfigurationFactory.Build([new BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new BmpCodec()]);
         using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
 
         // Act
@@ -42,7 +42,7 @@ public class BmpCodecTests
     public void Test_Save(string path)
     {
         // Arrange
-        Configuration configuration = ConfigurationFactory.Build([new BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new BmpCodec()]);
         using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
         var image = Image.Load(stream, configuration);
         using var outputStream = new MemoryStream();

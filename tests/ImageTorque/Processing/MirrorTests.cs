@@ -34,7 +34,7 @@ public class MirrorTests
         var mirror = new Mirror();
         var decoder = new BmpDecoder();
         var converter = new PixelBufferConverter();
-        Configuration configuration = ConfigurationFactory.Build([new BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new BmpCodec()]);
         using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
         IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
 
@@ -65,7 +65,7 @@ public class MirrorTests
         var mirror = new Mirror();
         var decoder = new BmpDecoder();
         var converter = new PixelBufferConverter();
-        Configuration configuration = ConfigurationFactory.Build([new BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new BmpCodec()]);
         using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
         IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
 
@@ -95,7 +95,7 @@ public class MirrorTests
         // Arrange
         var mirror = new Mirror();
         var decoder = new BmpDecoder();
-        Configuration configuration = ConfigurationFactory.Build([new BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new BmpCodec()]);
         using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
         IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
 
@@ -120,7 +120,7 @@ public class MirrorTests
         // Arrange
         var mirror = new Mirror();
         var decoder = new Codecs.Png.PngDecoder();
-        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
         using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
         IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
 
@@ -145,7 +145,7 @@ public class MirrorTests
         // Arrange
         var mirror = new Mirror();
         var decoder = new BmpDecoder();
-        Configuration configuration = ConfigurationFactory.Build([new BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new BmpCodec()]);
         using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
         IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
 
@@ -170,7 +170,7 @@ public class MirrorTests
         // Arrange
         var mirror = new Mirror();
         var decoder = new Codecs.Png.PngDecoder();
-        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
         using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
         IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
 
@@ -196,7 +196,7 @@ public class MirrorTests
         var mirror = new Mirror();
         var decoder = new BmpDecoder();
         var converter = new PixelBufferConverter();
-        Configuration configuration = ConfigurationFactory.Build([new BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new BmpCodec()]);
         using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
         IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
         IPixelBuffer convertedPixelBuffer = converter.Execute(new PixelBufferConvertParameters {
@@ -226,7 +226,7 @@ public class MirrorTests
         var mirror = new Mirror();
         var decoder = new BmpDecoder();
         var converter = new PixelBufferConverter();
-        Configuration configuration = ConfigurationFactory.Build([new BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new BmpCodec()]);
         using var inputStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
         IPixelBuffer pixelBuffer = decoder.Decode(inputStream, configuration);
         IPixelBuffer convertedPixelBuffer = converter.Execute(new PixelBufferConvertParameters {

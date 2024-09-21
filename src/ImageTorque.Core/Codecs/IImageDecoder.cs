@@ -19,5 +19,5 @@ public interface IImageDecoder {
     /// <param name="stream">The stream containing the image data.</param>
     /// <param name="configuration">The configuration to use for decoding.</param>
     /// <returns>The decoded pixel buffer.</returns>
-    IPixelBuffer Decode(Stream stream, Configuration configuration);
+    IPixelBuffer Decode(Stream stream, IConfiguration configuration);
 }

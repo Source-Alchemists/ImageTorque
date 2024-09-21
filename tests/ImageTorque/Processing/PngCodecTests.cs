@@ -28,7 +28,7 @@ public class PngCodecTests
     public void Test_Load(string path)
     {
         // Arrange
-        Configuration configuration = ConfigurationFactory.Build([new PngCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new PngCodec()]);
         using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
 
         // Act

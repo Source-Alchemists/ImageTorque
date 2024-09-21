@@ -14,15 +14,15 @@ internal sealed class Decoder : IImageDecoder
     /// </summary>
     /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
     /// <returns>The decoded <see cref="IPixelBuffer"/>.</returns>
-    public IPixelBuffer Decode(Stream stream) => Decode(stream, Configuration.Default);
+    public IPixelBuffer Decode(Stream stream) => Decode(stream, IConfiguration.Default);
 
     /// <summary>
     /// Decodes the image from the specified <see cref="Stream"/> using the specified configuration.
     /// </summary>
     /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
-    /// <param name="configuration">The <see cref="Configuration"/> to use for decoding.</param>
+    /// <param name="configuration">The <see cref="IConfiguration"/> to use for decoding.</param>
     /// <returns>The decoded <see cref="IPixelBuffer"/>.</returns>
-    public IPixelBuffer Decode(Stream stream, Configuration configuration)
+    public IPixelBuffer Decode(Stream stream, IConfiguration configuration)
     {
         if (stream.CanSeek)
         {
