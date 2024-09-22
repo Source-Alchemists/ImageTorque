@@ -21,17 +21,25 @@ namespace ImageTorque;
 /// <summary>
 /// Represents the configuration settings for the ImageTorque library.
 /// </summary>
-public sealed class Configuration : IConfiguration
+public interface IConfiguration
 {
-    /// <inheritdoc/>
-    public bool PreferContiguousImageBuffers { get; init; } = true;
+    /// <summary>
+    /// Gets or sets a value indicating whether to prefer contiguous image buffers.
+    /// </summary>
+    bool PreferContiguousImageBuffers { get; init; }
 
-    /// <inheritdoc/>
-    public int MaxHeaderSize { get; init; }
+    /// <summary>
+    /// Gets or sets the maximum size of the image header.
+    /// </summary>
+    int MaxHeaderSize { get; init; }
 
-    /// <inheritdoc/>
-    public IReadOnlyCollection<ICodec> Codecs { get; init; } = [];
+    /// <summary>
+    /// Gets or sets the collection of codecs used for image encoding and decoding.
+    /// </summary>
+    IReadOnlyCollection<ICodec> Codecs { get; init; }
 
-    /// <inheritdoc/>
-    public bool UseCrcValidation { get; init; } = false; // We don't use CRC validation by default, because we're running in a machine vision context
+    /// <summary>
+    /// Gets or sets a value indicating whether to use CRC validation for image data.
+    /// </summary>
+    bool UseCrcValidation { get; init; }
 }

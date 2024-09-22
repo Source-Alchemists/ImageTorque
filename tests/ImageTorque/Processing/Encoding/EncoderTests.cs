@@ -49,7 +49,7 @@ public class EncoderTests : IDisposable
     public void EncodeMono8(string encodeType)
     {
         // Arrange
-        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
         var encoder = new Encoder();
 
         // Act
@@ -72,7 +72,7 @@ public class EncoderTests : IDisposable
     public void EncodeMono16(string encodeType)
     {
         // Arrange
-        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
         var encoder = new Encoder();
 
         // Act
@@ -95,7 +95,7 @@ public class EncoderTests : IDisposable
     public void EncodeRgb24(string encodeType)
     {
         // Arrange
-        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
         var encoder = new Encoder();
 
         // Act
@@ -118,7 +118,7 @@ public class EncoderTests : IDisposable
     public void EncodeRgb48(string encodeType)
     {
         // Arrange
-        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec(), new Codecs.ImageSharp.BmpCodec()]);
         var encoder = new Encoder();
 
         // Act

@@ -40,7 +40,7 @@ internal class Decoder : IProcessor<DecoderParameters, IPixelBuffer>
         return format.Decoder.Decode(bs, parameters.Configuration!);
     }
 
-    private static ICodec DetectCodec(Stream stream, Configuration configuration)
+    private static ICodec DetectCodec(Stream stream, IConfiguration configuration)
     {
         int headerSize = (int)Math.Min(configuration.MaxHeaderSize, stream.Length);
         if (headerSize <= 0)

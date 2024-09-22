@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Source Alchemists
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 using System.Runtime.InteropServices;
 
 using ImageTorque.Buffers;
@@ -14,19 +30,12 @@ namespace ImageTorque.Codecs.ImageSharp;
 internal sealed class Decoder : IImageDecoder
 {
     /// <summary>
-    /// Decodes the image from the specified <see cref="Stream"/> using the default configuration.
-    /// </summary>
-    /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
-    /// <returns>The decoded <see cref="IPixelBuffer"/>.</returns>
-    public IPixelBuffer Decode(Stream stream) => Decode(stream, Configuration.Default);
-
-    /// <summary>
     /// Decodes the image from the specified <see cref="Stream"/> using the specified configuration.
     /// </summary>
     /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
-    /// <param name="configuration">The <see cref="Configuration"/> to use for decoding.</param>
+    /// <param name="configuration">The <see cref="IConfiguration"/> to use for decoding.</param>
     /// <returns>The decoded <see cref="IPixelBuffer"/>.</returns>
-    public IPixelBuffer Decode(Stream stream, Configuration configuration)
+    public IPixelBuffer Decode(Stream stream, IConfiguration configuration)
     {
         if (stream.CanSeek)
         {

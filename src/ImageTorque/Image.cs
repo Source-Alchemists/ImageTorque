@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Source Alchemists
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 using System.Collections.Concurrent;
 using ImageTorque.Buffers;
 using ImageTorque.Pixels;
@@ -103,14 +119,14 @@ public partial record Image : IImage
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <returns>The image.</returns>
-    public static Image Load(Stream stream) => Load(stream, Configuration.Default);
+    public static Image Load(Stream stream) => Load(stream, ConfigurationFactory.GetOrCreateDefault());
 
     /// <summary>
     /// Loads the image from the specified stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="configuration">The configuration.</param>
-    public static Image Load(Stream stream, Configuration configuration)
+    public static Image Load(Stream stream, IConfiguration configuration)
     {
         IPixelBuffer pixelBuffer = s_decoder.Execute(new DecoderParameters
         {
@@ -127,14 +143,14 @@ public partial record Image : IImage
     /// </summary>
     /// <param name="path">The path.</param>
     /// <returns>The image.</returns>
-    public static Image Load(string path) => Load(path, Configuration.Default);
+    public static Image Load(string path) => Load(path, ConfigurationFactory.GetOrCreateDefault());
 
     /// <summary>
     /// Loads the image from the specified file.
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="configuration">The configuration.</param>
-    public static Image Load(string path, Configuration configuration)
+    public static Image Load(string path, IConfiguration configuration)
     {
         using FileStream stream = File.OpenRead(path);
         return Load(stream, configuration);

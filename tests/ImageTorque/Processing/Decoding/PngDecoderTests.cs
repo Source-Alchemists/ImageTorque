@@ -29,7 +29,7 @@ public class PngDecoderTests
     public void Test_Identify()
     {
         // Arrange
-        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
         using var stream = new FileStream("./lena24.png", FileMode.Open, FileAccess.Read);
 
         // Act
@@ -45,7 +45,7 @@ public class PngDecoderTests
     public void Test_Decode_L8()
     {
         // Arrange
-        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
         var decoder = new PngDecoder();
         using var stream = new FileStream("./lena8.png", FileMode.Open, FileAccess.Read);
 
@@ -61,7 +61,7 @@ public class PngDecoderTests
     public void Test_Decode_Rgb24()
     {
         // Arrange
-        Configuration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
+        IConfiguration configuration = ConfigurationFactory.Build([new Codecs.ImageSharp.PngCodec()]);
         var decoder = new PngDecoder();
         using var stream = new FileStream("./lena24.png", FileMode.Open, FileAccess.Read);
 

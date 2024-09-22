@@ -28,14 +28,11 @@ namespace ImageTorque.Codecs.Bmp;
 /// <summary>
 /// Represents a decoder for BMP (Bitmap) images.
 /// </summary>
-public sealed class BmpDecoder : IImageDecoder
+internal sealed class BmpDecoder : IImageDecoder
 {
     /// <inheritdoc/>
-    public IPixelBuffer Decode(Stream stream) => Decode(stream, Configuration.Default);
-
-    /// <inheritdoc/>
     #pragma warning disable S3776 // Cognitive Complexity of methods should not be too high
-    public IPixelBuffer Decode(Stream stream, Configuration configuration)
+    public IPixelBuffer Decode(Stream stream, IConfiguration configuration)
     #pragma warning restore S3776 // Cognitive Complexity of methods should not be too high
     {
         if(stream.CanSeek)

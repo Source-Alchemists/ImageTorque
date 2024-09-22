@@ -30,13 +30,10 @@ namespace ImageTorque.Codecs.Png;
 /// <summary>
 /// Represents a PNG image decoder that implements the <see cref="IImageDecoder"/> interface.
 /// </summary>
-public class PngDecoder : IImageDecoder
+internal class PngDecoder : IImageDecoder
 {
     /// <inheritdoc/>
-    public IPixelBuffer Decode(Stream stream) => Decode(stream, Configuration.Default);
-
-    /// <inheritdoc/>
-    public IPixelBuffer Decode(Stream stream, Configuration configuration)
+    public IPixelBuffer Decode(Stream stream, IConfiguration configuration)
     {
         _ = Identify(stream, configuration, out PngInfos pngMeta);
         stream.Position = 0;
@@ -72,18 +69,11 @@ public class PngDecoder : IImageDecoder
     /// Represents information about an image.
     /// </summary>
     /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
+    /// <param name="configuration">The <see cref="IConfiguration"/> to use for decoding.</param>
     /// <returns>The <see cref="ImageInfo"/> containing the image information.</returns>
-    public static ImageInfo Identify(Stream stream) => Identify(stream, Configuration.Default);
+    public static ImageInfo Identify(Stream stream, IConfiguration configuration) => Identify(stream, configuration, out _);
 
-    /// <summary>
-    /// Represents information about an image.
-    /// </summary>
-    /// <param name="stream">The <see cref="Stream"/> containing the image data.</param>
-    /// <param name="configuration">The <see cref="Configuration"/> to use for decoding.</param>
-    /// <returns>The <see cref="ImageInfo"/> containing the image information.</returns>
-    public static ImageInfo Identify(Stream stream, Configuration configuration) => Identify(stream, configuration, out _);
-
-    private static IPixelBuffer<TPixel> Decode<TPixel>(Stream stream, PngInfos pngIno, Configuration configuration) where TPixel : unmanaged, IPixel
+    private static IPixelBuffer<TPixel> Decode<TPixel>(Stream stream, PngInfos pngIno, IConfiguration configuration) where TPixel : unmanaged, IPixel
     {
         stream.Skip(PngConstants.HeaderSize);
         PngHeader header = new();
@@ -182,7 +172,7 @@ public class PngDecoder : IImageDecoder
         }
     }
 
-    private static ImageInfo Identify(Stream stream, Configuration configuration, out PngInfos pngMeta)
+    private static ImageInfo Identify(Stream stream, IConfiguration configuration, out PngInfos pngMeta)
     {
         pngMeta = new();
         PngHeader header = new();
@@ -226,7 +216,7 @@ public class PngDecoder : IImageDecoder
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryReadChunk(in Stream stream, Span<byte> buffer, Configuration configuration, out PngChunk chunk)
+    private static bool TryReadChunk(in Stream stream, Span<byte> buffer, IConfiguration configuration, out PngChunk chunk)
     {
         if (stream.Position >= stream.Length - 1)
         {
