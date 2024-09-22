@@ -87,7 +87,8 @@ internal sealed class Decoder : IImageDecoder
     {
         int width = Convert.ToInt32(image.Width);
         int height = Convert.ToInt32(image.Height);
-        unsafe {
+        unsafe
+        {
             Span<L16> buffer = MemoryMarshal.Cast<ushort, L16>(new Span<ushort>((void*)image.GetPixelsUnsafe().GetAreaPointer(0, 0, image.Width, image.Height), (int)(image.Width * image.Height)));
             return new PixelBuffer<L16>(width, height, buffer);
         }
@@ -107,7 +108,8 @@ internal sealed class Decoder : IImageDecoder
     {
         int width = Convert.ToInt32(image.Width);
         int height = Convert.ToInt32(image.Height);
-        unsafe {
+        unsafe
+        {
             Span<Rgb48> buffer = MemoryMarshal.Cast<ushort, Rgb48>(new Span<ushort>((void*)image.GetPixelsUnsafe().GetAreaPointer(0, 0, image.Width, image.Height), (int)(image.Width * image.Height * 3)));
             return new PixelBuffer<Rgb48>(width, height, buffer);
         }
