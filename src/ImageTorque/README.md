@@ -13,7 +13,8 @@ Built for [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0), Imag
 
 ## Codec providers
 
-ImageTorque uses codec providers to decode and encode images. <br/>
+ImageTorque uses codec providers to decode and encode images.
+
 The following codec providers are supported:
 
 | Codec Provider | Supported Formats    | License |
